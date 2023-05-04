@@ -4,6 +4,8 @@ abstract class Constants {
   /// app theme colors
   static const Color colorPrimary = Color(0xffDA8F45);
   static const Color colorPrimaryVariant = Color(0xff313838);
+  static const Color scaffoldColor = Color(0xff121616);
+  static const Color onScaffoldColor = Color(0x80000000);
   static const Color colorSecondary = Color(0xff979797);
   static const Color colorSecondaryVariant = Color(0xff262A34);
   static const Color colorBackground = Color(0xff1B2446);
@@ -18,12 +20,12 @@ abstract class Constants {
   static const Color colorOnBottomSheet = Color(0xff0C1120);
   static const Color colorOnIcon = Color(0xff051840);
   static const Color colorOnBorder = Color(0xff707070);
+  static const Color colorGradientDark = Color(0xff665c51);
   static const Color colorTextLight = Color(0xff3D3D3D);
   static const Color colorGreen = Color(0xff1a8907);
   static const Color colorTextLight2 = Color(0xffE5E5E5);
   static const Color colorIcon = Color(0xff254D9C);
 
-  static const Color colorOnCard = Color(0xff1F222A);
   static const Color colorOnContainer = Color(0xffF6F6F6);
 
 

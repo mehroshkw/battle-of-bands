@@ -15,7 +15,7 @@ class AppButton extends StatelessWidget {
   const AppButton(
       {required this.text,
       required this.onClick,
-      this.borderRadius = 8,
+      this.borderRadius = 30,
       this.color,
       this.fontFamily = Constants.montserratMedium,
       this.textColor,
