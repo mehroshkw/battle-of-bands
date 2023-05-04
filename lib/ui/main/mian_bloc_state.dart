@@ -1,34 +1,27 @@
 import 'package:equatable/equatable.dart';
 
-import '../../data/snackbar_message.dart';
-
-class  MainScreenState extends Equatable{
+class MainScreenState extends Equatable {
   final int index;
-  final bool isSwitch;
+  final bool isVote;
 
-  const MainScreenState(
-      {
-        required this.index,
-        required this.isSwitch,
-      });
+  const MainScreenState({
+    required this.index,
+    required this.isVote,
+  });
 
-  MainScreenState.initial(): this(
-    index: 0,
-    isSwitch: true,
-  );
+  const MainScreenState.initial()
+      : this(
+          index: 0,
+          isVote: true,
+        );
 
-  MainScreenState copyWith(
-      {
-        SnackbarMessage? snackbarMessage,
-        int? index,
-        bool? isSwitch,
-      }) =>
+  MainScreenState copyWith({
+    int? index,
+    bool? isVote}) =>
       MainScreenState(
-          index: index ?? this.index,
-          isSwitch: isSwitch ?? this.isSwitch);
+          index: index ?? this.index, isVote: isVote ?? this.isVote);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [index, isSwitch,];
-
+  List<Object?> get props => [index, isVote];
 }

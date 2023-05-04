@@ -12,14 +12,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController genreController = TextEditingController();
 
-  MainScreenBloc():super(MainScreenState.initial());
+  MainScreenBloc():super(const MainScreenState.initial());
 
 
   void updateIndex(int index) {
    emit(state.copyWith(index: index));
   }
 
-  // void toggleSwitch() {
-  //   isSwitch.value = !isSwitch.value;
-  // }
+  void toggleVote() {
+    emit(state.copyWith(isVote:  !state.isVote));
+  }
 }

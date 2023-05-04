@@ -28,10 +28,28 @@ abstract class AppText {
   static const String HAVE_ACCOUNT = 'Already have an Account? ';
   static const String SELECT_DATE_FIRST = 'Select date first';
 
-/// errors
+  /// home
+  /// battles
+  static const String BATTLES = 'Battles';
+  static const String GENRE = 'Genre';
+  static const String SONG_NAME = "Designer's Life eps.5";
+  static const String PERFORMER_BAND = "Performer/Band Name";
+  static const String SONG_START_TIME = "00:20";
+  static const String SONG_END_TIME = "00:30";
+  static const String VOTE = "Vote";
+
+/// All songs
+  static const String MY_SONG = 'My Song';
+  static const String VOTES = 'Votes 98';
+  static const String TODAY = 'Today';
+  static const String DATE = '09 Feb 2023';
+
+  /// errors
   static const String INVALID_EMAIL = 'Invalid Email Address';
   static const String TRY_AGAIN = 'Try Again';
   static const String CANCEL = 'Cancel';
+  static const String YES = 'Yes';
+  static const String NO = 'No';
   static const String USER_LIST = 'User List';
   static const String DUMMY_TEXT =
       'Lorem Ipsum is simply dummy text of the printing and typesetting.';
@@ -51,4 +69,6 @@ abstract class AppText {
       'Confirm Password field cannot be empty!';
   static const String BOTH_PASSWORD_DOES_NOT_MATCH =
       'Both password does not match.';
+  static const String ARE_YOU_SURE_VOTE =
+      "Are You Sure you want to \nVote for Designer's";
 }
