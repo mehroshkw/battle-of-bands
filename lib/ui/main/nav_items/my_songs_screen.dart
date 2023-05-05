@@ -1,16 +1,16 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
-import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
+import 'package:battle_of_bands/ui/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/app_button.dart';
-import '../../../../common/app_text_field.dart';
-import '../../../../common/custom_appbar.dart';
-import '../../../../util/app_strings.dart';
-import '../../../../util/constants.dart';
-import '../../main_bloc.dart';
-import '../../mian_bloc_state.dart';
+import '../../../common/app_button.dart';
+import '../../../common/app_text_field.dart';
+import '../../../common/custom_appbar.dart';
+import '../../../util/app_strings.dart';
+import '../../../util/constants.dart';
+import '../main_bloc.dart';
+import '../mian_bloc_state.dart';
 
 class AllSongsScreen extends StatelessWidget {
   static const String key_title = '/all_songs';
@@ -21,9 +21,9 @@ class AllSongsScreen extends StatelessWidget {
     final size = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
-    return Scaffold(
-      body: Column(
+    return  Column(
         children: [
+          const SizedBox(height: kToolbarHeight-20),
         AppBarWithGenre(
         screenName: AppText.MY_SONG,
         genreField:
@@ -96,7 +96,7 @@ class AllSongsScreen extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          onTap: (){Navigator.pushNamed(context, MySongDetailScreen.route);},
+                          onTap: (){Navigator.pushNamed(context, MySongDetailScreen.route,arguments: true);},
                           child: SongTile(url: index.isOdd
                               ?'assets/song_icon2.png'
                             :'assets/song_icon.png' ,),
@@ -117,8 +117,7 @@ class AllSongsScreen extends StatelessWidget {
             color: Constants.colorPrimary,
             ),
           )
-      ])
-    );
+      ]);
   }
 }
 
@@ -134,14 +133,14 @@ class SongTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      height: size.height / 8,
       width: size.width - 30,
       decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant.withOpacity(0.95),
           borderRadius: BorderRadius.circular(20)),
       child: Row(
         children: [
-          Image.asset(url),
+
+          Image.asset(url,width: 60,height: 55),
           const SizedBox(width: 10,),
           Expanded(
             child: Column(

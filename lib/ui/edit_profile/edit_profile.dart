@@ -2,6 +2,7 @@ import 'package:battle_of_bands/common/custom_appbar.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
 import '../../../util/constants.dart';
@@ -36,17 +37,22 @@ class EditProfile extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          image: const DecorationImage(
-                            image: AssetImage(
-                                'assets/img_button.png'),
-                            fit: BoxFit.fill,
+                    child: GestureDetector(
+                      onTap: () async {
+                        getImg();
+                      },
+                      child: Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            image: const DecorationImage(
+                              image: AssetImage(
+                                  'assets/img_button.png'),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -119,5 +125,14 @@ class EditProfile extends StatelessWidget {
             ],
           ),
         ));
+  }
+  Future<void> getImg() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image!.path.isEmpty) {
+      return;
+    } else {
+      print('file picked');
+    }
   }
 }

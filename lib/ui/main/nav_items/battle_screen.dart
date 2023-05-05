@@ -1,42 +1,28 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../common/app_text_field.dart';
-import '../../../../common/custom_appbar.dart';
-import '../../../../helper/dilogue_helper.dart';
-import '../../../../helper/material_dialogue_content.dart';
-import '../../../../util/app_strings.dart';
-import '../../../../util/constants.dart';
-import '../../main_bloc.dart';
-import '../../mian_bloc_state.dart';
+import '../../../common/app_text_field.dart';
+import '../../../common/custom_appbar.dart';
+import '../../../helper/dilogue_helper.dart';
+import '../../../util/app_strings.dart';
+import '../../../util/constants.dart';
+import '../main_bloc.dart';
+import '../mian_bloc_state.dart';
 
 class BattleScreen extends StatelessWidget {
   static const String key_title = '/battle_screen';
 
   const BattleScreen({Key? key}) : super(key: key);
 
-  Future<void> _showDialogue(MainScreenBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
-    dialogHelper
-      ..injectContext(context)
-      ..showProgressDialog("Processing");
-    try {
-      dialogHelper.dismissProgress();
-      dialogHelper.showVoteDialogue();
-
-    } catch (_) {
-      dialogHelper.dismissProgress();
-      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () => _showDialogue(bloc, context, dialogHelper));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
-    return Scaffold(
-        body: Column(
+    return  Column(
       children: [
+        const SizedBox(height: kToolbarHeight-20),
         AppBarWithGenre(
           screenName: AppText.BATTLES,
           genreField:
@@ -105,7 +91,7 @@ class BattleScreen extends StatelessWidget {
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
                   return SongWidget(onChanged: (){
-                    _showDialogue(bloc, context, MaterialDialogHelper.instance());
+                    MaterialDialogHelper.instance()..injectContext(context)..showVoteDialogue();
                   },);
                 },
               ),
@@ -113,7 +99,7 @@ class BattleScreen extends StatelessWidget {
           ),
         )
       ],
-    ));
+    );
   }
 }
 

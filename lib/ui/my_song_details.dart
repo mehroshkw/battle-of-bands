@@ -1,19 +1,20 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
-import '../../common/custom_appbar.dart';
-import '../../util/constants.dart';
+import '../common/custom_appbar.dart';
+import '../util/constants.dart';
 
 class MySongDetailScreen extends StatelessWidget {
   static const String route = '/my_song_details_screen';
+  final bool isMySong;
 
-  const MySongDetailScreen({Key? key}) : super(key: key);
+  const MySongDetailScreen({Key? key,required this.isMySong}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     return  Scaffold(
-      appBar: const CustomAppbar(screenName: AppText.MY_SONG,),
+      appBar:  CustomAppbar(screenName:isMySong? AppText.MY_SONG:'Song',),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(

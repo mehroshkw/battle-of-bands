@@ -22,4 +22,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   void toggleVote() {
     emit(state.copyWith(isVote:  !state.isVote));
   }
+  void toggleNotify() {
+    emit(state.copyWith(isVote:  !state.isVote));
+  }
 }

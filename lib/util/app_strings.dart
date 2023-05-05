@@ -31,6 +31,9 @@ abstract class AppText {
   static const String SELECT_DATE_FIRST = 'Select date first';
 
   /// home
+  static const String LEADERBOARD = 'Leaderboard';
+  static const String STATISTICS = 'Statistics';
+
   /// battles
   static const String BATTLES = 'Battles';
   static const String GENRE = 'Genre';
@@ -109,4 +112,7 @@ abstract class AppText {
       'Both password does not match.';
   static const String ARE_YOU_SURE_VOTE =
       "Are You Sure you want to \nVote for Designer's";
+
+  ///Home Screen
+  static const String PERFORMER_BANDNAME = "Performer/Band Name";
 }

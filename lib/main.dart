@@ -1,13 +1,13 @@
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
-import 'package:battle_of_bands/ui/auth/edit_profile/edit_profile.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';
 import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
 import 'package:battle_of_bands/ui/auth/signup/signup_bloc.dart';
 import 'package:battle_of_bands/ui/auth/signup/signup_screen.dart';
+import 'package:battle_of_bands/ui/edit_profile/edit_profile.dart';
 import 'package:battle_of_bands/ui/main/main_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_screen.dart';
-import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
+import 'package:battle_of_bands/ui/my_song_details.dart';
 import 'package:battle_of_bands/ui/splash_screen.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
@@ -17,15 +17,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'helper/bottom_sheet_helper.dart';
-
 import 'dart:io';
 
-import 'package:battle_of_bands/util/app_strings.dart';
-import 'package:battle_of_bands/util/constants.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +39,7 @@ const _colorScheme = ColorScheme(
     onSurface: Constants.colorOnSecondary,
     onBackground: Constants.colorOnBackground,
     onError: Constants.colorOnError,
-    brightness: Brightness.light);
+    brightness: Brightness.dark);
 
 ThemeData _buildAppThemeData() {
   final ThemeData base = ThemeData.light();
@@ -92,7 +85,8 @@ class _AppRouter {
         }
       case MySongDetailScreen.route:
         {
-          const screen = MySongDetailScreen();
+          final bool isMySong=settings.arguments as bool;
+          final screen = MySongDetailScreen(isMySong: isMySong);
           return _getPageRoute(screen);
         }
       case UploadSongScreen.route:

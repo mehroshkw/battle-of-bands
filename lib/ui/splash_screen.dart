@@ -18,13 +18,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     getUser();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
     super.initState();
   }
 
   Future<void> getUser() async {
-    final route = LoginScreen.route;
+    const route = LoginScreen.route;
     Future.delayed(const Duration(milliseconds: 1500)).then((_) {
       Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (_) => false);
     });

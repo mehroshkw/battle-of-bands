@@ -4,6 +4,7 @@ class MainScreenState extends Equatable {
   final int index;
   final bool isVote;
 
+
   const MainScreenState({
     required this.index,
     required this.isVote,
