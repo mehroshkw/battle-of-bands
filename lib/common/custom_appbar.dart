@@ -97,3 +97,41 @@ class AppBarWithGenre extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+class CustomAppbar extends StatelessWidget with PreferredSizeWidget {
+  final String screenName;
+
+  const CustomAppbar({
+    required this.screenName,
+
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      centerTitle: true,
+      backgroundColor: Constants.scaffoldColor,
+      automaticallyImplyLeading: false,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child:
+            Text(
+              screenName,
+              style: const TextStyle(
+                color: Constants.colorOnSurface,
+                fontFamily: Constants.montserratSemibold,
+                fontSize: 22,
+              ),
+        ),
+      ),
+     leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color:Constants.colorOnSurface),
+    onPressed: () => Navigator.of(context).pop(),
+    ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}

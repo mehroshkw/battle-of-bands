@@ -1,4 +1,5 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
+import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -106,7 +107,9 @@ class AllSongsScreen extends StatelessWidget {
           SizedBox(
             width: size.width-30,
             height: 50,
-            child: AppButton(text: 'Upload Song', onClick: (){},
+            child: AppButton(text: 'Upload Song', onClick: (){
+              Navigator.pushNamed(context, MySongDetailScreen.route);
+            },
             color: Constants.colorPrimary,
             ),
           )

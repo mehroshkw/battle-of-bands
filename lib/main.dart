@@ -6,6 +6,7 @@ import 'package:battle_of_bands/ui/auth/signup/signup_bloc.dart';
 import 'package:battle_of_bands/ui/auth/signup/signup_screen.dart';
 import 'package:battle_of_bands/ui/main/main_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_screen.dart';
+import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/splash_screen.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:battle_of_bands/util/constants.dart';
@@ -54,8 +55,9 @@ ThemeData _buildAppThemeData() {
 }
 
 class _AppRouter {
-  Route _getPageRoute(Widget screen) =>
-      Platform.isIOS ? CupertinoPageRoute(builder: (_) => screen) : MaterialPageRoute(builder: (_) => screen);
+  Route _getPageRoute(Widget screen) => Platform.isIOS
+      ? CupertinoPageRoute(builder: (_) => screen)
+      : MaterialPageRoute(builder: (_) => screen);
 
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -67,17 +69,28 @@ class _AppRouter {
       case LoginScreen.route:
         {
           const screen = LoginScreen();
-          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => LoginBloc(), child: screen));
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => LoginBloc(), child: screen));
         }
-        case SignupScreen.route:
+      case SignupScreen.route:
         {
           const screen = SignupScreen();
-          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => SignupBloc(), child: screen));
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => SignupBloc(), child: screen));
         }
-        case MainScreen.route:
+      case MainScreen.route:
         {
           const screen = MainScreen();
-          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => MainScreenBloc(), child: screen));
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => MainScreenBloc(), child: screen));
+        }
+      case MySongDetailScreen.route:
+        {
+          const screen = MySongDetailScreen();
+          return _getPageRoute(screen);
         }
     }
     return null;

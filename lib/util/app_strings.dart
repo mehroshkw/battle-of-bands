@@ -43,6 +43,8 @@ abstract class AppText {
   static const String VOTES = 'Votes 98';
   static const String TODAY = 'Today';
   static const String DATE = '09 Feb 2023';
+/// my song details screen
+  static const String GENRE_NAME = 'Genre Name';
 
   /// errors
   static const String INVALID_EMAIL = 'Invalid Email Address';
