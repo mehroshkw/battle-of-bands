@@ -19,7 +19,7 @@ class AppButton extends StatelessWidget {
       this.color,
       this.fontFamily = Constants.montserratMedium,
       this.textColor,
-      this.fontSize = 15,
+      this.fontSize = 19,
       this.isEnabled = true});
 
   @override
@@ -29,7 +29,7 @@ class AppButton extends StatelessWidget {
       onPressed: isEnabled ? () => onClick?.call() : null,
       fillColor: isEnabled ? color : Colors.white54,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
-      child: Text(text, style: TextStyle(color: textColor, fontFamily: fontFamily, fontSize: fontSize)),
+      child: Text(text, style: TextStyle(color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: fontSize)),
     );
   }
 }

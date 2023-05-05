@@ -126,7 +126,7 @@ class SongWidget extends StatelessWidget {
     final bloc = context.read<MainScreenBloc>();
     final Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       height: size.height / 2.8,
       width: size.width - 30,
@@ -185,7 +185,7 @@ class SongWidget extends StatelessWidget {
               ),
             ],
           ),
-          Container(
+          SizedBox(
             width: size.width,
             child: Image.asset('assets/song_slider.png'),
           ),
@@ -211,14 +211,14 @@ class SongWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset('assets/3x/previous3x.png', height: 20, width: 20),
-              Image.asset('assets/3x/back3x.png', height: 20, width: 20),
-              Image.asset('assets/3x/play_big3x.png', height: 50, width: 50),
-              Image.asset('assets/3x/forward3x.png', height: 20, width: 20),
-              Image.asset('assets/3x/next3x.png', height: 20, width: 20),
+              Image.asset('assets/3x/previous.png', height: 20, width: 20),
+              Image.asset('assets/3x/back.png', height: 20, width: 20),
+              Image.asset('assets/3x/play_big.png', height: 50, width: 50),
+              Image.asset('assets/3x/forward.png', height: 20, width: 20),
+              Image.asset('assets/3x/next.png', height: 20, width: 20),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -276,7 +276,7 @@ class SongWidget extends StatelessWidget {
                         },
                       ),
                     ),
-                    Text(
+                    const Text(
                       AppText.VOTE,
                       style: TextStyle(
                         fontFamily: Constants.montserratLight,
@@ -336,7 +336,7 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
         width: 18.0,
         height: 18.0,
         child: _isChecked
-            ? Icon(
+            ? const Icon(
                 Icons.check,
                 color: Colors.white,
                 size: 14.0,

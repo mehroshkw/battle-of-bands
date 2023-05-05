@@ -242,7 +242,7 @@ class RoundedContainer extends StatelessWidget {
                             fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
                   ),
                 ),
-                const Divider(),
+                const Divider( color: Constants.scaffoldColor,),
                 const SizedBox(height: 10,),
                 const Text('Total Losses',
                     textAlign: TextAlign.left,

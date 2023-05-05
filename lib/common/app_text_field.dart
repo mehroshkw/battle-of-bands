@@ -37,7 +37,9 @@ class AppTextField extends StatelessWidget {
         decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: isError ? Constants.colorError : Constants.colorOnBorder),
+
+          border: Border.all(
+            width: 0.3,color: isError ? Constants.colorError : Constants.colorGreen,),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -56,13 +58,10 @@ class AppTextField extends StatelessWidget {
               decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(left: 10, right: 10),
                   border: InputBorder.none,
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Constants.colorGreen),
-                  ),
+                  focusedBorder: InputBorder.none,
                   hintText: hint,
-                  hintStyle: TextStyle(
-                      color: Constants.colorSecondary, fontFamily: Constants.montserratRegular, fontSize: 13)),
+                  hintStyle: const TextStyle(
+                      color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 13)),
             )),
             suffixIcon != null
                 ? GestureDetector(
@@ -175,8 +174,8 @@ class GenreField extends StatelessWidget {
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       hintText: hint,
-                      hintStyle: TextStyle(
-                          color: Constants.colorSecondary, fontFamily: Constants.montserratRegular, fontSize: 13)),
+                      hintStyle: const TextStyle(
+                          color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 13)),
                 )),
             suffixIcon != null
                 ? GestureDetector(

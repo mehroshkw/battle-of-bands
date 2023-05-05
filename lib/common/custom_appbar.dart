@@ -120,13 +120,13 @@ class CustomAppbar extends StatelessWidget with PreferredSizeWidget {
               screenName,
               style: const TextStyle(
                 color: Constants.colorOnSurface,
-                fontFamily: Constants.montserratSemibold,
+                fontFamily: Constants.montserratRegular,
                 fontSize: 22,
               ),
         ),
       ),
      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color:Constants.colorOnSurface),
+        icon: const Icon(Icons.arrow_back_ios_new, color:Constants.colorOnSurface),
     onPressed: () => Navigator.of(context).pop(),
     ),
     );
