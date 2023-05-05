@@ -130,14 +130,14 @@ class SongTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      height: size.height / 8,
       width: size.width - 30,
       decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant.withOpacity(0.95),
           borderRadius: BorderRadius.circular(20)),
       child: Row(
         children: [
-          Image.asset(url),
+
+          Image.asset(url,width: 60,height: 55),
           const SizedBox(width: 10,),
           Expanded(
             child: Column(

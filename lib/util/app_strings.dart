@@ -73,4 +73,7 @@ abstract class AppText {
       'Both password does not match.';
   static const String ARE_YOU_SURE_VOTE =
       "Are You Sure you want to \nVote for Designer's";
+
+  ///Home Screen
+  static const String PERFORMER_BANDNAME = "Performer/Band Name";
 }
