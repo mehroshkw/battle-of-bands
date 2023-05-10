@@ -173,7 +173,7 @@ class MaterialDialogHelper {
                                 child: AppButton(
                                     onClick: () {
                                       Navigator.pop(context);
-                                      positiveClickListener!.call();
+                                      // positiveClickListener!.call();
                                     },
                                     text: AppText.YES,
                                     fontFamily: Constants.montserratRegular,

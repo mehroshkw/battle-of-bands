@@ -98,14 +98,12 @@ class HomeScreen extends StatelessWidget {
                   child: GenreField(
                     controller: bloc.genreController,
                     hint: AppText.GENRE,
-                    readOnly: true,
-                    textInputType: TextInputType.text,
                     isError: false,
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: Constants.colorOnSurface,
                       size: 20,
-                    ),
+                    ), textInputType: TextInputType.text,
                   ),
                 );
               }),

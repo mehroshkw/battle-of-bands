@@ -251,7 +251,8 @@ class SignupScreen extends StatelessWidget {
                           fontFamily: Constants.montserratRegular, fontSize: 16, color: Constants.colorOnPrimary)),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, LoginScreen.route,);
+                      // Navigator.pushNamed(context, LoginScreen.route,);
+                      Navigator.pop(context);
                     },
                     child: const Text(AppText.LOGIN,
                         textAlign: TextAlign.left,

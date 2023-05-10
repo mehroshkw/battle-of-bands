@@ -222,54 +222,21 @@ class SongWidget extends StatelessWidget {
               ),
               child: BlocBuilder<MainScreenBloc, MainScreenState>(
                   builder: (_, state) {
-                return Row(
-                  children: [
-                    // Theme(
-                    //   data: ThemeData(
-                    //     checkboxTheme: CheckboxThemeData(
-                    //       fillColor: MaterialStateProperty.all(Colors.transparent),
-                    //       shape: RoundedRectangleBorder(
-                    //         side: BorderSide(width: 1, color: Colors.white),
-                    //         borderRadius: BorderRadius.circular(4),
-                    //       ),
-                    //       side: BorderSide(
-                    //         color: Constants.colorOnSurface,
-                    //       ),
-                    //
-                    //     ),
-                    //   ),
-                    //   child: Checkbox(
-                    //     value: state.isVote,
-                    //     onChanged: (bool? value) {
-                    //       if(value==null)return;
-                    //       bloc.toggleVote();
-                    //     },
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 8.0,
-                        left: 20.0,
-                      ),
-                      child: CustomCheckbox(
-                        isChecked: state.isVote,
-                        onChanged: (bool? value) {
-                          if (value == null) return;
-                          bloc.toggleVote();
-                          if (value) {
-                            onChanged.call();
-                          }
-                        },
-                      ),
-                    ),
-                    const Text(
-                      AppText.VOTE,
-                      style: TextStyle(
-                        fontFamily: Constants.montserratLight,
-                        color: Constants.colorOnSurface,
-                      ),
-                    ),
-                  ],
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    right: 8.0,
+                    left: 20.0,
+                  ),
+                  child: CustomCheckbox(
+                    isChecked: state.isVote,
+                    onChanged: (bool? value) {
+                      if (value == null) return;
+                      bloc.toggleVote();
+                      if (value) {
+                        onChanged.call();
+                      }
+                    },
+                  ),
                 );
               }))
         ],
@@ -278,7 +245,8 @@ class SongWidget extends StatelessWidget {
   }
 }
 
-class CustomCheckbox extends StatefulWidget {
+
+class CustomCheckbox extends StatelessWidget {
   final bool isChecked;
   final Function(bool) onChanged;
 
@@ -289,46 +257,45 @@ class CustomCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomCheckboxState createState() => _CustomCheckboxState();
-}
-
-class _CustomCheckboxState extends State<CustomCheckbox> {
-  bool _isChecked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isChecked = widget.isChecked;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = context.read<MainScreenBloc>();
     return InkWell(
-      onTap: () {
-        setState(() {
-          _isChecked = !_isChecked;
-          widget.onChanged(_isChecked);
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.white,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-          color: _isChecked ? Colors.transparent : Colors.transparent,
-        ),
-        width: 18.0,
-        height: 18.0,
-        child: _isChecked
-            ? const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 14.0,
-              )
-            : null,
-      ),
-    );
+     onTap: () {
+       onChanged.call(isChecked);
+     },
+     child: Row(
+       children: [
+         Padding(
+           padding: const EdgeInsets.only(left: 4.0, right: 8),
+           child: Container(
+             decoration: BoxDecoration(
+               border: Border.all(
+                 color: Colors.white,
+                 width: 1.0,
+               ),
+               borderRadius: BorderRadius.circular(4.0),
+               color: Colors.transparent,
+             ),
+             width: 18.0,
+             height: 18.0,
+             child: isChecked
+                 ? null
+                 : const Icon(
+               Icons.check,
+               color: Colors.white,
+               size: 14.0,
+             ),
+           ),
+         ),
+         const Text(
+           AppText.VOTE,
+           style: TextStyle(
+             fontFamily: Constants.montserratLight,
+             color: Constants.colorOnSurface,
+           ),
+         ),
+       ],
+     ),
+      );
   }
 }
