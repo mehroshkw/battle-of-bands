@@ -131,4 +131,6 @@ abstract class AppText {
   static const String NAME_EMPTY = "Name cannot be empty";
   static const String DOB_EMPTY = "DOB cannot be empty";
   static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
+  static const String SENDING = "Sending...";
+  static const String EMAIL_SENT = "Email Sent Successfully";
 }

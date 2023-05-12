@@ -1,4 +1,5 @@
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
+import 'package:battle_of_bands/ui/auth/forget_password/forget_pass_bloc.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';
 import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
@@ -112,7 +113,9 @@ class _AppRouter {
         case ForgetPasswordScreen.route:
         {
           const screen = ForgetPasswordScreen();
-          return _getPageRoute(screen);
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => ForgetPasswordBloc(), child: screen));
         }
     }
     return null;

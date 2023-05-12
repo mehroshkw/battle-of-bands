@@ -82,6 +82,15 @@ class SharedWebService {
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
+  /// forget password
+  Future<LoginAuthenticationResponse> forgetPassword(
+      String email) async {
+    final response = await _post(Uri.parse("$BASE_URL/Account/ForgetPassword"),
+        {'email': email});
+    final responseBody = await response.transform(utf8.decoder).join();
+    return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+  }
+
   /// Change Password
   Future<IBaseResponse> changePassword(
       String currentPassword, String newPassword) async {
