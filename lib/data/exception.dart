@@ -1,12 +1,3 @@
-class MultiInstanceException implements Exception {
-  static const String _ERROR = 'Only one instance allowed for the class';
-
-  const MultiInstanceException();
-
-  @override
-  String toString() => _ERROR;
-}
-
 class NoInternetConnectException implements Exception {
   static const String _ERROR = 'User device is not connected to internet';
 
@@ -14,12 +5,6 @@ class NoInternetConnectException implements Exception {
 
   @override
   String toString() => _ERROR;
-}
-
-class CustomFirebaseAuthException implements Exception {
-  final String message;
-
-  const CustomFirebaseAuthException({required this.message});
 }
 
 class UserCancelledOnGoingAuthException implements Exception {
@@ -38,4 +23,10 @@ class UserAlreadyExistsWithDifferentCredential implements Exception {
 
   @override
   String toString() => _ERROR;
+}
+
+class EmailNotFoundException implements Exception {}
+
+class IdNotFoundException implements Exception {
+  const IdNotFoundException();
 }

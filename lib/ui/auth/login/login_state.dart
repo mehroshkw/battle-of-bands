@@ -1,43 +1,32 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/base_cubit_state.dart';
 import '../../../data/snackbar_message.dart';
 
-class LoginBlocState extends BaseCubitState {
-  final String navigationRoute;
-  final String emailError;
-  final String passwordError;
+class LoginBlocState extends Equatable {
+  final String errorText;
+  final bool emailError;
+  final bool passwordError;
 
-  const LoginBlocState(
+   LoginBlocState(
       {
-        required this.navigationRoute,
-        required SnackbarMessage snackbarMessage,
-        required this.emailError,
-        required this.passwordError,
-      })
-      : super(snackbarMessage);
+        required this.errorText, required this.passwordError, required this.emailError
+      });
 
-  const LoginBlocState.initial()
-      : this(
-      navigationRoute: '',
-      snackbarMessage: const SnackbarMessage.empty(),
-      emailError: '',
-      passwordError: '',
-    );
+   LoginBlocState.initial()
+      : this(errorText: '', passwordError: false, emailError: false);
 
   LoginBlocState copyWith(
       {
-        String? navigationRoute,
-        SnackbarMessage? snackbarMessage,
-        String? emailError,
-        String? passwordError,
+        bool? passwordError, String? errorText, bool? emailError
        }) =>
       LoginBlocState(
-          navigationRoute: navigationRoute ?? this.navigationRoute,
-          snackbarMessage: snackbarMessage ?? this.snackbarMessage,
-          emailError: emailError ?? this.emailError,
-          passwordError: passwordError ?? this.passwordError);
+        errorText: errorText ?? this.errorText,
+        passwordError: passwordError ?? this.passwordError,
+        emailError: emailError ?? this.emailError);
 
 
   @override
   List<Object> get props =>
-      [ navigationRoute, super.props, emailError, passwordError];
+      [emailError, passwordError, errorText];
 }

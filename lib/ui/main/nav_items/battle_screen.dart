@@ -58,9 +58,9 @@ class BattleScreen extends StatelessWidget {
                     .toList();
               },
               onSelected: (value) =>
-                  bloc.genreController.text = value.toString(),
+                  bloc.battlesGenreController.text = value.toString(),
               child: GenreField(
-                controller: bloc.genreController,
+                controller: bloc.battlesGenreController,
                 hint: AppText.GENRE,
                 readOnly: true,
                 textInputType: TextInputType.text,

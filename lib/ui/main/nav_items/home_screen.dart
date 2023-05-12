@@ -94,9 +94,9 @@ class HomeScreen extends StatelessWidget {
                         .toList();
                   },
                   onSelected: (value) =>
-                      bloc.genreController.text = value.toString(),
+                      bloc.leaderBoardGenreController.text = value.toString(),
                   child: GenreField(
-                    controller: bloc.genreController,
+                    controller: bloc.leaderBoardGenreController,
                     hint: AppText.GENRE,
                     isError: false,
                     suffixIcon: const Icon(
