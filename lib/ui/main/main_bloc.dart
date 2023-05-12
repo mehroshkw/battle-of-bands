@@ -2,6 +2,7 @@ import 'package:battle_of_bands/ui/main/mian_bloc_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/meta_data.dart';
+import '../../helper/shared_preference_helper.dart';
 
 
 class MainScreenBloc extends Cubit<MainScreenState> {
@@ -14,7 +15,26 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   TextEditingController battlesGenreController = TextEditingController();
   TextEditingController genreController = TextEditingController();
 
+   String name= '';
+   String email= '';
+
+
+  final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
+
+
   MainScreenBloc():super(const MainScreenState.initial());
+
+
+  // get user from shared preferences
+  Future<void> getUser()  async {
+    final user= await sharedPreferenceHelper.user;
+    if(user==null)return;
+    name = user.name;
+    print(name);
+    email = user.emailAddress;
+    print(email);
+  }
+
 
 
   void updateIndex(int index) {

@@ -58,7 +58,7 @@ abstract class AppText {
   static const String GENRE_NAME = 'Genre Name';
   static const String VOTE_98 = '98 Vote';
 
- /// Edit Profile screen
+  /// Edit Profile screen
   static const String EDIT_PROFILE = 'Edit Profile';
 
   /// my profile screen
@@ -86,7 +86,8 @@ abstract class AppText {
   static const String UPLOAD = 'Upload';
   static const String SONG_NAME_MP = 'Songname.mp4';
   static const String TRIM_FILE = 'Trim File';
-  static const String UPLOAD_DESCRIPTION = 'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
+  static const String UPLOAD_DESCRIPTION =
+      'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
 
   /// errors
   static const String INVALID_EMAIL = 'Invalid Email Address';
@@ -94,6 +95,7 @@ abstract class AppText {
   static const String CANCEL = 'Cancel';
   static const String YES = 'Yes';
   static const String LOG_oUT = 'Logout';
+  static const String LOGGING = 'Logging In...';
   static const String NO = 'No';
   static const String USER_LIST = 'User List';
   static const String DUMMY_TEXT =
@@ -106,12 +108,14 @@ abstract class AppText {
   static const NETWORK_CONNECTION_ERROR =
       'Please check your internet connection and try again';
   static const String PASSWORD_FIELD_CANNOT_BE_EMPTY =
-      'Password field cannot be empty!';
+      'Password cannot be empty!';
+  static const String EMAIL_FIELD_CANNOT_BE_EMPTY =
+      'Email cannot be empty!';
   static const String AMOUNT_CANNOT_BE_EMPTY = 'Amount field cannot be empty!';
   static const String NEW_PASSWORD_FIELD_CANNOT_BE_EMPTY =
       'New Password field cannot be empty!';
   static const String CONFIRM_PASSWORD_FIELD_CANNOT_BE_EMPTY =
-      'Confirm Password field cannot be empty!';
+      'Confirm Password cannot be empty!';
   static const String BOTH_PASSWORD_DOES_NOT_MATCH =
       'Both password does not match.';
   static const String ARE_YOU_SURE_VOTE =
@@ -119,4 +123,12 @@ abstract class AppText {
 
   ///Home Screen
   static const String PERFORMER_BANDNAME = "Performer/Band Name";
+
+  /// snackbar messages
+  static const String SUCCESSFULLY_LOGGED_IN = "Logged In Successfully";
+  static const String CREATING_ACCOUNT = "Creating Account";
+  static const String ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully";
+  static const String NAME_EMPTY = "Name cannot be empty";
+  static const String DOB_EMPTY = "DOB cannot be empty";
+  static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
 }

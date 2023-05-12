@@ -2,7 +2,9 @@ import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/util/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../helper/shared_preference_helper.dart';
 import 'auth/login/login_screen.dart';
+import 'main/main_screen.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -22,9 +24,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> getUser() async {
-    const route = LoginScreen.route;
+    final user = SharedPreferenceHelper.instance().isUserLoggedIn;
+    final route = user ? MainScreen.route : LoginScreen.route;
     Future.delayed(const Duration(milliseconds: 1500)).then((_) {
-      Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (_) => false);
+      Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
     });
   }
 

@@ -80,10 +80,10 @@ class MaterialDialogHelper {
                                     onClick: () => Navigator.pop(context),
                                     text: content.negativeText,
                                     fontFamily: Constants.montserratRegular,
-                                    textColor: Constants.colorPrimaryVariant,
+                                    textColor: Constants.colorPrimary,
                                     borderRadius: 10.0,
                                     fontSize: 16,
-                                    color: Constants.colorOnSurface)),
+                                    color: Constants.colorOnSurface.withOpacity(0.5))),
                             const SizedBox(width: 20),
                             SizedBox(
                                 height: 35,

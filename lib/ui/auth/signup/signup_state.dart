@@ -1,18 +1,16 @@
-
-
-import '../../../data/base_cubit_state.dart';
+import 'package:equatable/equatable.dart';
 import '../../../data/snackbar_message.dart';
 
-class SignUpScreenBlocState extends BaseCubitState {
+class SignUpScreenBlocState extends Equatable {
   final bool isNotShowPassword;
   final bool isNotShowConfirmPassword;
-  final String emailError;
-  final String passwordError;
-  final String confirmPasswordError;
-  final String nameError;
-  final String dobError;
-  final String navigationRoute;
-  final String emailVerificationError;
+  final bool emailError;
+  final bool passwordError;
+  final bool confirmPasswordError;
+  final bool nameError;
+  final bool dobError;
+  final String errorText;
+
 
 
   const SignUpScreenBlocState(
@@ -20,65 +18,56 @@ class SignUpScreenBlocState extends BaseCubitState {
         required this.isNotShowConfirmPassword,
         required this.nameError,
         required this.dobError,
-        required SnackbarMessage message,
         required this.emailError,
         required this.passwordError,
         required this.confirmPasswordError,
-        required this.navigationRoute,
-        required this.emailVerificationError,
-        })
-      : super(message);
+        required this.errorText,
+        });
 
   const SignUpScreenBlocState.initial()
       : this(
       isNotShowPassword: true,
       isNotShowConfirmPassword: true,
-      message: const SnackbarMessage.empty(),
-      emailError: '',
-      passwordError: '',
-      dobError: '',
-      nameError: '',
-      navigationRoute: '',
-      emailVerificationError: '',
-      confirmPasswordError: '',
+      emailError: false,
+      passwordError: false,
+      dobError: false,
+      nameError:false,
+      confirmPasswordError:false,
+      errorText: '',
      );
 
   SignUpScreenBlocState copyWith(
       {bool? isNotShowPassword,
         bool? isNotShowConfirmPassword,
-        SnackbarMessage? snackbarMessage,
-        String? emailError,
-        String? nameError,
-        String? dobError,
-        String? navigationRoute,
+        bool? emailError,
+        bool? nameError,
+        bool? dobError,
         DateTime? dateFromDate,
-        String? passwordError,
-        String? emailVerificationError,
-        String? confirmPasswordError,
+        bool? passwordError,
+        bool? confirmPasswordError,
+        String? errorText
         }) =>
       SignUpScreenBlocState(
           isNotShowPassword: isNotShowPassword ?? this.isNotShowPassword,
-          message: snackbarMessage ?? this.snackbarMessage,
           emailError: emailError ?? this.emailError,
-          navigationRoute: navigationRoute ?? this.navigationRoute,
           passwordError: passwordError ?? this.passwordError,
-          emailVerificationError: emailVerificationError ?? this.emailVerificationError,
           confirmPasswordError: confirmPasswordError ?? this.confirmPasswordError,
           isNotShowConfirmPassword: isNotShowConfirmPassword ?? this.isNotShowConfirmPassword,
           nameError: nameError ?? this.nameError,
-        dobError: dobError ?? this.dobError,
+          dobError: dobError ?? this.dobError,
+          errorText: errorText??this.errorText,
       );
 
   @override
   List<Object> get props => [
     isNotShowPassword,
-    emailVerificationError,
     isNotShowConfirmPassword,
-    super.props,
     emailError,
     passwordError,
-    confirmPasswordError,
-    navigationRoute,
+    nameError,
+    dobError,
+    errorText,
+    confirmPasswordError
   ];
   @override
   bool get stringify => true;

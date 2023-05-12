@@ -89,10 +89,10 @@ class LoginAuthenticationResponse extends StatusMessageResponse {
 // }
 
 class LoginResponse {
-  final String id;
+  final int id;
   final String imagePath;
   final String name;
-  final DateTime dateOfBirth;
+  final String dateOfBirth;
   final String emailAddress;
 
 
@@ -106,11 +106,18 @@ class LoginResponse {
       });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    final String id = json.containsKey('id') ? json['id'] : '';
+    print("id === -----------------------");
+
+    final int id = json.containsKey('id') ? json['id'] : 0;
+    print("id === $id");
     final String imagePath = json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
-    final String name = json.containsKey('name') ? json['name'] ?? '' : '';
-    final String dateOfBirth = json.containsKey('userType') ? json['userType'] : '';
+    final String name = json.containsKey('fullName') ? json['fullName'] ?? '' : '';
+    print("name === $name");
+    final String dateOfBirth = json.containsKey('dob') ? json['dob'] : '';
+    print("dob === $dateOfBirth");
+
     final String emailAddress = json.containsKey('email') ? json['email'] ?? '' : '';
+    print("email === $emailAddress");
 
 
 
@@ -118,7 +125,7 @@ class LoginResponse {
         id: id,
       imagePath: imagePath,
         name: name,
-        dateOfBirth: dateOfBirth.isNotEmpty?dateOfBirth.parsedDatetime:DateTime(2020),
+        dateOfBirth: dateOfBirth,
         emailAddress: emailAddress,
        );
   }
@@ -127,24 +134,23 @@ class LoginResponse {
       {
         String? imagePath,
         String? name,
-        // String? dateOfirth,
+        String? dateOfBirth,
         String? emailAddress,
       }) =>
       LoginResponse(
           id: id,
         imagePath: imagePath ?? this.imagePath,
           name: name ?? this.name,
-          dateOfBirth: dateOfBirth,
+          dateOfBirth: dateOfBirth ?? this.dateOfBirth,
           emailAddress: emailAddress ?? this.emailAddress,
       );
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'imagePath': imagePath,
-    'name': name,
-    'dateOfBirth': dateOfBirth,
+    'fullName': name,
+    'dob': dateOfBirth,
     'email': emailAddress,
-
   };
 }
 
