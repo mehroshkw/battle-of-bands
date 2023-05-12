@@ -4,7 +4,7 @@ abstract class Constants {
   /// app theme colors
   static const Color colorPrimary = Color(0xffDA8F45);
   static const Color colorPrimaryVariant = Color(0xff313838);
-  static const Color scaffoldColor = Color(0xff121616);
+  static const Color scaffoldColor = Color(0xff000000);
   static const Color onScaffoldColor = Color(0x80000000);
   static const Color colorSecondary = Color(0xff979797);
   static const Color colorSecondaryVariant = Color(0xff262A34);

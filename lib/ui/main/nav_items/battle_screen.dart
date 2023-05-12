@@ -1,42 +1,28 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../common/app_text_field.dart';
-import '../../../../common/custom_appbar.dart';
-import '../../../../helper/dilogue_helper.dart';
-import '../../../../helper/material_dialogue_content.dart';
-import '../../../../util/app_strings.dart';
-import '../../../../util/constants.dart';
-import '../../main_bloc.dart';
-import '../../mian_bloc_state.dart';
+import '../../../common/app_text_field.dart';
+import '../../../common/custom_appbar.dart';
+import '../../../helper/dilogue_helper.dart';
+import '../../../util/app_strings.dart';
+import '../../../util/constants.dart';
+import '../main_bloc.dart';
+import '../mian_bloc_state.dart';
 
 class BattleScreen extends StatelessWidget {
   static const String key_title = '/battle_screen';
 
   const BattleScreen({Key? key}) : super(key: key);
 
-  Future<void> _showDialogue(MainScreenBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
-    dialogHelper
-      ..injectContext(context)
-      ..showProgressDialog("Processing");
-    try {
-      dialogHelper.dismissProgress();
-      dialogHelper.showVoteDialogue();
-
-    } catch (_) {
-      dialogHelper.dismissProgress();
-      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () => _showDialogue(bloc, context, dialogHelper));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
-    return Scaffold(
-        body: Column(
+    return  Column(
       children: [
+        const SizedBox(height: kToolbarHeight-20),
         AppBarWithGenre(
           screenName: AppText.BATTLES,
           genreField:
@@ -72,9 +58,9 @@ class BattleScreen extends StatelessWidget {
                     .toList();
               },
               onSelected: (value) =>
-                  bloc.genreController.text = value.toString(),
+                  bloc.battlesGenreController.text = value.toString(),
               child: GenreField(
-                controller: bloc.genreController,
+                controller: bloc.battlesGenreController,
                 hint: AppText.GENRE,
                 readOnly: true,
                 textInputType: TextInputType.text,
@@ -105,7 +91,7 @@ class BattleScreen extends StatelessWidget {
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
                   return SongWidget(onChanged: (){
-                    _showDialogue(bloc, context, MaterialDialogHelper.instance());
+                    MaterialDialogHelper.instance()..injectContext(context)..showVoteDialogue();
                   },);
                 },
               ),
@@ -113,7 +99,7 @@ class BattleScreen extends StatelessWidget {
           ),
         )
       ],
-    ));
+    );
   }
 }
 
@@ -128,7 +114,6 @@ class SongWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      height: size.height / 2.8,
       width: size.width - 30,
       decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant.withOpacity(0.95),
@@ -137,51 +122,56 @@ class SongWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+              SizedBox(
+                  height: 90,
+                  width: 90,
                   child: Image.asset('assets/song_icon.png')),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: size.width / 1.75,
-                    alignment: Alignment.topRight,
-                    child: Image.asset(
-                      'assets/share.png',
-                      height: 30,
-                      width: 30,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Image.asset(
+                        'assets/share.png',
+                        height: 30,
+                        width: 30,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10, left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      AppText.SONG_NAME,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontFamily: Constants.montserratBold,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Constants.colorOnPrimary),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10, left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      AppText.PERFORMER_BAND,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontFamily: Constants.montserratLight,
-                          fontSize: 16,
-                          color: Constants.colorOnPrimary),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 10, left: 10),
+                      child: Text(
+                        AppText.SONG_NAME,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: Constants.montserratBold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Constants.colorOnPrimary),
+                      ),
                     ),
-                  ),
-                ],
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10, left: 10),
+                        child: Text(
+                          AppText.PERFORMER_BAND,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: Constants.montserratLight,
+                              fontSize: 16,
+                              color: Constants.colorOnPrimary),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -236,54 +226,21 @@ class SongWidget extends StatelessWidget {
               ),
               child: BlocBuilder<MainScreenBloc, MainScreenState>(
                   builder: (_, state) {
-                return Row(
-                  children: [
-                    // Theme(
-                    //   data: ThemeData(
-                    //     checkboxTheme: CheckboxThemeData(
-                    //       fillColor: MaterialStateProperty.all(Colors.transparent),
-                    //       shape: RoundedRectangleBorder(
-                    //         side: BorderSide(width: 1, color: Colors.white),
-                    //         borderRadius: BorderRadius.circular(4),
-                    //       ),
-                    //       side: BorderSide(
-                    //         color: Constants.colorOnSurface,
-                    //       ),
-                    //
-                    //     ),
-                    //   ),
-                    //   child: Checkbox(
-                    //     value: state.isVote,
-                    //     onChanged: (bool? value) {
-                    //       if(value==null)return;
-                    //       bloc.toggleVote();
-                    //     },
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 8.0,
-                        left: 20.0,
-                      ),
-                      child: CustomCheckbox(
-                        isChecked: state.isVote,
-                        onChanged: (bool? value) {
-                          if (value == null) return;
-                          bloc.toggleVote();
-                          if (value) {
-                            onChanged.call();
-                          }
-                        },
-                      ),
-                    ),
-                    const Text(
-                      AppText.VOTE,
-                      style: TextStyle(
-                        fontFamily: Constants.montserratLight,
-                        color: Constants.colorOnSurface,
-                      ),
-                    ),
-                  ],
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    right: 8.0,
+                    left: 20.0,
+                  ),
+                  child: CustomCheckbox(
+                    isChecked: state.isVote,
+                    onChanged: (bool? value) {
+                      if (value == null) return;
+                      bloc.toggleVote();
+                      if (value) {
+                        onChanged.call();
+                      }
+                    },
+                  ),
                 );
               }))
         ],
@@ -292,7 +249,8 @@ class SongWidget extends StatelessWidget {
   }
 }
 
-class CustomCheckbox extends StatefulWidget {
+
+class CustomCheckbox extends StatelessWidget {
   final bool isChecked;
   final Function(bool) onChanged;
 
@@ -303,46 +261,45 @@ class CustomCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomCheckboxState createState() => _CustomCheckboxState();
-}
-
-class _CustomCheckboxState extends State<CustomCheckbox> {
-  bool _isChecked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isChecked = widget.isChecked;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bloc = context.read<MainScreenBloc>();
     return InkWell(
-      onTap: () {
-        setState(() {
-          _isChecked = !_isChecked;
-          widget.onChanged(_isChecked);
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.white,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-          color: _isChecked ? Colors.transparent : Colors.transparent,
-        ),
-        width: 18.0,
-        height: 18.0,
-        child: _isChecked
-            ? const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 14.0,
-              )
-            : null,
-      ),
-    );
+     onTap: () {
+       onChanged.call(isChecked);
+     },
+     child: Row(
+       children: [
+         Padding(
+           padding: const EdgeInsets.only(left: 4.0, right: 8),
+           child: Container(
+             decoration: BoxDecoration(
+               border: Border.all(
+                 color: Colors.white,
+                 width: 1.0,
+               ),
+               borderRadius: BorderRadius.circular(4.0),
+               color: Colors.transparent,
+             ),
+             width: 18.0,
+             height: 18.0,
+             child: isChecked
+                 ? null
+                 : const Icon(
+               Icons.check,
+               color: Colors.white,
+               size: 14.0,
+             ),
+           ),
+         ),
+         const Text(
+           AppText.VOTE,
+           style: TextStyle(
+             fontFamily: Constants.montserratLight,
+             color: Constants.colorOnSurface,
+           ),
+         ),
+       ],
+     ),
+      );
   }
 }

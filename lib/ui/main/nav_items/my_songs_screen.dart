@@ -1,16 +1,16 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
-import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
+import 'package:battle_of_bands/ui/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/app_button.dart';
-import '../../../../common/app_text_field.dart';
-import '../../../../common/custom_appbar.dart';
-import '../../../../util/app_strings.dart';
-import '../../../../util/constants.dart';
-import '../../main_bloc.dart';
-import '../../mian_bloc_state.dart';
+import '../../../common/app_button.dart';
+import '../../../common/app_text_field.dart';
+import '../../../common/custom_appbar.dart';
+import '../../../util/app_strings.dart';
+import '../../../util/constants.dart';
+import '../main_bloc.dart';
+import '../mian_bloc_state.dart';
 
 class AllSongsScreen extends StatelessWidget {
   static const String key_title = '/all_songs';
@@ -21,9 +21,9 @@ class AllSongsScreen extends StatelessWidget {
     final size = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
-    return Scaffold(
-      body: Column(
+    return  Column(
         children: [
+          const SizedBox(height: kToolbarHeight-20),
         AppBarWithGenre(
         screenName: AppText.MY_SONG,
         genreField:
@@ -75,50 +75,104 @@ class AllSongsScreen extends StatelessWidget {
           );
         }),
       ),
-          Expanded(
-            child: Container(
-              width: size.width,
-              height: size.height,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: 6,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppText.DATE,
-                          style: TextStyle(
-                            fontFamily: Constants.montserratLight,
-                            color: Constants.colorOnSurface.withOpacity(0.7),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: (){Navigator.pushNamed(context, MySongDetailScreen.route);},
-                          child: SongTile(url: index.isOdd
-                              ?'assets/song_icon2.png'
-                            :'assets/song_icon.png' ,),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: size.width-30,
-            height: 50,
-            child: AppButton(text: 'Upload Song', onClick: (){
-              Navigator.pushNamed(context, UploadSongScreen.route);
+    BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
+      return state.isNoMusic?
+          GestureDetector(
+            onTap: (){
+              bloc.toggleNoMusic();
             },
-            color: Constants.colorPrimary,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 60,),
+                Image.asset("assets/no_music.png", height: 70, width: 70,),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    AppText.NO_SONG,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: Constants.montserratRegular,
+                      color: Constants.colorOnSurface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                const Padding(
+                  padding: EdgeInsets.all(6.0),
+                  child: Text(
+                    AppText.UPLOAD_YOUR_NEW_SONG,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: Constants.montserratRegular,
+                      color: Constants.colorOnSurface,
+                    ),
+                  ),
+                ),
+                 Text(
+                  AppText.DUMMY_SONG_DESC,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: Constants.montserratLight,
+                    color: Constants.colorOnSurface.withOpacity(0.8),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 50,),
+              ],
             ),
           )
-      ])
-    );
+          :Expanded(
+        child: Container(
+          width: size.width,
+          height: size.height,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: 6,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppText.DATE,
+                      style: TextStyle(
+                        fontFamily: Constants.montserratLight,
+                        color: Constants.colorOnSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, MySongDetailScreen.route, arguments: true);
+                      },
+                      child: SongTile(url: index.isOdd
+                          ? 'assets/song_icon2.png'
+                          : 'assets/song_icon.png',),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    }),
+          BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) =>
+             SizedBox(
+              width: size.width-30,
+              height: 50,
+              child: AppButton(text: 'Upload Song', onClick: (){
+               state.isNoMusic ? bloc.toggleNoMusic()
+                   : Navigator.pushNamed(context, UploadSongScreen.route);
+              },
+              color: Constants.colorPrimary,
+              ),
+            ),
+          )
+      ]);
   }
 }
 

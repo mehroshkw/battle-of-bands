@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'main_bloc.dart';
 import 'package:battle_of_bands/util/constants.dart';
 import 'mian_bloc_state.dart';
-import 'nav_items/my_songs/my_songs_screen.dart';
-import 'nav_items/battle/battle_screen.dart';
-import 'nav_items/home/home_screen.dart';
-import 'nav_items/profile/profile_screen.dart';
+import 'nav_items/my_songs_screen.dart';
+import 'nav_items/battle_screen.dart';
+import 'nav_items/home_screen.dart';
+import 'nav_items/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static const String route = '/main_screen_route';

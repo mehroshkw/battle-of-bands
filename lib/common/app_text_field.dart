@@ -148,7 +148,6 @@ class GenreField extends StatelessWidget {
     return Container(
         height: 50,
         alignment: Alignment.center,
-        // padding: const EdgeInsets.symmetric(horizontal: 15),
         margin: const EdgeInsets.only(bottom: 10, top: 10),
         decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant,
@@ -161,9 +160,10 @@ class GenreField extends StatelessWidget {
           children: [
             Expanded(
                 child: TextFormField(
+                  enabled: false,
                   obscureText: isObscure,
                   controller: controller,
-                  readOnly: readOnly,
+                  readOnly: true,
                   onChanged: onChanged,
                   keyboardType: textInputType,
                   textInputAction: textInputAction,

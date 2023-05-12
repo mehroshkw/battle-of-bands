@@ -173,7 +173,7 @@ class MaterialDialogHelper {
                                 child: AppButton(
                                     onClick: () {
                                       Navigator.pop(context);
-                                      positiveClickListener!.call();
+                                      // positiveClickListener!.call();
                                     },
                                     text: AppText.YES,
                                     fontFamily: Constants.montserratRegular,
@@ -244,7 +244,6 @@ class MaterialDialogHelper {
                             Container(
                                 height: 35,
                                 width: 120,
-
                                 child: AppButton(
                                     onClick: () {
                                       Navigator.pop(context);
@@ -264,52 +263,4 @@ class MaterialDialogHelper {
         });
   }
 
-  // void showMaterialDialogWithImageContent(String imagePath, String buttonText, MaterialDialogContent content, Function positiveClickListener, {Function? negativeClickListener, Widget? richText}) {
-  //   final context = _context;
-  //   if (context == null) return;
-  //   showDialog(
-  //       context: context,
-  //       builder: (_) {
-  //         return WillPopScope(
-  //             child: AlertDialog(
-  //                 insetPadding: const EdgeInsets.symmetric(horizontal: 25),
-  //                 contentPadding: const EdgeInsets.only(bottom: 0),
-  //                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
-  //                 content: Container(
-  //                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-  //                   child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
-  //                     const SizedBox(height: 30),
-  //                     Image(image: AssetImage(imagePath), width: MediaQuery.of(context).size.width - 150),
-  //                     const SizedBox(height: 20),
-  //                     Padding(
-  //                         padding: const EdgeInsets.symmetric(horizontal: 20),
-  //                         child: Text(content.title, textAlign: TextAlign.center, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorPrimary))),
-  //                     const SizedBox(height: 10),
-  //                     Padding(
-  //                         padding: const EdgeInsets.symmetric(horizontal: 45),
-  //                         child: richText ?? Text(content.message, textAlign: TextAlign.center, style: const TextStyle(color: Constants.colorSurface, fontSize: 16, fontFamily: Constants.montserratMedium))),
-  //                     const SizedBox(height: 20),
-  //                     IntrinsicHeight(
-  //                         child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-  //                           SizedBox(
-  //                               height: 35,
-  //                               width: 100,
-  //                               child: AppButton(
-  //                                   onClick: () {
-  //                                     Navigator.pop(context);
-  //                                     positiveClickListener.call();
-  //                                   },
-  //                                   text: buttonText,
-  //                                   fontFamily: Constants.montserratRegular,
-  //                                   textColor: Constants.colorOnSurface,
-  //                                   borderRadius: 10.0,
-  //                                   fontSize: 16,
-  //                                   color: Constants.colorPrimary))
-  //                         ])),
-  //                     const SizedBox(height: 25)
-  //                   ]),
-  //                 )),
-  //             onWillPop: () async => false);
-  //       });
-  // }
 }

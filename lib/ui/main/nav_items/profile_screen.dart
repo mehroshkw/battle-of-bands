@@ -1,33 +1,20 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
-import 'package:battle_of_bands/ui/auth/edit_profile/edit_profile.dart';
+import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/app_button.dart';
-import '../../../../helper/dilogue_helper.dart';
-import '../../../../helper/material_dialogue_content.dart';
-import '../../../../util/app_strings.dart';
-import '../../../../util/constants.dart';
-import '../../main_bloc.dart';
+import '../../../common/app_button.dart';
+import '../../../helper/dilogue_helper.dart';
+import '../../../helper/material_dialogue_content.dart';
+import '../../../util/app_strings.dart';
+import '../../../util/constants.dart';
+import '../../edit_profile/edit_profile.dart';
+import '../main_bloc.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String key_title = '/profile';
   const ProfileScreen({Key? key}) : super(key: key);
-
-  Future<void> _showDialogue(MainScreenBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
-    dialogHelper
-      ..injectContext(context)
-      ..showProgressDialog("Processing");
-    try {
-      dialogHelper.dismissProgress();
-      dialogHelper.showLogOutDialogue();
-
-    } catch (_) {
-      dialogHelper.dismissProgress();
-      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () => _showDialogue(bloc, context, dialogHelper));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +144,8 @@ class ProfileScreen extends StatelessWidget {
                 child: AppButton(
                   text: AppText.LOGOUT,
                   onClick: () {
-                    _showDialogue(bloc, context, MaterialDialogHelper.instance());
-                  },
+                    MaterialDialogHelper.instance()..injectContext(context)..showLogOutDialogue(positiveClickListener: ()=>Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (route) => false));
+                    },
                   color: Constants.colorPrimary,
                 ),
               )

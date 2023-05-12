@@ -31,6 +31,13 @@ abstract class AppText {
   static const String SELECT_DATE_FIRST = 'Select date first';
 
   /// home
+  static const String LEADERBOARD = 'Leaderboard';
+  static const String STATISTICS = 'Statistics';
+  static const String TOTAL_UPLOADS = 'Total Uploads';
+  static const String TOTAL_BATTLES = 'Total Battles';
+  static const String TOTAL_WINS = 'Total Wins';
+  static const String TOTAL_LOSES = 'Total Losses';
+
   /// battles
   static const String BATTLES = 'Battles';
   static const String GENRE = 'Genre';
@@ -46,6 +53,10 @@ abstract class AppText {
   static const String VOTES = 'Votes 98';
   static const String TODAY = 'Today';
   static const String DATE = '09 Feb 2023';
+  static const String NO_SONG = 'No Song';
+  static const String UPLOAD_YOUR_NEW_SONG = 'Upload your new song';
+  static const String DUMMY_SONG_DESC =
+      'Lorem Ipsum is simply dummy text of the \nprinting and typesetting industry.';
 
   /// my song details screen
   static const String GENRE_NAME = 'Genre Name';
@@ -112,6 +123,4 @@ abstract class AppText {
 
   ///Home Screen
   static const String PERFORMER_BANDNAME = "Performer/Band Name";
-  static const String LEADERBOARD = 'Leaderboard';
-  static const String STATISTICS = 'Statistics';
 }
