@@ -127,12 +127,7 @@ class EditProfile extends StatelessWidget {
         ));
   }
   Future<void> getImg() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image!.path.isEmpty) {
-      return;
-    } else {
-      print('file picked');
-    }
+    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(image==null)return;
   }
 }

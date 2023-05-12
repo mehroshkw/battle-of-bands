@@ -33,6 +33,10 @@ abstract class AppText {
   /// home
   static const String LEADERBOARD = 'Leaderboard';
   static const String STATISTICS = 'Statistics';
+  static const String TOTAL_UPLOADS = 'Total Uploads';
+  static const String TOTAL_BATTLES = 'Total Battles';
+  static const String TOTAL_WINS = 'Total Wins';
+  static const String TOTAL_LOSES = 'Total Losses';
 
   /// battles
   static const String BATTLES = 'Battles';

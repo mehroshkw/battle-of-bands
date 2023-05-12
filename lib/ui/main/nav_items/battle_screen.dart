@@ -114,7 +114,6 @@ class SongWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      height: size.height / 2.8,
       width: size.width - 30,
       decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant.withOpacity(0.95),
@@ -123,51 +122,56 @@ class SongWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+              SizedBox(
+                  height: 90,
+                  width: 90,
                   child: Image.asset('assets/song_icon.png')),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: size.width / 1.75,
-                    alignment: Alignment.topRight,
-                    child: Image.asset(
-                      'assets/share.png',
-                      height: 30,
-                      width: 30,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Image.asset(
+                        'assets/share.png',
+                        height: 30,
+                        width: 30,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10, left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      AppText.SONG_NAME,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontFamily: Constants.montserratBold,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Constants.colorOnPrimary),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10, left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      AppText.PERFORMER_BAND,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontFamily: Constants.montserratLight,
-                          fontSize: 16,
-                          color: Constants.colorOnPrimary),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 10, left: 10),
+                      child: Text(
+                        AppText.SONG_NAME,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: Constants.montserratBold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Constants.colorOnPrimary),
+                      ),
                     ),
-                  ),
-                ],
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10, left: 10),
+                        child: Text(
+                          AppText.PERFORMER_BAND,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: Constants.montserratLight,
+                              fontSize: 16,
+                              color: Constants.colorOnPrimary),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

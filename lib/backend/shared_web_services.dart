@@ -6,8 +6,9 @@ import 'server_response.dart';
 import 'package:http/http.dart' as http;
 
 class SharedWebService {
-  final String BASE_URL = "http://192.168.1.34:5069/api";
-  // final String BASE_URL = "http://192.168.1.32:6055/api";
+  // final String BASE_URL = "http://reekrootsapi.triaxo.com/api";
+  final String BASE_URL = "http://192.168.1.34:5069/api/";
+
   final HttpClient _client = HttpClient();
   final Duration _timeoutDuration = const Duration(seconds: 20);
 
@@ -124,12 +125,19 @@ class SharedWebService {
       'password': password,
       'imagePath': imagePath,
     };
-    final uri = Uri.parse('${BASE_URL}/Accounts/UpdateUser');
+    final uri = Uri.parse('$BASE_URL/Accounts/UpdateUser');
     final response = await _post(uri, body);
     final responseBody = await response.transform(utf8.decoder).join();
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
+  Future<Statistics> getStatistics(int userId) async {
+    final uri = Uri.parse('${BASE_URL}Dashboard/GetStatistics?appUserId=$userId');
+    final response = await _get(uri);
+    final responseBody=json.decode(await response.transform(utf8.decoder).join());
+    print('responsebody==========>$responseBody');
+    return Statistics.fromJson(responseBody);
+  }
 }
 
 

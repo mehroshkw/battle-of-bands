@@ -24,10 +24,7 @@ class HomeScreen extends StatelessWidget {
           userEmail: 'dian@email.com',
           notificationIcon: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(PageRouteBuilder(
-                  opaque: false,
-                  pageBuilder: (BuildContext context, _, __) =>
-                      NotificationView()));
+              Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (BuildContext context, _, __) => NotificationView()));
             },
             child: Image.asset(
               'assets/Group 12408.png',
@@ -42,11 +39,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: const Text(AppText.STATISTICS,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratMedium,
-                        fontSize: 18,
-                        color: Constants.colorOnPrimary)),
+                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
               ),
               const RoundedContainer(),
               const SizedBox(
@@ -56,11 +49,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: const Text(AppText.LEADERBOARD,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratMedium,
-                        fontSize: 22,
-                        color: Constants.colorOnPrimary)),
+                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 22, color: Constants.colorOnPrimary)),
               ),
               BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
                 return PopupMenuButton<String>(
@@ -93,8 +82,7 @@ class HomeScreen extends StatelessWidget {
                             ))
                         .toList();
                   },
-                  onSelected: (value) =>
-                      bloc.leaderBoardGenreController.text = value.toString(),
+                  onSelected: (value) => bloc.leaderBoardGenreController.text = value.toString(),
                   child: GenreField(
                     controller: bloc.leaderBoardGenreController,
                     hint: AppText.GENRE,
@@ -103,28 +91,14 @@ class HomeScreen extends StatelessWidget {
                       Icons.keyboard_arrow_down_rounded,
                       color: Constants.colorOnSurface,
                       size: 20,
-                    ), textInputType: TextInputType.text,
+                    ),
+                    textInputType: TextInputType.text,
                   ),
                 );
               }),
-              const _SingleLeaderboardItem(
-                  rankNumber: '1st',
-                  isCrown: true,
-                  color: Constants.colorYellow,
-                  image: 'assets/3x/song_icon.png',
-                  vote: 150),
-              const _SingleLeaderboardItem(
-                  rankNumber: '2st',
-                  isCrown: false,
-                  color: Color(0xffC0C0C0),
-                  image: 'assets/3x/song_icon.png',
-                  vote: 110),
-              const _SingleLeaderboardItem(
-                  rankNumber: '3st',
-                  isCrown: false,
-                  color: Constants.colorPrimary,
-                  image: 'assets/3x/song_icon.png',
-                  vote: 100)
+              const _SingleLeaderboardItem(rankNumber: '1st', isCrown: true, color: Constants.colorYellow, image: 'assets/3x/song_icon.png', vote: 150),
+              const _SingleLeaderboardItem(rankNumber: '2st', isCrown: false, color: Color(0xffC0C0C0), image: 'assets/3x/song_icon.png', vote: 110),
+              const _SingleLeaderboardItem(rankNumber: '3st', isCrown: false, color: Constants.colorPrimary, image: 'assets/3x/song_icon.png', vote: 100)
             ],
           ),
         ));
@@ -141,174 +115,162 @@ class RoundedContainer extends StatelessWidget {
     return SizedBox(
       height: size.height / 3.5,
       width: size.width,
-      child: Row(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: 170,
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.6, 1.0],
-                      colors: [
-                        Constants.colorPrimary,
-                        Constants.colorGradientDark,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Total Uploads',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: Constants.montserratMedium,
-                          fontSize: 12,
-                          color: Constants.colorOnPrimary,
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            '86',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: Constants.montserratMedium,
-                              fontSize: 26,
-                              color: Constants.colorOnPrimary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 105,
-                  width: 170,
-                  margin: const EdgeInsets.only(top: 10),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.5, 1.0],
-                      colors: [
-                        Constants.colorPrimary,
-                        Constants.colorGradientDark,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Total Battles',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: Constants.montserratMedium,
-                          fontSize: 12,
-                          color: Constants.colorOnPrimary,
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            '66',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: Constants.montserratMedium,
-                              fontSize: 26,
-                              color: Constants.colorOnPrimary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 8),
-          Container(
-            height: 220,
-            width: 133,
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.5, 1.0],
-                colors: [
-                  Constants.colorPrimary,
-                  Constants.colorGradientDark,
-                ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: BlocBuilder<MainScreenBloc,MainScreenState>(
+        builder: (_,state)=>
+         Row(
+          children: [
+            Column(
               children: [
-                const Text(
-                  'Total wins',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: Constants.montserratMedium,
-                    fontSize: 12,
-                    color: Constants.colorOnPrimary,
+                Expanded(
+                  child: Container(
+                    width: 170,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.6, 1.0],
+                        colors: [
+                          Constants.colorPrimary,
+                          Constants.colorGradientDark,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          AppText.TOTAL_UPLOADS,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: Constants.montserratMedium,
+                            fontSize: 12,
+                            color: Constants.colorOnPrimary,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child:  Text(
+                              '${state.statistics.totalUploads}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontFamily: Constants.montserratMedium,
+                                fontSize: 26,
+                                color: Constants.colorOnPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    alignment: Alignment.center,
-                    child: const Text('36',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
+                    height: 105,
+                    width: 170,
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.5, 1.0],
+                        colors: [
+                          Constants.colorPrimary,
+                          Constants.colorGradientDark,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          AppText.TOTAL_BATTLES,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
                             fontFamily: Constants.montserratMedium,
-                            fontSize: 26,
-                            color: Constants.colorOnPrimary)),
+                            fontSize: 12,
+                            color: Constants.colorOnPrimary,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child:  Text(
+                              '${state.statistics.totalBattles}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontFamily: Constants.montserratMedium,
+                                fontSize: 26,
+                                color: Constants.colorOnPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const Divider(color: Constants.scaffoldColor, thickness: 1),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Total Losses',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratMedium,
-                        fontSize: 12,
-                        color: Constants.colorOnPrimary)),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const Text('30',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontFamily: Constants.montserratMedium,
-                            fontSize: 26,
-                            color: Constants.colorOnPrimary)),
-                  ),
-                )
               ],
             ),
-          )
-        ],
+            const SizedBox(width: 8),
+            Container(
+              height: 220,
+              width: 133,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.5, 1.0],
+                  colors: [
+                    Constants.colorPrimary,
+                    Constants.colorGradientDark,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   const Text(
+                    AppText.TOTAL_WINS,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: Constants.montserratMedium,
+                      fontSize: 12,
+                      color: Constants.colorOnPrimary,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child:  Text('${state.statistics.totalWins}', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                    ),
+                  ),
+                  const Divider(color: Constants.scaffoldColor, thickness: 1),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(AppText.TOTAL_LOSES, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 12, color: Constants.colorOnPrimary)),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child:  Text('${state.statistics.totalLoses}', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -321,12 +283,7 @@ class _SingleLeaderboardItem extends StatelessWidget {
   final String image;
   final int vote;
 
-  const _SingleLeaderboardItem(
-      {required this.rankNumber,
-      required this.isCrown,
-      required this.color,
-      required this.image,
-      required this.vote});
+  const _SingleLeaderboardItem({required this.rankNumber, required this.isCrown, required this.color, required this.image, required this.vote});
 
   @override
   Widget build(BuildContext context) {
@@ -335,56 +292,31 @@ class _SingleLeaderboardItem extends StatelessWidget {
     return SizedBox(
       child: Stack(alignment: Alignment.center, children: [
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route,
-              arguments: false),
+          onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: false),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: isCrown ? 90 : 30),
-              Text(rankNumber,
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontFamily: Constants.montserratMedium,
-                      fontSize: 18,
-                      color: Constants.colorOnPrimary)),
+              Text(rankNumber, textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 padding: const EdgeInsets.all(10),
                 height: 75,
                 width: size.width,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(width: 0.5, color: Constants.colorGreen),
-                    color: Constants.colorPrimaryVariant),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: Constants.colorGreen), color: Constants.colorPrimaryVariant),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Image(
-                        image: AssetImage('assets/3x/play.png'),
-                        width: 30,
-                        height: 30),
+                    const Image(image: AssetImage('assets/3x/play.png'), width: 30, height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('00:30',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontFamily: Constants.montserratRegular,
-                                fontSize: 14,
-                                color: Constants.colorGradientDark)),
-                        Text(AppText.PERFORMER_BANDNAME,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontFamily: Constants.montserratMedium,
-                                fontSize: 14,
-                                color: color)),
+                        const Text('00:30', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
+                        Text(AppText.PERFORMER_BANDNAME, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 14, color: color)),
                         Text('Vote $vote',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                                fontFamily: Constants.montserratRegular,
-                                fontSize: 14,
-                                color: Constants.colorOnPrimary)),
+                            textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorOnPrimary)),
                       ],
                     )
                   ],
@@ -395,19 +327,11 @@ class _SingleLeaderboardItem extends StatelessWidget {
         ),
         Column(
           children: [
-            isCrown
-                ? const Image(
-                    image: AssetImage('assets/crown.png'),
-                    width: 30,
-                    height: 30)
-                : const SizedBox(),
+            isCrown ? const Image(image: AssetImage('assets/crown.png'), width: 30, height: 30) : const SizedBox(),
             Container(
               width: isCrown ? 100 : 70,
               height: isCrown ? 100 : 70,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 4, color: color),
-                  image: DecorationImage(image: AssetImage(image))),
+              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 4, color: color), image: DecorationImage(image: AssetImage(image))),
             )
           ],
         )
@@ -417,42 +341,34 @@ class _SingleLeaderboardItem extends StatelessWidget {
 }
 
 class NotificationView extends StatelessWidget {
+  const NotificationView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Constants.scaffoldColor.withOpacity(0.6),
-        body: Padding(
-          padding: const EdgeInsets.only(
-              top: 100.0, bottom: 300, left: 20, right: 20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20,
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              margin: const EdgeInsets.only(top: 80.0, left: 20, right: 20),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Constants.colorSecondaryVariant.withOpacity(0.8)),
+              child: Column(
+                children: const [
+                  NotificationTile(),
+                  Divider(color: Constants.colorOnSurface),
+                  NotificationTile(),
+                  Divider(color: Constants.colorOnSurface),
+                  NotificationTile(),
+                  Divider(color: Constants.colorOnSurface),
+                  NotificationTile(),
+                  Divider(color: Constants.colorOnSurface),
+                  NotificationTile(),
+                ],
+              ),
             ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Constants.colorSecondaryVariant),
-            child: Column(
-              children: const [
-                NotificationTile(),
-                Divider(
-                  color: Constants.colorOnSurface,
-                ),
-                NotificationTile(),
-                Divider(
-                  color: Constants.colorOnSurface,
-                ),
-                NotificationTile(),
-                Divider(
-                  color: Constants.colorOnSurface,
-                ),
-                NotificationTile(),
-                Divider(
-                  color: Constants.colorOnSurface,
-                ),
-                NotificationTile(),
-              ],
-            ),
-          ),
+            Expanded(child: Container(color: Colors.transparent))
+          ],
         ));
   }
 }
@@ -471,26 +387,17 @@ class NotificationTile extends StatelessWidget {
             children: const [
               Text(
                 '${AppText.SONG_NAME} ep.5 ',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Constants.colorPrimary,
-                    fontFamily: Constants.montserratRegular),
+                style: TextStyle(fontSize: 13, color: Constants.colorPrimary, fontFamily: Constants.montserratRegular),
               ),
               Text(
                 'song',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Constants.colorOnSurface,
-                    fontFamily: Constants.montserratRegular),
+                style: TextStyle(fontSize: 13, color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular),
               ),
             ],
           ),
           const Text(
             'is in a battle field',
-            style: TextStyle(
-                fontSize: 14,
-                color: Constants.colorOnSurface,
-                fontFamily: Constants.montserratRegular),
+            style: TextStyle(fontSize: 14, color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular),
           ),
         ],
       ),
