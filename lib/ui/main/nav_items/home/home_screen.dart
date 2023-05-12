@@ -1,12 +1,14 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
+import 'package:battle_of_bands/ui/main/mian_bloc_state.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../common/app_text_field.dart';
 import '../../../../common/custom_appbar.dart';
 import '../../../../util/constants.dart';
+import '../../../my_song_details/my_song_details.dart';
 import '../../main_bloc.dart';
-import '../../mian_bloc_state.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String key_title = '/home';
@@ -21,8 +23,16 @@ class HomeScreen extends StatelessWidget {
         appBar: CustomAppBar(
           userName: 'Hello Diana',
           userEmail: 'dian@email.com',
-          notificationIcon: Image.asset(
-            'assets/Group 12408.png',
+          notificationIcon: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (BuildContext context, _, __) =>
+                      NotificationView()));
+            },
+            child: Image.asset(
+              'assets/Group 12408.png',
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -32,7 +42,12 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
-                child: const Text('Statistics', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
+                child:  const Text(AppText.STATISTICS,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 18,
+                        color: Constants.colorOnPrimary)),
               ),
               const RoundedContainer(),
               const SizedBox(
@@ -41,8 +56,12 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
-                child:
-                    const Text('Leaderboard', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 22, color: Constants.colorOnPrimary)),
+                child:  const Text(AppText.LEADERBOARD,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 22,
+                        color: Constants.colorOnPrimary)),
               ),
               BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
                 return PopupMenuButton<String>(
@@ -75,25 +94,38 @@ class HomeScreen extends StatelessWidget {
                             ))
                         .toList();
                   },
-                  onSelected: (value) => bloc.genreController.text = value.toString(),
+                  onSelected: (value) =>
+                      bloc.leaderBoardGenreController.text = value.toString(),
                   child: GenreField(
-                    controller: bloc.genreController,
-                    hint: 'Genre',
-                    readOnly: true,
-                    textInputType: TextInputType.text,
+                    controller: bloc.leaderBoardGenreController,
+                    hint: AppText.GENRE,
                     isError: false,
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: Constants.colorOnSurface,
                       size: 20,
-                    ),
+                    ), textInputType: TextInputType.text,
                   ),
                 );
               }),
-
-              const _SingleLeaderboardItem(rankNumber: '1st', isCrown: true, color: Constants.colorYellow, image: 'assets/3x/song_icon3x.png', vote: 150),
-              const _SingleLeaderboardItem(rankNumber: '2st', isCrown: false, color: Color(0xffC0C0C0), image: 'assets/3x/song_icon3x.png', vote: 110),
-              const _SingleLeaderboardItem(rankNumber: '3st', isCrown: false, color: Constants.colorPrimary, image: 'assets/3x/song_icon3x.png', vote: 100)
+              const _SingleLeaderboardItem(
+                  rankNumber: '1st',
+                  isCrown: true,
+                  color: Constants.colorYellow,
+                  image: 'assets/3x/song_icon.png',
+                  vote: 150),
+              const _SingleLeaderboardItem(
+                  rankNumber: '2st',
+                  isCrown: false,
+                  color: Color(0xffC0C0C0),
+                  image: 'assets/3x/song_icon.png',
+                  vote: 110),
+              const _SingleLeaderboardItem(
+                  rankNumber: '3st',
+                  isCrown: false,
+                  color: Constants.colorPrimary,
+                  image: 'assets/3x/song_icon.png',
+                  vote: 100)
             ],
           ),
         ));
@@ -245,18 +277,33 @@ class RoundedContainer extends StatelessWidget {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    child: const Text('36', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                    child: const Text('36',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: Constants.montserratMedium,
+                            fontSize: 26,
+                            color: Constants.colorOnPrimary)),
                   ),
                 ),
-                const Divider(),
+                const Divider(color: Constants.scaffoldColor, thickness: 1),
                 const SizedBox(
                   height: 10,
                 ),
-                const Text('Total Losses', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 12, color: Constants.colorOnPrimary)),
+                const Text('Total Losses',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 12,
+                        color: Constants.colorOnPrimary)),
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    child: const Text('30', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                    child: const Text('30',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: Constants.montserratMedium,
+                            fontSize: 26,
+                            color: Constants.colorOnPrimary)),
                   ),
                 )
               ],
@@ -274,7 +321,13 @@ class _SingleLeaderboardItem extends StatelessWidget {
   final Color color;
   final String image;
   final int vote;
-  const _SingleLeaderboardItem({required this.rankNumber,required this.isCrown,required this.color,required this.image,required this.vote});
+
+  const _SingleLeaderboardItem(
+      {required this.rankNumber,
+      required this.isCrown,
+      required this.color,
+      required this.image,
+      required this.vote});
 
   @override
   Widget build(BuildContext context) {
@@ -282,48 +335,82 @@ class _SingleLeaderboardItem extends StatelessWidget {
 
     return SizedBox(
       child: Stack(alignment: Alignment.center, children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-             SizedBox(height: isCrown? 90:30),
-            Text(rankNumber, textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.all(10),
-              height: 75,
-              width: size.width,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: Constants.colorGreen),color: Constants.colorPrimaryVariant),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Image(image: AssetImage('assets/3x/play3x.png'), width: 30, height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:  [
-                      const Text('00:30',
-                          textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
-                      Text(AppText.PERFORMER_BANDNAME,
-                          textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 14, color: color)),
-                       Text('Vote $vote',
-                          textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorOnPrimary)),
-                    ],
-                  )
-                ],
+        GestureDetector(
+          onTap: () {
+              Navigator.pushNamed(context, MySongDetailScreen.route,
+              arguments: false);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: isCrown ? 90 : 30),
+              Text(rankNumber,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                      fontFamily: Constants.montserratMedium,
+                      fontSize: 18,
+                      color: Constants.colorOnPrimary)),
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(10),
+                height: 75,
+                width: size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 0.5, color: Constants.colorGreen),
+                    color: Constants.colorPrimaryVariant),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Image(
+                        image: AssetImage('assets/3x/play.png'),
+                        width: 30,
+                        height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('00:30',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontFamily: Constants.montserratRegular,
+                                fontSize: 14,
+                                color: Constants.colorGradientDark)),
+                        Text(AppText.PERFORMER_BANDNAME,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontFamily: Constants.montserratMedium,
+                                fontSize: 14,
+                                color: color)),
+                        Text('Vote $vote',
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                fontFamily: Constants.montserratRegular,
+                                fontSize: 14,
+                                color: Constants.colorOnPrimary)),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Column(
           children: [
-            isCrown?const Image(image: AssetImage('assets/crown.png'), width: 30, height: 30):const SizedBox(),
+            isCrown
+                ? const Image(
+                    image: AssetImage('assets/crown.png'),
+                    width: 30,
+                    height: 30)
+                : const SizedBox(),
             Container(
-              width:isCrown? 100:70,
-              height: isCrown? 100:70,
+              width: isCrown ? 100 : 70,
+              height: isCrown ? 100 : 70,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(width: 4, color: color),
-                  image:  DecorationImage(image: AssetImage(image))),
+                  image: DecorationImage(image: AssetImage(image))),
             )
           ],
         )
@@ -332,3 +419,88 @@ class _SingleLeaderboardItem extends StatelessWidget {
   }
 }
 
+class NotificationView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Constants.scaffoldColor.withOpacity(0.6),
+        body: Padding(
+          padding: const EdgeInsets.only(
+              top: 100.0, bottom: 300, left: 20, right: 20),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20,
+            ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Constants.colorSecondaryVariant),
+            child: Column(
+              children: const [
+                NotificationTile(),
+                Divider(
+                  color: Constants.colorOnSurface,
+                ),
+                NotificationTile(),
+                Divider(
+                  color: Constants.colorOnSurface,
+                ),
+                NotificationTile(),
+                Divider(
+                  color: Constants.colorOnSurface,
+                ),
+                NotificationTile(),
+                Divider(
+                  color: Constants.colorOnSurface,
+                ),
+                NotificationTile(),
+              ],
+            ),
+          ),
+        ));
+  }
+}
+
+class NotificationTile extends StatelessWidget {
+  const NotificationTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Image.asset('assets/notification_img.png'),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Text(
+                '${AppText.SONG_NAME} ep.5 ',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Constants.colorPrimary,
+                    fontFamily: Constants.montserratRegular),
+              ),
+              Text(
+                'song',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Constants.colorOnSurface,
+                    fontFamily: Constants.montserratRegular),
+              ),
+            ],
+          ),
+          const Text(
+            'is in a battle field',
+            style: TextStyle(
+                fontSize: 14,
+                color: Constants.colorOnSurface,
+                fontFamily: Constants.montserratRegular),
+          ),
+        ],
+      ),
+      trailing: Image.asset('assets/close.png'),
+      onTap: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+}

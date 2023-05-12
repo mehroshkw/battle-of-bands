@@ -1,5 +1,6 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
+import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,9 +95,12 @@ class AllSongsScreen extends StatelessWidget {
                             color: Constants.colorOnSurface.withOpacity(0.7),
                           ),
                         ),
-                        SongTile(url: index.isOdd
-                            ?'assets/song_icon2.png'
-                          :'assets/song_icon.png' ,),
+                        GestureDetector(
+                          onTap: (){Navigator.pushNamed(context, MySongDetailScreen.route);},
+                          child: SongTile(url: index.isOdd
+                              ?'assets/song_icon2.png'
+                            :'assets/song_icon.png' ,),
+                        ),
                       ],
                     );
                   },
@@ -108,7 +112,7 @@ class AllSongsScreen extends StatelessWidget {
             width: size.width-30,
             height: 50,
             child: AppButton(text: 'Upload Song', onClick: (){
-              Navigator.pushNamed(context, MySongDetailScreen.route);
+              Navigator.pushNamed(context, UploadSongScreen.route);
             },
             color: Constants.colorPrimary,
             ),

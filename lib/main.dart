@@ -1,4 +1,5 @@
-import 'package:battle_of_bands/ui/auth/forget_password/forget_password_controller.dart';
+import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
+import 'package:battle_of_bands/ui/auth/edit_profile/edit_profile.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';
 import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
@@ -8,6 +9,8 @@ import 'package:battle_of_bands/ui/main/main_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_screen.dart';
 import 'package:battle_of_bands/ui/my_song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/splash_screen.dart';
+import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
+import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:battle_of_bands/util/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,6 +93,28 @@ class _AppRouter {
       case MySongDetailScreen.route:
         {
           const screen = MySongDetailScreen();
+          return _getPageRoute(screen);
+        }
+      case UploadSongScreen.route:
+        {
+          const screen = UploadSongScreen();
+          return MaterialPageRoute(
+              builder: (_) =>
+              BlocProvider(create: (_) => UploadSongBloc(), child: screen));
+        }
+      case ChangePassword.route:
+        {
+          const screen = ChangePassword();
+          return _getPageRoute(screen);
+        }
+        case EditProfile.route:
+        {
+          const screen = EditProfile();
+          return _getPageRoute(screen);
+        }
+        case ForgetPasswordScreen.route:
+        {
+          const screen = ForgetPasswordScreen();
           return _getPageRoute(screen);
         }
     }

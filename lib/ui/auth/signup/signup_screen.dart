@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
 import '../../../util/app_strings.dart';
+import '../../main/main_screen.dart';
 import '../login/login_screen.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -27,7 +28,7 @@ class SignupScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 30),
+                padding: const EdgeInsets.only(top: 20.0, bottom: 30),
                 child: Image.asset(
                   'assets/logo.png',
                   height: size.height / 5,
@@ -232,7 +233,9 @@ class SignupScreen extends StatelessWidget {
                 width: size.width,
                 child: AppButton(
                   text: AppText.SIGN_UP,
-                  onClick: () {},
+                  onClick: () {
+                    Navigator.pushNamedAndRemoveUntil(context, MainScreen.route, (_) => false);
+                  },
                   color: Constants.colorPrimary,
                 ),
               ),

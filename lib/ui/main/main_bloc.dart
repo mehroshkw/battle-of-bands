@@ -10,6 +10,8 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   Key inputKey = GlobalKey();
   final GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController leaderBoardGenreController = TextEditingController();
+  TextEditingController battlesGenreController = TextEditingController();
   TextEditingController genreController = TextEditingController();
 
   MainScreenBloc():super(const MainScreenState.initial());
