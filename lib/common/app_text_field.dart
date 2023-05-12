@@ -12,6 +12,7 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String)? onChanged;
   final bool readOnly;
+  final bool enabled;
   final Function()? onSuffixClick;
 
   const AppTextField(
@@ -25,7 +26,7 @@ class AppTextField extends StatelessWidget {
       this.suffixIcon,
       this.onSuffixClick,
       this.prefixIcon,
-      this.textInputAction = TextInputAction.next});
+      this.textInputAction = TextInputAction.next,  this.enabled= true});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,6 @@ class AppTextField extends StatelessWidget {
         decoration: BoxDecoration(
           color: Constants.colorPrimaryVariant,
           borderRadius: BorderRadius.circular(10),
-
           border: Border.all(
             width: 0.3,color: isError ? Constants.colorError : Constants.colorGreen,),
         ),
@@ -50,6 +50,7 @@ class AppTextField extends StatelessWidget {
               obscureText: isObscure,
               controller: controller,
               readOnly: readOnly,
+              enabled: enabled,
               onChanged: onChanged,
               keyboardType: textInputType,
               textInputAction: textInputAction,

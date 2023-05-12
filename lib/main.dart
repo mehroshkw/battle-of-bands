@@ -19,9 +19,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 
+import 'helper/shared_preference_helper.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferenceHelper.initializeSharedPreferences();
 
   runApp(const _App());
 }
@@ -130,8 +133,14 @@ class _AppState extends State<_App> {
 
   @override
   void initState() {
+    getBindings();
     super.initState();
   }
+
+Future<void> getBindings() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferenceHelper.initializeSharedPreferences();
+}
 
   @override
   Widget build(BuildContext context) {

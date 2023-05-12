@@ -1,20 +1,51 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
+import 'package:battle_of_bands/ui/auth/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:battle_of_bands/util/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
+import '../../../data/snackbar_message.dart';
+import '../../../helper/dilogue_helper.dart';
+import '../../../helper/material_dialogue_content.dart';
+import '../../../helper/snackbar_helper.dart';
 import '../../../util/app_strings.dart';
 import '../../main/main_screen.dart';
 import '../forget_password/forget_password_screen.dart';
 import '../signup/signup_screen.dart';
+import 'login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String route = '/login_screen';
 
   const LoginScreen({Key? key}) : super(key: key);
 
+  Future<void> _login(LoginBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
+    dialogHelper
+      ..injectContext(context)
+      ..showProgressDialog(AppText.LOGGING);
+    try {
+      final response = await bloc.login();
+      dialogHelper.dismissProgress();
+      final snackbarHelper = SnackbarHelper.instance..injectContext(context);
+
+      if (!response.status) {
+        snackbarHelper.showSnackbar(snackbar: SnackbarMessage.error(message: response.message));
+        return;
+      }
+      snackbarHelper.showSnackbar(snackbar: SnackbarMessage.success(message: AppText.SUCCESSFULLY_LOGGED_IN));
+      Future.delayed(const Duration(seconds: 1)).then((_) =>
+      Navigator.pushNamedAndRemoveUntil(context, MainScreen.route, (route) => false));
+    } catch (_) {
+      dialogHelper.dismissProgress();
+      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () => _login(bloc, context, dialogHelper));
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<LoginBloc>();
     final size = context.screenSize;
     return Scaffold(
       body: SingleChildScrollView(
@@ -60,14 +91,21 @@ class LoginScreen extends StatelessWidget {
                       fontSize: 16,
                       color: Constants.colorOnPrimary)),
             ),
-            SizedBox(
-              width: size.width,
-              height: 70,
-              child: const AppTextField(
-                hint: AppText.ENTER_EMAIL,
-                // controller: controller.emailController,
-                textInputType: TextInputType.emailAddress,
-                isError: false,
+            BlocBuilder<LoginBloc, LoginBlocState>(
+              buildWhen: (previous, current) => previous.emailError != current.emailError,
+              builder: (_, state) => SizedBox(
+                width: size.width,
+                height: 70,
+                child: AppTextField(
+                  hint: AppText.ENTER_EMAIL,
+                  controller: bloc.emailController,
+                  textInputType: TextInputType.emailAddress,
+                  isError: state.emailError,
+                  onChanged: (String? value) {
+                    if (value == null) return;
+                    if (value.isNotEmpty && state.emailError) bloc.updateEmailError(false, '');
+                  },
+                ),
               ),
             ),
             Container(
@@ -79,14 +117,23 @@ class LoginScreen extends StatelessWidget {
                       fontSize: 16,
                       color: Constants.colorOnPrimary)),
             ),
-            SizedBox(
-              width: size.width,
-              height: 70,
-              child: const AppTextField(
-                hint: AppText.ENTER_PASSWORD,
-                textInputType: TextInputType.visiblePassword,
-                // controller: controller.passwordController,
-                isError: false,
+            BlocBuilder<LoginBloc, LoginBlocState>(
+              buildWhen: (previous, current) =>
+              previous.passwordError != current.passwordError,
+              builder: (_, state) => SizedBox(
+                width: size.width,
+                height: 70,
+                child: AppTextField(
+                  hint: AppText.ENTER_PASSWORD,
+                  textInputType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  controller: bloc.passwordController,
+                  onChanged: (String? value) {
+                    if (value == null) return;
+                    if (value.isNotEmpty && state.passwordError) bloc.updatePasswordError(false, '');
+                  },
+                  isError: state.passwordError,
+                ),
               ),
             ),
             GestureDetector(
@@ -103,8 +150,25 @@ class LoginScreen extends StatelessWidget {
                         color: Constants.colorPrimary)),
               ),
             ),
+            BlocBuilder<LoginBloc, LoginBlocState>(
+                buildWhen: (previous, current) => previous.errorText != current.errorText,
+                builder: (_, state) {
+                  if (state.errorText.isEmpty) return const SizedBox();
+                  return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                      margin: const EdgeInsets.only(bottom: 20, top: 15),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8), border: Border.all(color: Constants.colorError)),
+                      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        const Icon(Icons.warning_amber_rounded, color: Constants.colorError),
+                        const SizedBox(width: 5),
+                        Text(state.errorText,
+                            style: const TextStyle(
+                                color: Constants.colorError, fontFamily: Constants.montserratRegular, fontSize: 14))
+                      ]));
+                }),
             const SizedBox(
-              height: 40,
+              height: 30,
             ),
             SizedBox(
               height: 50,
@@ -112,8 +176,16 @@ class LoginScreen extends StatelessWidget {
               child: AppButton(
                 text: AppText.LOGIN,
                 onClick: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, MainScreen.route, (_) => false);
+                  FocusScope.of(context).unfocus();
+                  if (bloc.emailController.text.isEmpty) {
+                    bloc.updateEmailError(true, AppText.EMAIL_FIELD_CANNOT_BE_EMPTY);
+                    return;
+                  }
+                  if (bloc.passwordController.text.isEmpty) {
+                    bloc.updatePasswordError(true, AppText.PASSWORD_FIELD_CANNOT_BE_EMPTY);
+                    return;
+                  }
+                  _login(bloc, context, MaterialDialogHelper.instance());
                 },
                 color: Constants.colorPrimary,
               ),

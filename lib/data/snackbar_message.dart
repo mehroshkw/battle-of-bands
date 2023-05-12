@@ -1,26 +1,18 @@
 class SnackbarMessage {
-  final String content;
-  final bool isLongMessage;
-  final Duration duration;
-  final bool isForError;
+  final String message;
+  final bool isForSuccess;
+  final bool isLongDuration;
 
-  const SnackbarMessage({required this.content, required this.isLongMessage, required this.isForError})
-      : duration = isLongMessage ? const Duration(seconds: 5) : const Duration(seconds: 2);
+  SnackbarMessage({required this.message, required this.isForSuccess, required this.isLongDuration});
 
-  const SnackbarMessage.empty({bool isLongMessage = false}) : this(content: '', isLongMessage: isLongMessage, isForError: false);
+  SnackbarMessage.success({required String message, bool isLongDuration = false})
+      : this(message: message, isForSuccess: true, isLongDuration: isLongDuration);
 
-  const SnackbarMessage.longMessage({required String content}) : this(content: content, isLongMessage: true, isForError: false);
-
-  const SnackbarMessage.longMessageError({required String content})
-      : this(content: content, isLongMessage: true, isForError: true);
-
-  const SnackbarMessage.smallMessage({required String content}) : this(content: content, isLongMessage: false, isForError: false);
-
-  const SnackbarMessage.smallMessageError({required String content})
-      : this(content: content, isLongMessage: false, isForError: true);
+  SnackbarMessage.error({required String message, bool isLongDuration = false})
+      : this(message: message, isForSuccess: false, isLongDuration: isLongDuration);
 
   @override
   String toString() {
-    return 'SnackbarMessage{content: $content, isLongMessage: $isLongMessage}';
+    return 'SnackbarMessage{message: $message, isForSuccess: $isForSuccess, isLongDuration: $isLongDuration}';
   }
 }

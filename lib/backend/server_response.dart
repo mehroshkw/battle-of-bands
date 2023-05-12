@@ -45,48 +45,11 @@ class LoginAuthenticationResponse extends StatusMessageResponse {
   }
 }
 
-// class AddNotesResponse extends StatusMessageResponse {
-//   final NotesResponse? notes;
-//
-//   AddNotesResponse(this.notes, bool status, String message)
-//       : super(status: status, message: message);
-//
-//   factory AddNotesResponse.fromJson(
-//       Map<String, dynamic> json,
-//       ) {
-//     final statusMessageResponse = StatusMessageResponse.fromJson(json);
-//     final notesJson =
-//     json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
-//     return notesJson == null
-//         ? AddNotesResponse(
-//         null, statusMessageResponse.status, statusMessageResponse.message)
-//         : AddNotesResponse(NotesResponse.fromJson(notesJson),
-//         statusMessageResponse.status, statusMessageResponse.message);
-//   }
-// }
-//
-// class UserResponse extends StatusMessageResponse {
-//   final Rekroot? rekroot;
-//
-//   UserResponse(this.rekroot, bool status, String message)
-//       : super(status: status, message: message);
-//
-//   factory UserResponse.fromJson(Map<String, dynamic> json) {
-//     final statusMessageResponse = StatusMessageResponse.fromJson(json);
-//     final userJson = json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
-//     return userJson == null
-//         ? UserResponse(
-//         null, statusMessageResponse.status, statusMessageResponse.message)
-//         : UserResponse(Rekroot.fromJson(userJson),
-//         statusMessageResponse.status, statusMessageResponse.message);
-//   }
-// }
-
 class LoginResponse {
-  final String id;
+  final int id;
   final String imagePath;
   final String name;
-  final DateTime dateOfBirth;
+  final String dateOfBirth;
   final String emailAddress;
 
   LoginResponse({
@@ -98,42 +61,50 @@ class LoginResponse {
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    final String id = json.containsKey('id') ? json['id'] : '';
+    print("id === -----------------------");
+
+    final int id = json.containsKey('id') ? json['id'] : 0;
+    print("id === $id");
     final String imagePath = json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
-    final String name = json.containsKey('name') ? json['name'] ?? '' : '';
-    final String dateOfBirth = json.containsKey('userType') ? json['userType'] : '';
+    final String name = json.containsKey('fullName') ? json['fullName'] ?? '' : '';
+    print("name === $name");
+    final String dateOfBirth = json.containsKey('dob') ? json['dob'] : '';
+    print("dob === $dateOfBirth");
+
     final String emailAddress = json.containsKey('email') ? json['email'] ?? '' : '';
+    print("email === $emailAddress");
 
     return LoginResponse(
       id: id,
       imagePath: imagePath,
-      name: name,
-      dateOfBirth: dateOfBirth.isNotEmpty ? dateOfBirth.parsedDatetime : DateTime(2020),
-      emailAddress: emailAddress,
-    );
+        name: name,
+        dateOfBirth: dateOfBirth,
+        emailAddress: emailAddress,
+       );
   }
 
-  LoginResponse copyWith({
-    String? imagePath,
-    String? name,
-    // String? dateOfirth,
-    String? emailAddress,
-  }) =>
+  LoginResponse copyWith(
+      {
+        String? imagePath,
+        String? name,
+        String? dateOfBirth,
+        String? emailAddress,
+      }) =>
       LoginResponse(
         id: id,
         imagePath: imagePath ?? this.imagePath,
-        name: name ?? this.name,
-        dateOfBirth: dateOfBirth,
-        emailAddress: emailAddress ?? this.emailAddress,
+          name: name ?? this.name,
+          dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+          emailAddress: emailAddress ?? this.emailAddress,
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'imagePath': imagePath,
-        'name': name,
-        'dateOfBirth': dateOfBirth,
-        'email': emailAddress,
-      };
+    'id': id,
+    'imagePath': imagePath,
+    'fullName': name,
+    'dob': dateOfBirth,
+    'email': emailAddress,
+  };
 }
 
 class Singer {

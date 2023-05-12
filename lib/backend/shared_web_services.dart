@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 class SharedWebService {
   // final String BASE_URL = "http://reekrootsapi.triaxo.com/api";
   final String BASE_URL = "http://192.168.1.34:5069/api/";
+
   final HttpClient _client = HttpClient();
   final Duration _timeoutDuration = const Duration(seconds: 20);
 
@@ -49,16 +50,36 @@ class SharedWebService {
           [Map<String, dynamic>? body, Map<String, String>? headers]) =>
       _responseFrom(_client.postUrl, uri: uri, body: body, headers: headers);
 
+
+  Future<LoginAuthenticationResponse> signup(
+      String name,
+      String email,
+      String password,
+      String dob,
+      ) async {
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data'
+    };
+    final response = await _post(Uri.parse('$BASE_URL/Account/SignUp'),
+        {
+        'fullName': name,
+        'email': email,
+        'password': password,
+        'dob': dob,
+        });
+    final responseBody = await response.transform(utf8.decoder).join();
+    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+  }
+
   /// Login user
   Future<LoginAuthenticationResponse> login(
       String email, String password) async {
-    final response = await _post(Uri.parse("$BASE_URL/Accounts/Login"),
+    final response = await _post(Uri.parse("$BASE_URL/Account/Login"),
         {'email': email, 'password': password});
-
     final responseBody = await response.transform(utf8.decoder).join();
-    final data =
-        LoginAuthenticationResponse.fromJson(json.decode(responseBody));
-
+    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 

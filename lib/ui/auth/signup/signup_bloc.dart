@@ -1,55 +1,77 @@
 import 'package:battle_of_bands/ui/auth/signup/signup_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/snackbar_message.dart';
+import '../../../backend/server_response.dart';
+import '../../../backend/shared_web_services.dart';
+import '../../../helper/shared_preference_helper.dart';
 
 class SignupBloc extends Cubit<SignUpScreenBlocState> {
+
+  final SharedWebService _sharedWebService = SharedWebService.instance();
+
+
   /// Text Editing Controllers
-final TextEditingController nameController = TextEditingController();
-final TextEditingController dobController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
+  void togglePassword() =>
+      emit(state.copyWith(isNotShowPassword: !state.isNotShowPassword));
 
-  void togglePassword() => emit(state.copyWith(isNotShowPassword: !state.isNotShowPassword));
+  void toggleConfirmPassword() => emit(state.copyWith(
+      isNotShowConfirmPassword: !state.isNotShowConfirmPassword));
 
-  void toggleConfirmPassword() => emit(state.copyWith(isNotShowConfirmPassword: !state.isNotShowConfirmPassword));
+  SignupBloc() : super(SignUpScreenBlocState.initial());
 
-  SignupBloc():super( SignUpScreenBlocState.initial());
-  void updateEmailError(String error) => emit(state.copyWith(emailError: error));
+  void updateNameError(bool value, String errorText) =>
+      emit(state.copyWith(nameError: value, errorText: errorText));
 
-  void updateNamelError(String error) => emit(state.copyWith(nameError: error));
+  void updateDOBError(bool value, String errorText) =>
+      emit(state.copyWith(dobError: value, errorText: errorText));
 
-  void updateDOBError(String error) => emit(state.copyWith(dobError: error));
+  void updateEmailError(bool value, String errorText) =>
+      emit(state.copyWith(emailError: value, errorText: errorText));
 
-  void updatePasswordError(String error) => emit(state.copyWith(passwordError: error));
+  void updatePasswordError(bool value, String errorText) =>
+      emit(state.copyWith(passwordError: value, errorText: errorText));
 
-  void updateConfirmPasswordError(String error) => emit(state.copyWith(confirmPasswordError: error));
+  void updateConfirmPasswordError(bool value, String errorText) =>
+      emit(state.copyWith(confirmPasswordError: value, errorText: errorText));
 
-void handleDateFromDate(DateTime dateTime) {
-  print('date time==================.$dateTime');
-  final formattedDatetime = '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-  // emit(state.copyWith(dobError: ''));
-  dobController.text = formattedDatetime;
-}
-
-  void _emitSnackbar(SnackbarMessage message) {
-    emit(state.copyWith(snackbarMessage: message));
-    _sendEmptySnackbar();
+  void handleDateFromDate(DateTime dateTime) {
+    print('date time==================.$dateTime');
+    final formattedDatetime =
+        '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    // emit(state.copyWith(dobError: ''));
+    dobController.text = formattedDatetime;
   }
 
-  void _sendEmptySnackbar() =>
-      Future.delayed(const Duration(seconds: 1)).then((_) => emit(state.copyWith(snackbarMessage: const SnackbarMessage.empty())));
+
+  Future<IBaseResponse> signup() async {
+    final name = nameController.text;
+    final email = emailController.text;
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+    final dob = dobController.text;
+print("reached here ====");
+    final response = await _sharedWebService.signup(name, email, password, dob);
+    if (response.status && response.user != null) {
+      print("user not empty ${response.user}");
+      await SharedPreferenceHelper.instance().insertUser(response.user!);
+    }
+    return response;
+  }
 
   @override
   Future<void> close() {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-
-
+    nameController.dispose();
+    dobController.dispose();
     return super.close();
   }
 }
