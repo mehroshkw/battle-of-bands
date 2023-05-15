@@ -33,7 +33,9 @@ class SharedPreferenceHelper {
     }
   }
   Future<void> insertUser(LoginResponse user) async {
+    print('ghgygygy');
     final userSerialization = json.encode(user.toJson());
+    print('7777');
     _sharedPreferences?.setString(_USER, userSerialization);
   }
 

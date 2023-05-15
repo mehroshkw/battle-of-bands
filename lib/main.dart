@@ -1,4 +1,5 @@
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
+import 'package:battle_of_bands/ui/auth/change_password/change_password_screen_bloc.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_pass_bloc.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
 import 'package:battle_of_bands/ui/auth/signup/signup_bloc.dart';
 import 'package:battle_of_bands/ui/auth/signup/signup_screen.dart';
 import 'package:battle_of_bands/ui/edit_profile/edit_profile.dart';
+import 'package:battle_of_bands/ui/edit_profile/edit_profile_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_screen.dart';
 import 'package:battle_of_bands/ui/my_song_details.dart';
@@ -103,12 +105,16 @@ class _AppRouter {
       case ChangePassword.route:
         {
           const screen = ChangePassword();
-          return _getPageRoute(screen);
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => ChangePasswordScreenBloc(), child: screen));
         }
         case EditProfile.route:
         {
           const screen = EditProfile();
-          return _getPageRoute(screen);
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => EditProfileBloc(), child: screen));
         }
         case ForgetPasswordScreen.route:
         {

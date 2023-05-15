@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/app_button.dart';
 import '../../common/app_text_field.dart';
 import '../../common/custom_appbar.dart';
+import '../../data/snackbar_message.dart';
+import '../../helper/dilogue_helper.dart';
+import '../../helper/material_dialogue_content.dart';
+import '../../helper/snackbar_helper.dart';
 import '../../util/app_strings.dart';
 import '../../util/constants.dart';
 
@@ -14,6 +21,30 @@ class UploadSongScreen extends StatelessWidget {
   static const String route = '/upload_song_screen';
 
   const UploadSongScreen({Key? key}) : super(key: key);
+
+  Future<void> _addSong(
+      UploadSongBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
+    dialogHelper
+      ..injectContext(context)
+      ..showProgressDialog(AppText.UPLOADING_SONG);
+    try {
+      final response = await bloc.addNotes();
+      dialogHelper.dismissProgress();
+      final snackbarHelper = SnackbarHelper.instance..injectContext(context);
+      if (response!.status == false && response.songs == null) {
+        snackbarHelper.showSnackbar(snackbar: SnackbarMessage.error(message: response.message));
+        return;
+      }
+      snackbarHelper.showSnackbar(snackbar: SnackbarMessage.success(message: AppText.SONG_UPLOADED));
+
+    } catch (_) {
+      dialogHelper.dismissProgress();
+      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () {
+        _addSong(bloc, context, dialogHelper);
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +59,9 @@ class UploadSongScreen extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () {
-                  bloc.toggleVote();
+                onTap: () async {
+                 bloc.pickFile();
+                  // bloc.toggleVote();
                 },
                 child: BlocBuilder<UploadSongBloc, UploadSongState>(builder: (_, state) {
                   return Container(
@@ -118,14 +150,21 @@ class UploadSongScreen extends StatelessWidget {
                         fontSize: 16,
                         color: Constants.colorOnPrimary)),
               ),
-              SizedBox(
-                width: size.width,
-                height: 70,
-                child: AppTextField(
-                  hint: AppText.Enter_SONG_TITLE,
-                  textInputType: TextInputType.emailAddress,
-                  controller: bloc.songTitleController,
-                  isError: false,
+              BlocBuilder<UploadSongBloc, UploadSongState>(
+                builder: (_, state) => SizedBox(
+                  width: size.width,
+                  height: 70,
+                  child: AppTextField(
+                    hint: AppText.Enter_SONG_TITLE,
+                    textInputType: TextInputType.emailAddress,
+                    controller: bloc.songTitleController,
+                    onChanged: (String? value) {
+                      if (value == null) return;
+                      if (value.isNotEmpty && state.nameError)
+                        bloc.updateNameError(false, '');
+                    },
+                    isError: state.nameError,
+                  ),
                 ),
               ),
               Container(
@@ -179,7 +218,12 @@ class UploadSongScreen extends StatelessWidget {
                       hint: AppText.GENRE,
                       readOnly: true,
                       textInputType: TextInputType.text,
-                      isError: false,
+                      onChanged: (String? value) {
+                        if (value == null) return;
+                        if (value.isNotEmpty && state.genreError)
+                          bloc.updateGenreError(false, '');
+                      },
+                      isError: state.genreError,
                       suffixIcon: const Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: Constants.colorOnSurface,
@@ -198,14 +242,21 @@ class UploadSongScreen extends StatelessWidget {
                         fontSize: 16,
                         color: Constants.colorOnPrimary)),
               ),
-              SizedBox(
-                width: size.width,
-                height: 70,
-                child: AppTextField(
-                  hint: AppText.ENTER_PERFROMER_BAND_NAME,
-                  controller: bloc.bandNameController,
-                  textInputType: TextInputType.emailAddress,
-                  isError: false,
+              BlocBuilder<UploadSongBloc, UploadSongState>(
+                builder: (_, state) =>   SizedBox(
+                  width: size.width,
+                  height: 70,
+                  child: AppTextField(
+                    hint: AppText.ENTER_PERFROMER_BAND_NAME,
+                    controller: bloc.bandNameController,
+                    textInputType: TextInputType.text,
+                    onChanged: (String? value) {
+                      if (value == null) return;
+                      if (value.isNotEmpty && state.bandNameError)
+                        bloc.updatebBandNameError(false, '');
+                    },
+                    isError: state.bandNameError,
+                  ),
                 ),
               ),
               Container(
@@ -217,16 +268,43 @@ class UploadSongScreen extends StatelessWidget {
                         fontSize: 16,
                         color: Constants.colorOnPrimary)),
               ),
-              SizedBox(
-                width: size.width,
-                height: 70,
-                child: AppTextField(
-                  hint: AppText.URL,
-                  controller: bloc.urlController,
-                  textInputType: TextInputType.emailAddress,
-                  isError: false,
+              BlocBuilder<UploadSongBloc, UploadSongState>(
+                builder: (_, state) =>  SizedBox(
+                  width: size.width,
+                  height: 70,
+                  child: AppTextField(
+                    hint: AppText.URL,
+                    controller: bloc.urlController,
+                    textInputType: TextInputType.emailAddress,
+                    isError: false,
+                  ),
                 ),
               ),
+              BlocBuilder<UploadSongBloc, UploadSongState>(
+                  buildWhen: (previous, current) =>
+                  previous.errorText != current.errorText,
+                  builder: (_, state) {
+                    if (state.errorText.isEmpty) return const SizedBox();
+                    return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 7),
+                        margin: const EdgeInsets.only(bottom: 20, top: 15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Constants.colorError)),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.warning_amber_rounded,
+                                  color: Constants.colorError),
+                              const SizedBox(width: 5),
+                              Text(state.errorText,
+                                  style: const TextStyle(
+                                      color: Constants.colorError,
+                                      fontFamily: Constants.montserratRegular,
+                                      fontSize: 14))
+                            ]));
+                  }),
               const SizedBox(
                 height: 20,
               ),
@@ -236,6 +314,26 @@ class UploadSongScreen extends StatelessWidget {
                 child: AppButton(
                   text: AppText.UPLOAD,
                   onClick: () {
+                    final name = bloc.songTitleController.text;
+                    final bandName = bloc.bandNameController.text;
+                    final genre = bloc.genreController.text;
+                    if (name.isEmpty) {
+                      bloc.updateNameError(
+                          true, AppText.TITLE_EMPTY);
+                      return;
+                    }
+                    if (genre.isEmpty) {
+                      bloc.updateGenreError(
+                          true, AppText.GENRE_EMPTY);
+                      return;
+                    }
+                    if (bandName.isEmpty) {
+                      bloc.updatebBandNameError(
+                          true, AppText.BANDNAME_EMPTY);
+                      return;
+                    }
+
+                    _addSong(bloc, context, MaterialDialogHelper.instance());
                     // Navigator.pushNamed(context, UploadSongScreen.route);
                   },
                   color: Constants.colorPrimary,

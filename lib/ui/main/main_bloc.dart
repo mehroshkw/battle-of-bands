@@ -16,8 +16,15 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   final SharedWebService _sharedWebService = SharedWebService.instance();
   final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
 
+  int? id = 0;
+  String? name = '';
+  String? email = '';
+  String? dob = '';
+  String? img = '';
+
   MainScreenBloc() : super(MainScreenState.initial()) {
     getStatistics();
+    getUser();
   }
 
 
@@ -28,8 +35,15 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   // get user from shared preferences
   Future<void> getUser() async {
+    print("fgfgggggg");
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
+    id = user.id;
+    name = user.name;
+    email = user.emailAddress;
+    dob = user.dateOfBirth;
+    img = user.imagePath;
+    print("valueee from shared preferences======> $name, $email, $dob, $img, $id");
   }
 
 
@@ -43,5 +57,9 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   void toggleNoMusic() {
     emit(state.copyWith(isNoMusic: !state.isNoMusic));
+  }
+
+  void logout() {
+    sharedPreferenceHelper.clear();
   }
 }

@@ -23,6 +23,8 @@ class LoginBloc extends Cubit<LoginBlocState>{
  Future<IBaseResponse> login() async {
    final String email = emailController.text;
    final String password = passwordController.text;
+   print('email: $email');
+   print('pass: $password');
    final response = await _sharedWebService.login(email, password);
    print("reached here========");
    if (response.status && response.user != null) {

@@ -94,6 +94,9 @@ abstract class AppText {
       'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
 
   /// errors
+  static const String TITLE_EMPTY = "Title cannot be empty";
+  static const String BANDNAME_EMPTY = "Bandname cannot be empty";
+  static const String GENRE_EMPTY = "Genre cannot be empty";
   static const String INVALID_EMAIL = 'Invalid Email Address';
   static const String TRY_AGAIN = 'Try Again';
   static const String CANCEL = 'Cancel';
@@ -137,4 +140,11 @@ abstract class AppText {
   static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
   static const String SENDING = "Sending...";
   static const String EMAIL_SENT = "Email Sent Successfully";
+  static const String UPDATING_PASSWORD = "Updating Password...";
+  static const String PASSWORD_CHANGED = "Password Changed Successfully";
+  static const String UPDATING_PROFILE = "Updating Profile...";
+  static const String PROFILE_UPDATED = "Profile Updated Successfully";
+  static const String UPLOADING_SONG = "Uploading Song";
+  static const String SONG_UPLOADED = "Song Uploaded Successfully";
+
 }
