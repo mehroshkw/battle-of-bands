@@ -162,17 +162,16 @@ class SignupScreen extends StatelessWidget {
                       showModalBottomSheet(
                           enableDrag: false,
                           context: context,
-                          builder: (_) => SizedBox(
-                              height: context.size!.height / 3.2,
-                              child: CupertinoDatePicker(
-                                  onDateTimeChanged: bloc.handleDateFromDate,
-                                  maximumDate: DateTime(
-                                      currentDatetime.year,
-                                      currentDatetime.month,
-                                      currentDatetime.day - 1),
-                                  mode: CupertinoDatePickerMode.date,
-                                  initialDateTime:
-                                      DateTime(currentDatetime.year - 2))));
+                          builder: (_) => CupertinoDatePicker(
+                              backgroundColor: Constants.scaffoldColor,
+                              onDateTimeChanged: bloc.handleDateFromDate,
+                              maximumDate: DateTime(
+                                  currentDatetime.year,
+                                  currentDatetime.month,
+                                  currentDatetime.day - 1),
+                              mode: CupertinoDatePickerMode.date,
+                              initialDateTime:
+                                  DateTime(currentDatetime.year - 2)));
                     }
                   },
                   textInputAction: TextInputAction.done,

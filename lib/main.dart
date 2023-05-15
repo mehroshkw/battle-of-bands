@@ -1,3 +1,4 @@
+import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';
@@ -88,8 +89,10 @@ class _AppRouter {
         }
       case MySongDetailScreen.route:
         {
-          final bool isMySong=settings.arguments as bool;
-          final screen = MySongDetailScreen(isMySong: isMySong);
+          final arguments=settings.arguments as List<dynamic>;
+          final bool isMySong=arguments.first as bool;
+          final song=arguments.last as Song;
+          final screen = MySongDetailScreen(isMySong: isMySong,song: song);
           return _getPageRoute(screen);
         }
       case UploadSongScreen.route:

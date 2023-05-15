@@ -54,9 +54,8 @@ class SignupBloc extends Cubit<SignUpScreenBlocState> {
     final name = nameController.text;
     final email = emailController.text;
     final password = passwordController.text;
-    final confirmPassword = confirmPasswordController.text;
     final dob = dobController.text;
-print("reached here ====");
+    print("reached here ====");
     final response = await _sharedWebService.signup(name, email, password, dob);
     if (response.status && response.user != null) {
       print("user not empty ${response.user}");

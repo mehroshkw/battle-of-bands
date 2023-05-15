@@ -61,50 +61,43 @@ class LoginResponse {
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    print("id === -----------------------");
-
     final int id = json.containsKey('id') ? json['id'] : 0;
-    print("id === $id");
     final String imagePath = json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
     final String name = json.containsKey('fullName') ? json['fullName'] ?? '' : '';
-    print("name === $name");
     final String dateOfBirth = json.containsKey('dob') ? json['dob'] : '';
-    print("dob === $dateOfBirth");
-
     final String emailAddress = json.containsKey('email') ? json['email'] ?? '' : '';
-    print("email === $emailAddress");
-
     return LoginResponse(
       id: id,
       imagePath: imagePath,
-        name: name,
-        dateOfBirth: dateOfBirth,
-        emailAddress: emailAddress,
-       );
+      name: name,
+      dateOfBirth: dateOfBirth,
+      emailAddress: emailAddress,
+    );
   }
 
-  LoginResponse copyWith(
-      {
-        String? imagePath,
-        String? name,
-        String? dateOfBirth,
-        String? emailAddress,
-      }) =>
+  LoginResponse.empty() : this(id: 0, imagePath: '', name: '', dateOfBirth: '', emailAddress: '');
+
+  LoginResponse copyWith({
+    String? imagePath,
+    String? name,
+    String? dateOfBirth,
+    String? emailAddress,
+  }) =>
       LoginResponse(
         id: id,
         imagePath: imagePath ?? this.imagePath,
-          name: name ?? this.name,
-          dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-          emailAddress: emailAddress ?? this.emailAddress,
+        name: name ?? this.name,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        emailAddress: emailAddress ?? this.emailAddress,
       );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'imagePath': imagePath,
-    'fullName': name,
-    'dob': dateOfBirth,
-    'email': emailAddress,
-  };
+        'id': id,
+        'imagePath': imagePath,
+        'fullName': name,
+        'dob': dateOfBirth,
+        'email': emailAddress,
+      };
 }
 
 class Singer {
@@ -265,158 +258,43 @@ class Singer {
 
 class Song {
   final int id;
-  final String imagePath;
-  final String songName;
-  final String genreName;
-  final DateTime date;
-  final String votes;
-  final String emailAddress;
-  final String performerName;
+  final String title;
+  final Genre genre;
+  final String fileUrl;
+  final String date;
+  final int votesCount;
   final String bandName;
-  final int zipCode;
-  final String cityName;
-  final String stateName;
-  final String dateOfBirth;
-  final String highSchool;
-  final dynamic gpa;
-  final dynamic height;
-  final dynamic weight;
-  final String dominantFoot;
-  final String gender;
-  final String socialMediaLink;
-  dynamic rating;
+  final LoginResponse user;
 
   Song(
       {required this.id,
-      required this.imagePath,
-      required this.songName,
-      required this.genreName,
+      required this.title,
+      required this.genre,
       required this.date,
-      required this.votes,
-      required this.emailAddress,
-      required this.performerName,
+      required this.votesCount,
+      required this.user,
       required this.bandName,
-      required this.zipCode,
-      required this.cityName,
-      required this.stateName,
-      required this.dateOfBirth,
-      required this.highSchool,
-      required this.gpa,
-      required this.height,
-      required this.weight,
-      required this.dominantFoot,
-      required this.gender,
-      required this.socialMediaLink,
-      required this.rating});
+      required this.fileUrl});
 
   factory Song.fromJson(Map<String, dynamic> json) {
-    final int id = json.containsKey('id') ? json['id'] : 0;
-    final String imagePath = json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
-    final String songName = json.containsKey('songName') ? json['songName'] ?? '' : '';
-    final String genreName = json.containsKey('genreName') ? json['genreName'] ?? '' : '';
-    final String date = json.containsKey('position1') ? json['position1'] ?? '' : '';
-    final String votes = json.containsKey('position2') ? json['position2'] ?? '' : '';
-    final String emailAddress = json.containsKey('emailAddress') ? json['emailAddress'] ?? '' : '';
-    final String performerName = json.containsKey('phoneNumber') ? json['phoneNumber'] ?? '' : '';
-    final String bandName = json.containsKey('graduationYear') ? json['graduationYear'] ?? '' : '';
-    final int zipCode = json.containsKey('zipCode') ? json['zipCode'] ?? 0.0 : '';
-    final String cityName = json.containsKey('cityName') ? json['cityName'] ?? '' : '';
-    final String stateName = json.containsKey('stateName') ? json['stateName'] ?? '' : '';
-    final String dateOfBirth = json.containsKey('dateOfBirth') ? json['dateOfBirth'] ?? '' : '';
-    final String highSchool = json.containsKey('highSchool') ? json['highSchool'] ?? '' : '';
-    final dynamic gpa = json.containsKey('gpa') ? json['gpa'] ?? '' : 0.0;
-    final dynamic height = json.containsKey('height') ? json['height'] ?? '' : 0.0;
-    final dynamic weight = json.containsKey('weight') ? json['weight'] ?? '' : 0.0;
-    final String dominantFoot = json.containsKey('dominantFoot') ? json['dominantFoot'] ?? '' : '';
-    final String gender = json.containsKey('gender') ? json['gender'] ?? '' : '';
-    final String socialMediaLink = json.containsKey('socialMediaLink') ? json['socialMediaLink'] ?? '' : '';
-    final dynamic rating = json.containsKey('rating') ? json['rating'] ?? 0.0 : 0.0;
+    final int id = json.containsKey('id') ? json['id'] ?? 0 : 0;
+    final String title = json.containsKey('title') ? json['title'] ?? '' : '';
+    final String date = json.containsKey('date') ? (json['date']) ?? '' : '';
+    final int votesCount = json.containsKey('votesCount') ? json['votesCount'] ?? 0 : 0;
+    final String fileUrl = json.containsKey('fileUrl') ? json['fileUrl'] ?? '' : '';
+    final String bandName = json.containsKey('bandName') ? json['bandName'] ?? '' : '';
+    final Genre genre = json.containsKey('genre') ?json['genre'] =='null'? Genre.empty(): Genre.empty() : Genre.empty();
+    final LoginResponse user = json.containsKey('appUser') ?json['appUser']=='null'? LoginResponse.empty():LoginResponse.empty() : LoginResponse.empty();
 
-    return Song(
-      id: id,
-      imagePath: imagePath,
-      songName: songName,
-      genreName: genreName,
-      date: date.isNotEmpty ? date.parsedDatetime : DateTime(2020),
-      votes: votes,
-      emailAddress: emailAddress,
-      performerName: performerName,
-      bandName: bandName,
-      zipCode: zipCode,
-      cityName: cityName,
-      stateName: stateName,
-      dateOfBirth: dateOfBirth,
-      highSchool: highSchool,
-      gpa: gpa,
-      height: height,
-      weight: weight,
-      dominantFoot: dominantFoot,
-      gender: gender,
-      socialMediaLink: socialMediaLink,
-      rating: rating,
-    );
+    return Song(id: id, title: title, votesCount: votesCount, date: date, genre: genre, fileUrl: fileUrl, user: user, bandName: bandName);
   }
 
   Song copyWith({
-    String? image,
-    String? songName,
-    String? genreName,
-    // String? date,
-    String? votes,
-    String? emailAddress,
-    String? performerName,
-    String? bandName,
-    String? cityName,
-    String? stateName,
-    String? dateOfBirth,
-    String? highSchool,
-    String? dominantFoot,
-    String? gender,
-    String? socialMediaLink,
-    dynamic rating,
+    int? votesCount,
   }) =>
-      Song(
-        id: id,
-        imagePath: imagePath,
-        songName: songName ?? this.songName,
-        genreName: genreName ?? this.genreName,
-        date: date,
-        votes: votes ?? this.votes,
-        emailAddress: emailAddress ?? this.emailAddress,
-        performerName: performerName ?? this.performerName,
-        bandName: bandName ?? this.bandName,
-        zipCode: zipCode,
-        cityName: cityName ?? this.cityName,
-        stateName: stateName ?? this.stateName,
-        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-        highSchool: highSchool ?? this.highSchool,
-        gpa: gpa,
-        height: height,
-        weight: weight,
-        dominantFoot: dominantFoot ?? this.dominantFoot,
-        gender: gender ?? this.gender,
-        socialMediaLink: socialMediaLink ?? this.socialMediaLink,
-        rating: rating ?? this.rating,
-      );
+      Song(id: id, fileUrl: fileUrl, user: user, title: title, genre: genre, date: date, votesCount: votesCount ?? this.votesCount, bandName: bandName);
 
-  Map<String, dynamic> toJson() => {
-        'productId': id,
-        'imagePath': imagePath,
-        'songName': songName,
-        'genreName': genreName,
-        'date': date,
-        'emailAddress': emailAddress,
-        'performerName': performerName,
-        'graduationYear': bandName,
-        'zipCode': zipCode,
-        'cityName': cityName,
-        'stateName': stateName,
-        'dateOfBirth': dateOfBirth,
-        'location': highSchool,
-        'gpa': gpa,
-        'height': height,
-        'weight': weight,
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'title': title, 'date': date, 'votesCount': votesCount, 'fileUrl': fileUrl, 'bandName': bandName, 'appUser': user};
 }
 
 class Statistics {
@@ -437,50 +315,20 @@ class Statistics {
   }
 }
 
-// class PlayersResponse {
-//   final int playerId;
-//   final int id;
-//   final int teamId;
-//   final Singer player;
-//
-//   PlayersResponse({
-//     required this.playerId,
-//     required this.id,
-//     required this.teamId,
-//     required this.player,
-//   });
-//
-//   factory PlayersResponse.fromJson(Map<String, dynamic> json) {
-//
-//     final int playerId = json.containsKey('playerId') ? json['playerId'] : -1;
-//     final int id = json.containsKey('id') ? json['id']  : -1;
-//     final int teamId = json.containsKey('teamId') ? json['teamId'] : -1;
-//     final Singer player = Singer.fromJson(json['player']);
-//
-//
-//     return PlayersResponse(
-//       playerId: playerId,
-//       id: id,
-//       teamId: teamId,
-//       player:player,
-//     );
-//   }
-//
-//   PlayersResponse copyWith(
-//       { Singer? player,
-//       }) =>
-//       PlayersResponse(
-//         id: id,
-//         playerId:playerId,
-//         teamId: teamId,
-//         player: player??this.player
-//       );
-//
-//   Map<String, dynamic> toJson() => {
-//     'playerId': playerId,
-//     'id': id,
-//     'teamId': teamId,
-//     'player': player,
-//
-//   };
-// }
+class Genre {
+  final int id;
+  final String title;
+  final bool isActive;
+
+  Genre({required this.id, required this.title, required this.isActive});
+
+  Genre.empty() : this(id: 0, title: '', isActive: false);
+
+  factory Genre.fromJson(Map<String, dynamic> json) {
+    final int id = json.containsKey('id') ? json['id'] ?? -1 : -1;
+    final String title = json.containsKey('title') ? json['title'] ?? '' : '';
+    final bool isActive = json.containsKey('isActive') ? json['isActive'] ?? true : true;
+
+    return Genre(id: id, title: title, isActive: isActive);
+  }
+}

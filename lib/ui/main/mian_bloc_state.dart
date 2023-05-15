@@ -1,40 +1,68 @@
 import 'package:battle_of_bands/backend/server_response.dart';
-import 'package:battle_of_bands/backend/shared_web_services.dart';
+import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:equatable/equatable.dart';
 
 class MainScreenState extends Equatable {
   final int index;
   final bool isVote;
   final bool isNoMusic;
-  final int totalUploads;
-  final int totalWins;
-  final int totalLoses;
-  final int totalBattles;
   final Statistics statistics;
+  final List<Genre> allGenre;
+  final int userId;
+  final String userName;
+  final String userEmail;
+  final DataEvent leaderBoardDataEvent;
+  final DataEvent mySongDataEvent;
 
   const MainScreenState(
       {required this.index,
       required this.isVote,
       required this.isNoMusic,
-      required this.totalWins,
-      required this.totalLoses,
-      required this.totalUploads,
-        required this.statistics,
-      required this.totalBattles});
+      required this.statistics,
+      required this.allGenre,
+      required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.leaderBoardDataEvent,
+      required this.mySongDataEvent});
 
-   MainScreenState.initial() : this(index: 0, isVote: false, isNoMusic: true, totalUploads: 0, totalWins: 0, totalLoses: 0, totalBattles: 0,statistics:  Statistics(totalUploads: 0, totalWins: 0, totalBattles: 0, totalLoses: 0));
+  MainScreenState.initial()
+      : this(
+            index: 0,
+            isVote: false,
+            isNoMusic: true,
+            statistics: Statistics(totalUploads: 0, totalWins: 0, totalBattles: 0, totalLoses: 0),
+            allGenre: <Genre>[],
+            userId: -1,
+            userName: '',
+            userEmail: '',
+            leaderBoardDataEvent: const Initial(),
+            mySongDataEvent: const Initial());
 
-  MainScreenState copyWith({int? index, bool? isVote, bool? isNoMusic, int? totalUploads, int? totalWins, int? totalLoses, int? totalBattles,Statistics? statistics}) => MainScreenState(
-      index: index ?? this.index,
-      isVote: isVote ?? this.isVote,
-      statistics: statistics??this.statistics,
-      isNoMusic: isNoMusic ?? this.isNoMusic,
-      totalLoses: totalLoses ?? this.totalLoses,
-      totalWins: totalWins ?? this.totalWins,
-      totalUploads: totalUploads ?? this.totalUploads,
-      totalBattles: totalBattles ?? this.totalBattles);
+  MainScreenState copyWith(
+          {int? index,
+          bool? isVote,
+          bool? isNoMusic,
+          Statistics? statistics,
+          List<Genre>? allGenre,
+          int? userId,
+          String? userName,
+          String? userEmail,
+          DataEvent? leaderBoardDataEvent,
+          DataEvent? mySongDataEvent}) =>
+      MainScreenState(
+          index: index ?? this.index,
+          isVote: isVote ?? this.isVote,
+          statistics: statistics ?? this.statistics,
+          isNoMusic: isNoMusic ?? this.isNoMusic,
+          userName: userName ?? this.userName,
+          userEmail: userEmail ?? this.userEmail,
+          userId: userId ?? this.userId,
+          allGenre: allGenre ?? this.allGenre,
+          leaderBoardDataEvent: leaderBoardDataEvent ?? this.leaderBoardDataEvent,
+          mySongDataEvent: mySongDataEvent ?? this.mySongDataEvent);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [index, isVote, isNoMusic, totalBattles, totalUploads, totalWins, totalLoses,statistics];
+  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent];
 }

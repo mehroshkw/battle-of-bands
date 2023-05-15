@@ -7,13 +7,12 @@ import 'package:http/http.dart' as http;
 
 class SharedWebService {
   // final String BASE_URL = "http://reekrootsapi.triaxo.com/api";
-  final String BASE_URL = "http://192.168.1.34:5069/api/";
+  final String BASE_URL = "http://192.168.1.2:5069/api";
 
   final HttpClient _client = HttpClient();
   final Duration _timeoutDuration = const Duration(seconds: 20);
 
-  final SharedPreferenceHelper _sharedPrefHelper =
-      SharedPreferenceHelper.instance();
+  final SharedPreferenceHelper _sharedPrefHelper = SharedPreferenceHelper.instance();
 
   Future<LoginResponse?> get _loginResponse => _sharedPrefHelper.user;
 
@@ -26,87 +25,58 @@ class SharedWebService {
     return _instance!;
   }
 
-  Future<HttpClientResponse> _responseFrom(
-          Future<HttpClientRequest> Function(Uri) toCall,
-          {required Uri uri,
-          Map<String, dynamic>? body,
-          Map<String, String>? headers}) =>
+  Future<HttpClientResponse> _responseFrom(Future<HttpClientRequest> Function(Uri) toCall, {required Uri uri, Map<String, dynamic>? body, Map<String, String>? headers}) =>
       toCall(uri).then((request) {
         if (headers != null) {
           headers.forEach((key, value) => request.headers.add(key, value));
         }
         if (request.method == 'POST' && body != null) {
-          request.headers.contentType =
-              ContentType('application', 'json', charset: 'utf-8');
+          request.headers.contentType = ContentType('application', 'json', charset: 'utf-8');
           request.add(utf8.encode(json.encode(body)));
         }
         return request.close();
       }).timeout(_timeoutDuration);
 
-  Future<HttpClientResponse> _get(Uri uri, [Map<String, String>? headers]) =>
-      _responseFrom(_client.getUrl, uri: uri, headers: headers);
+  Future<HttpClientResponse> _get(Uri uri, [Map<String, String>? headers]) => _responseFrom(_client.getUrl, uri: uri, headers: headers);
 
-  Future<HttpClientResponse> _post(Uri uri,
-          [Map<String, dynamic>? body, Map<String, String>? headers]) =>
-      _responseFrom(_client.postUrl, uri: uri, body: body, headers: headers);
-
+  Future<HttpClientResponse> _post(Uri uri, [Map<String, dynamic>? body, Map<String, String>? headers]) => _responseFrom(_client.postUrl, uri: uri, body: body, headers: headers);
 
   Future<LoginAuthenticationResponse> signup(
-      String name,
-      String email,
-      String password,
-      String dob,
-      ) async {
-    final headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'multipart/form-data'
-    };
-    final response = await _post(Uri.parse('$BASE_URL/Account/SignUp'),
-        {
-        'fullName': name,
-        'email': email,
-        'password': password,
-        'dob': dob,
-        });
+    String name,
+    String email,
+    String password,
+    String dob,
+  ) async {
+    final response = await _post(Uri.parse('$BASE_URL/Account/SignUp'), {
+      'fullName': name,
+      'email': email,
+      'password': password,
+      'dob': dob,
+    });
     final responseBody = await response.transform(utf8.decoder).join();
     final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
   /// Login user
-  Future<LoginAuthenticationResponse> login(
-      String email, String password) async {
-    final response = await _post(Uri.parse("$BASE_URL/Account/Login"),
-        {'email': email, 'password': password});
+  Future<LoginAuthenticationResponse> login(String email, String password) async {
+    final response = await _post(Uri.parse("$BASE_URL/Account/Login"), {'email': email, 'password': password});
     final responseBody = await response.transform(utf8.decoder).join();
     final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
   /// Change Password
-  Future<IBaseResponse> changePassword(
-      String currentPassword, String newPassword) async {
+  Future<IBaseResponse> changePassword(String currentPassword, String newPassword) async {
     final loginResponse = await _loginResponse;
     if (loginResponse == null) throw const IdNotFoundException();
-    final response =
-        await _post(Uri.parse('$BASE_URL/Accounts/ChangePassword'), {
-      'userId': loginResponse.id,
-      'currentPassword': currentPassword,
-      'newPassword': newPassword
-    });
+    final response = await _post(Uri.parse('$BASE_URL/Accounts/ChangePassword'), {'userId': loginResponse.id, 'currentPassword': currentPassword, 'newPassword': newPassword});
     final responseBody = await response.transform(utf8.decoder).join();
     return StatusMessageResponse.fromJson(json.decode(responseBody));
   }
 
   /// Edit Profile
-  Future<LoginAuthenticationResponse> editProfile(
-      String? id,
-      String name,
-      String schoolName,
-      String email,
-      String userName,
-      String password,
-      String imagePath) async {
+  Future<LoginAuthenticationResponse> editProfile(String? id, String name, String schoolName, String email, String userName, String password, String imagePath) async {
     final body = {
       'id': id,
       'name': name,
@@ -123,12 +93,29 @@ class SharedWebService {
   }
 
   Future<Statistics> getStatistics(int userId) async {
-    final uri = Uri.parse('${BASE_URL}Dashboard/GetStatistics?appUserId=$userId');
+    final uri = Uri.parse('$BASE_URL/Dashboard/GetStatistics?appUserId=$userId');
     final response = await _get(uri);
-    final responseBody=json.decode(await response.transform(utf8.decoder).join());
-    print('responsebody==========>$responseBody');
+    final responseBody = json.decode(await response.transform(utf8.decoder).join());
     return Statistics.fromJson(responseBody);
   }
+  Future<List<Genre>> getAllGenre() async {
+    final uri = Uri.parse('$BASE_URL/Genre/GetAllGenre');
+    final response = await _get(uri);
+    final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    return (responseBody as List<dynamic>).map((e) => Genre.fromJson(e)).toList();
+  }
+  Future<List<Song>> getLeaderboard(int genreId,int userId) async {
+    final uri = Uri.parse('$BASE_URL/Dashboard/GetLeaderboard?appUserId=$userId&genreId=$genreId');
+    final response = await _get(uri);
+    final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+  }
+  Future<List<Song>> getAllMySongs(int genreId,int userId) async {
+    print('genre id---->$genreId');
+    final uri = Uri.parse('$BASE_URL/Song/GetAllMySongs?appUserId=4&genreId=$genreId');
+    final response = await _get(uri);
+    final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    print('response --------->$responseBody');
+    return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+  }
 }
-
-

@@ -42,7 +42,7 @@ abstract class AppText {
   static const String BATTLES = 'Battles';
   static const String GENRE = 'Genre';
   static const String SONG_NAME = "Designer's Life eps.5";
-  static const String PERFORMER_BAND = "Performer/Band Name";
+  static const String PERFORMER_BAND = "Performer/";
   static const String SONG_START_TIME = "00:20";
   static const String SONG_START = "00:10 - 00:20";
   static const String SONG_END_TIME = "00:30";
@@ -50,7 +50,8 @@ abstract class AppText {
 
   /// All songs
   static const String MY_SONG = 'My Song';
-  static const String VOTES = 'Votes 98';
+  static const String SONG = 'Song';
+  static const String VOTES = 'Votes';
   static const String TODAY = 'Today';
   static const String DATE = '09 Feb 2023';
   static const String NO_SONG = 'No Song';
@@ -126,7 +127,7 @@ abstract class AppText {
       "Are You Sure you want to \nVote for Designer's";
 
   ///Home Screen
-  static const String PERFORMER_BANDNAME = "Performer/Band Name";
+  static const String PERFORMER_BANDNAME = "Performer/";
 
   /// snackbar messages
   static const String SUCCESSFULLY_LOGGED_IN = "Logged In Successfully";
@@ -135,4 +136,5 @@ abstract class AppText {
   static const String NAME_EMPTY = "Name cannot be empty";
   static const String DOB_EMPTY = "DOB cannot be empty";
   static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
+  static const String LEADERBOARD_RANKING_CONTENT = "Leaderboard ranking not show right now. if you upload songs then rank of your song show here ...";
 }

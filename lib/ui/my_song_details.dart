@@ -1,3 +1,4 @@
+import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,15 @@ import '../util/constants.dart';
 class MySongDetailScreen extends StatelessWidget {
   static const String route = '/my_song_details_screen';
   final bool isMySong;
+  final Song song;
 
-  const MySongDetailScreen({Key? key,required this.isMySong}) : super(key: key);
+  const MySongDetailScreen({Key? key,required this.isMySong,required this.song}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     return  Scaffold(
-      appBar:  CustomAppbar(screenName:isMySong? AppText.MY_SONG:'Song',),
+      appBar:  CustomAppbar(screenName:isMySong? AppText.MY_SONG:AppText.SONG),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -22,9 +24,9 @@ class MySongDetailScreen extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10.0),
-              child: const Text(
-                AppText.GENRE_NAME,
-                style: TextStyle(
+              child:  Text(
+                song.genre.title,
+                style: const TextStyle(
                   fontFamily: Constants.montserratRegular,
                   color: Constants.colorPrimary,
                   fontSize: 18
@@ -36,7 +38,7 @@ class MySongDetailScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  AppText.DATE,
+                  song.date,
                   style: TextStyle(
                     fontFamily: Constants.montserratLight,
                     color: Constants.colorOnSurface.withOpacity(0.7),
@@ -58,10 +60,10 @@ class MySongDetailScreen extends StatelessWidget {
           ),
         ),
             const SizedBox(height: 20,),
-            const Text(
-              AppText.SONG_NAME,
+             Text(
+              song.title,
               textAlign: TextAlign.left,
-              style: TextStyle(
+              style: const TextStyle(
                   fontFamily: Constants.montserratSemibold,
                   fontSize: 28,
                   color: Constants.colorOnPrimary),
@@ -69,7 +71,7 @@ class MySongDetailScreen extends StatelessWidget {
              Padding(
                padding: const EdgeInsets.all(8.0),
                child: Text(
-                AppText.PERFORMER_BAND,
+                '${AppText.PERFORMER_BAND }${song.bandName}',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontFamily: Constants.montserratLight,
@@ -77,12 +79,12 @@ class MySongDetailScreen extends StatelessWidget {
                     color: Constants.colorOnSurface.withOpacity(0.8)),
             ),
              ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 15.0),
+             Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
               child: Text(
-                AppText.VOTE_98,
+                '${AppText.VOTE } ${song.votesCount}',
                 textAlign: TextAlign.left,
-                style: TextStyle(
+                style: const TextStyle(
                     fontFamily: Constants.montserratRegular,
                     fontSize: 16,
                     color: Constants.colorPrimary),
