@@ -104,8 +104,54 @@ class BattleScreen extends StatelessWidget {
                 if (battleDataEvent is Loading) {
                   return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
                 } else if (battleDataEvent is Empty || battleDataEvent is Initial) {
-                  return const Text(AppText.BATTLE_CONTENT,
-                      textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface));
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/no_music.png",
+                        height: 70,
+                        width: 70,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          AppText.NO_SONG,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: Constants.montserratRegular,
+                            color: Constants.colorOnSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(6.0),
+                        child: Text(
+                          AppText.SELECT_A_GENRE,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: Constants.montserratRegular,
+                            color: Constants.colorOnSurface,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        AppText.DUMMY_SONG_DESC,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: Constants.montserratLight,
+                          color: Constants.colorOnSurface.withOpacity(0.8),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  );
                 } else if (battleDataEvent is Data) {
                   final items = battleDataEvent.data as List<Song>;
                   return ListView.builder(
@@ -262,7 +308,7 @@ class SongWidget extends StatelessWidget {
                   left: 20.0,
                 ),
                 child: CustomCheckbox(
-                  isChecked: song.isVoted,
+                  isChecked: !song.isVoted,
                   onChanged: (bool? value) {
                     if (value == null) return;
                       onChanged.call();
