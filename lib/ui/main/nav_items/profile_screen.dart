@@ -2,7 +2,6 @@ import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
 import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
 import 'package:battle_of_bands/ui/main/mian_bloc_state.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
                   );
                 }),
             BlocBuilder<MainScreenBloc, MainScreenState>(
-              buildWhen: (previous, current) => previous.userName != current.userName,
+              // buildWhen: (previous, current) => previous.userName != current.userName,
               builder: (_, state) => Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
@@ -95,13 +94,13 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 BlocBuilder<MainScreenBloc, MainScreenState>(
-                  buildWhen: (previous, current) => previous.userEmail != current.userEmail,
+                  // buildWhen: (previous, current) => previous.userEmail != current.userEmail,
                   builder: (_, state) => Text(
                     state.userEmail,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontFamily: Constants.montserratLight,
-                      color: Constants.colorOnSurface.withOpacity(0.7),
+                      color: Constants.colorText
                     ),
                   ),
                 ),
@@ -125,13 +124,13 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 BlocBuilder<MainScreenBloc, MainScreenState>(
-                  buildWhen: (previous, current) => previous.userDb != current.userDb,
+                  // buildWhen: (previous, current) => previous.userDb != current.userDb,
                   builder: (_, state) => Text(
                     state.userDb,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontFamily: Constants.montserratLight,
-                      color: Constants.colorOnSurface.withOpacity(0.7),
+                      color: Constants.colorText,
                     ),
                   ),
                 ),

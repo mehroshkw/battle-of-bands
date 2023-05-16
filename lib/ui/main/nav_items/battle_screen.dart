@@ -103,7 +103,7 @@ class BattleScreen extends StatelessWidget {
                 final battleDataEvent = state.battleDataEvent;
                 if (battleDataEvent is Loading) {
                   return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
-                } else if (battleDataEvent is Empty) {
+                } else if (battleDataEvent is Empty || battleDataEvent is Initial) {
                   return const Text(AppText.BATTLE_CONTENT,
                       textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface));
                 } else if (battleDataEvent is Data) {
@@ -194,7 +194,11 @@ class SongWidget extends StatelessWidget {
                         child: Text(
                           '${AppText.PERFORMER_BAND}${song.bandName}',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 16, color: Constants.colorOnPrimary),
+
+                          style: const TextStyle(
+                              fontFamily: Constants.montserratLight,
+                              fontSize: 16,
+                              color: Constants.colorText),
                         ),
                       ),
                     ),
@@ -209,19 +213,19 @@ class SongWidget extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: const [
               Text(
                 AppText.SONG_START_TIME,
                 style: TextStyle(
                   fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface.withOpacity(0.7),
+                  color: Constants.colorText,
                 ),
               ),
               Text(
                 AppText.SONG_END_TIME,
                 style: TextStyle(
                   fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface.withOpacity(0.7),
+                  color: Constants.colorText,
                 ),
               ),
             ],

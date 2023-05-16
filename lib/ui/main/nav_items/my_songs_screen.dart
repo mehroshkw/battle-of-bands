@@ -81,7 +81,7 @@ class AllSongsScreen extends StatelessWidget {
         final mySongDataEvent = state.mySongDataEvent;
         if (mySongDataEvent is Loading) {
           return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
-        } else if (mySongDataEvent is Empty) {
+        } else if (mySongDataEvent is Empty || mySongDataEvent is Initial) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,17 +160,22 @@ class AllSongsScreen extends StatelessWidget {
         }
       }),
       BlocBuilder<MainScreenBloc, MainScreenState>(
-        builder: (_, state) => SizedBox(
-          width: size.width - 30,
-          height: 50,
-          child: AppButton(
-            text: 'Upload Song',
-            onClick: () {
-              Navigator.pushNamed(context, UploadSongScreen.route);
-            },
-            color: Constants.colorPrimary,
-          ),
-        ),
+        builder: (_, state) =>
+            SizedBox(
+              width: size.width - 30,
+              height: 50,
+              child: AppButton(
+                text: 'Upload Song',
+                onClick: () {
+
+                  final bool result = Navigator.pushNamed(context, UploadSongScreen.route) as bool;
+                  if(result) {
+                    bloc.getAllGenre();
+                  }
+                },
+                color: Constants.colorPrimary,
+              ),
+            ),
       )
     ]);
   }

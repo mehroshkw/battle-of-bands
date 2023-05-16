@@ -22,6 +22,7 @@ abstract class Constants {
   static const Color colorOnBorder = Color(0xff707070);
   static const Color colorGradientDark = Color(0xff665c51);
   static const Color colorTextLight = Color(0xff3D3D3D);
+  static const Color colorText = Color(0xffaa9a9a);
   static const Color colorGreen = Color(0xff1a8907);
   static const Color colorYellow = Color(0xffFFD800);
   static const Color colorTextLight2 = Color(0xffE5E5E5);

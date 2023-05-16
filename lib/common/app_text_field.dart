@@ -62,7 +62,7 @@ class AppTextField extends StatelessWidget {
                   focusedBorder: InputBorder.none,
                   hintText: hint,
                   hintStyle: const TextStyle(
-                      color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 13)),
+                      color: Constants.colorText, fontFamily: Constants.montserratRegular, fontSize: 13)),
             )),
             suffixIcon != null
                 ? GestureDetector(
@@ -176,7 +176,7 @@ class GenreField extends StatelessWidget {
                       focusedBorder: InputBorder.none,
                       hintText: hint,
                       hintStyle: const TextStyle(
-                          color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 13)),
+                          color: Constants.colorText, fontFamily: Constants.montserratRegular, fontSize: 13)),
                 )),
             suffixIcon != null
                 ? GestureDetector(

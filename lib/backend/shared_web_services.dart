@@ -112,7 +112,6 @@ class SharedWebService {
     request.fields.addAll(body);
     final response = await request.send();
     final responseData = await response.stream.bytesToString();
-    print("responsedata === $responseData");
     return LoginAuthenticationResponse.fromJson(json.decode(responseData));
   }
 
@@ -139,6 +138,7 @@ class SharedWebService {
   }
 
   Future<List<Song>> getAllMySongs(int genreId, int userId) async {
+
     final uri = Uri.parse('$BASE_URL/Song/GetAllMySongs?appUserId=$userId&genreId=$genreId');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
@@ -163,10 +163,8 @@ class SharedWebService {
     final headers = {'Accept': 'application/json', 'Content-Type': 'multipart/form-data'};
     final uri = Uri.parse('$BASE_URL/Song/AddSong');
     final request = http.MultipartRequest('POST', uri);
-    if (song.isNotEmpty) {
-      final uploadSong = await http.MultipartFile.fromPath('fileUrl', song);
-      request.files.add(uploadSong);
-    }
+      final uploadSong = await http.MultipartFile.fromPath('AudioFile', song);
+    request.files.add(uploadSong);
     request.headers.addAll(headers);
     request.fields.addAll(body);
     final response = await request.send();

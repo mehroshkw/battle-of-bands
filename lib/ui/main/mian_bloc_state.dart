@@ -86,5 +86,6 @@ class MainScreenState extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent, userDb, userImage, battleDataEvent, snackbarMessage];
+  List<Object?> get props =>
+      [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent, userDb, userImage, battleDataEvent, snackbarMessage, userName, userId, userEmail];
 }

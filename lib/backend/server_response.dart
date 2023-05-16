@@ -13,7 +13,8 @@ abstract class IBaseResponse {
 }
 
 class StatusMessageResponse extends IBaseResponse {
-  StatusMessageResponse({required bool status, required String message}) : super(status, message);
+  StatusMessageResponse({required bool status, required String message})
+      : super(status, message);
 
   factory StatusMessageResponse.fromJson(Map<String, dynamic> json) {
     final bool status = json.containsKey('status') ? json['status'] : false;
@@ -30,16 +31,20 @@ class StatusMessageResponse extends IBaseResponse {
 class LoginAuthenticationResponse extends StatusMessageResponse {
   final LoginResponse? user;
 
-  LoginAuthenticationResponse(this.user, bool status, String message) : super(status: status, message: message);
+  LoginAuthenticationResponse(this.user, bool status, String message)
+      : super(status: status, message: message);
 
   factory LoginAuthenticationResponse.fromJson(
     Map<String, dynamic> json,
   ) {
     final statusMessageResponse = StatusMessageResponse.fromJson(json);
-    final userJson = json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
+    final userJson =
+        json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
     return userJson == null
-        ? LoginAuthenticationResponse(null, statusMessageResponse.status, statusMessageResponse.message)
-        : LoginAuthenticationResponse(LoginResponse.fromJson(userJson), statusMessageResponse.status, statusMessageResponse.message);
+        ? LoginAuthenticationResponse(
+            null, statusMessageResponse.status, statusMessageResponse.message)
+        : LoginAuthenticationResponse(LoginResponse.fromJson(userJson),
+            statusMessageResponse.status, statusMessageResponse.message);
   }
 }
 
@@ -52,10 +57,14 @@ class AddSongResponse extends StatusMessageResponse {
     Map<String, dynamic> json,
   ) {
     final statusMessageResponse = StatusMessageResponse.fromJson(json);
-    final songsJson = json.containsKey('dataList') ? json['dataList'] as Map<String, dynamic>? : null;
+    final songsJson = json.containsKey('dataList')
+        ? json['dataList'] as Map<String, dynamic>?
+        : null;
     return songsJson == null
-        ? AddSongResponse(null, statusMessageResponse.status, statusMessageResponse.message)
-        : AddSongResponse(Song.fromJson(songsJson), statusMessageResponse.status, statusMessageResponse.message);
+        ? AddSongResponse(
+            null, statusMessageResponse.status, statusMessageResponse.message)
+        : AddSongResponse(Song.fromJson(songsJson),
+            statusMessageResponse.status, statusMessageResponse.message);
   }
 }
 
@@ -76,10 +85,13 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     final int id = json.containsKey('id') ? json['id'] : 0;
-    final String imagePath = json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
-    final String name = json.containsKey('fullName') ? json['fullName'] ?? '' : '';
+    final String imagePath =
+        json.containsKey('imagePath') ? json['imagePath'] ?? '' : '';
+    final String name =
+        json.containsKey('fullName') ? json['fullName'] ?? '' : '';
     final String dateOfBirth = json.containsKey('dob') ? json['dob'] : '';
-    final String emailAddress = json.containsKey('email') ? json['email'] ?? '' : '';
+    final String emailAddress =
+        json.containsKey('email') ? json['email'] ?? '' : '';
     return LoginResponse(
       id: id,
       imagePath: imagePath,
@@ -89,7 +101,8 @@ class LoginResponse {
     );
   }
 
-  LoginResponse.empty() : this(id: 0, imagePath: '', name: '', dateOfBirth: '', emailAddress: '');
+  LoginResponse.empty()
+      : this(id: 0, imagePath: '', name: '', dateOfBirth: '', emailAddress: '');
 
   LoginResponse copyWith({
     String? imagePath,
@@ -120,15 +133,26 @@ class Statistics {
   final int totalLoses;
   final int totalBattles;
 
-  Statistics({required this.totalUploads, required this.totalWins, required this.totalBattles, required this.totalLoses});
+  Statistics(
+      {required this.totalUploads,
+      required this.totalWins,
+      required this.totalBattles,
+      required this.totalLoses});
 
   factory Statistics.fromJson(Map<String, dynamic> json) {
-    final int totalUploads = json.containsKey('totalUploads') ? json['totalUploads'] : 0;
+    final int totalUploads =
+        json.containsKey('totalUploads') ? json['totalUploads'] : 0;
     final int totalWins = json.containsKey('totalWins') ? json['totalWins'] : 0;
-    final int totalLoses = json.containsKey('totalLosses') ? json['totalLosses'] : 0;
-    final int totalBattles = json.containsKey('totalBattles') ? json['totalBattles'] : 0;
+    final int totalLoses =
+        json.containsKey('totalLosses') ? json['totalLosses'] : 0;
+    final int totalBattles =
+        json.containsKey('totalBattles') ? json['totalBattles'] : 0;
 
-    return Statistics(totalBattles: totalBattles, totalLoses: totalLoses, totalUploads: totalUploads, totalWins: totalWins);
+    return Statistics(
+        totalBattles: totalBattles,
+        totalLoses: totalLoses,
+        totalUploads: totalUploads,
+        totalWins: totalWins);
   }
 }
 
@@ -178,7 +202,16 @@ class Song {
       bandName: bandName,
       isVoted: isVoted ?? this.isVoted);
 
-  Map<String, dynamic> toJson() => {'id': id, 'title': title, 'date': date, 'votesCount': votesCount, 'fileUrl': fileUrl, 'bandName': bandName, 'appUser': user};
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'date': date,
+        'votesCount': votesCount,
+        'fileUrl': fileUrl,
+        'bandName': bandName,
+        'appUser': user
+      };
 }
 
 class Genre {
@@ -193,7 +226,8 @@ class Genre {
   factory Genre.fromJson(Map<String, dynamic> json) {
     final int id = json.containsKey('id') ? json['id'] ?? -1 : -1;
     final String title = json.containsKey('title') ? json['title'] ?? '' : '';
-    final bool isActive = json.containsKey('isActive') ? json['isActive'] ?? true : true;
+    final bool isActive =
+        json.containsKey('isActive') ? json['isActive'] ?? true : true;
 
     return Genre(id: id, title: title, isActive: isActive);
   }

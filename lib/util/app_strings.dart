@@ -140,8 +140,8 @@ abstract class AppText {
   static const String NAME_EMPTY = "Name cannot be empty";
   static const String DOB_EMPTY = "DOB cannot be empty";
   static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
-  static const String LEADERBOARD_RANKING_CONTENT = "Leaderboard ranking not showing right now. if you upload songs then rank of your song show here ...";
   static const String BATTLE_CONTENT = "Battles song not showing right now. if someone upload songs then battles show here ...";
+  static const String LEADERBOARD_RANKING_CONTENT = "Leaderboards will be displayed here";
   static const String SENDING = "Sending...";
   static const String EMAIL_SENT = "Email Sent Successfully";
   static const String UPDATING_PASSWORD = "Updating Password...";

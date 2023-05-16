@@ -1,8 +1,6 @@
 import 'package:battle_of_bands/backend/server_response.dart';
-import 'package:battle_of_bands/common/error_try_again.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
-import 'package:battle_of_bands/helper/material_dialogue_content.dart';
 import 'package:battle_of_bands/ui/my_song_details.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +24,18 @@ class HomeScreen extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BlocBuilder<MainScreenBloc, MainScreenState>(
-            buildWhen: (previous, current) => previous.userEmail != current.userEmail || previous.userName != current.userName,
+            buildWhen: (previous, current) =>
+                previous.userEmail != current.userEmail ||
+                previous.userName != current.userName,
             builder: (_, state) => CustomAppBar(
               userName: state.userName,
               userEmail: state.userEmail,
               notificationIcon: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (BuildContext context, _, __) => const NotificationView()));
+                  Navigator.of(context).push(PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (BuildContext context, _, __) =>
+                          const NotificationView()));
                 },
                 child: Image.asset(
                   'assets/Group 12408.png',
@@ -49,7 +52,11 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: const Text(AppText.STATISTICS,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 18,
+                        color: Constants.colorOnPrimary)),
               ),
               const RoundedContainer(),
               const SizedBox(
@@ -59,10 +66,15 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: const Text(AppText.LEADERBOARD,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 22, color: Constants.colorOnPrimary)),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 22,
+                        color: Constants.colorOnPrimary)),
               ),
               BlocBuilder<MainScreenBloc, MainScreenState>(
-                  buildWhen: (previous, current) => previous.allGenre != current.allGenre,
+                  buildWhen: (previous, current) =>
+                      previous.allGenre != current.allGenre,
                   builder: (_, state) {
                     return PopupMenuButton<Genre>(
                       enabled: true,
@@ -86,7 +98,8 @@ class HomeScreen extends StatelessWidget {
                                     height: 20,
                                     child: Text(genre.title,
                                         style: const TextStyle(
-                                          fontFamily: Constants.montserratMedium,
+                                          fontFamily:
+                                              Constants.montserratMedium,
                                           fontSize: 15,
                                           color: Constants.colorOnPrimary,
                                         )),
@@ -94,7 +107,8 @@ class HomeScreen extends StatelessWidget {
                                 ))
                             .toList();
                       },
-                      onSelected: (genre) => bloc.updateLeaderBoardByChangeGenreId(genre),
+                      onSelected: (genre) =>
+                          bloc.updateLeaderBoardByChangeGenreId(genre),
                       child: GenreField(
                         controller: bloc.leaderBoardGenreController,
                         hint: AppText.GENRE,
@@ -111,10 +125,39 @@ class HomeScreen extends StatelessWidget {
               BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
                 final leaderBoardDataEvent = state.leaderBoardDataEvent;
                 if (leaderBoardDataEvent is Loading) {
-                  return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
-                } else if (leaderBoardDataEvent is Empty) {
-                  return const Text(AppText.LEADERBOARD_RANKING_CONTENT,
-                      textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface));
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                          backgroundColor: Constants.colorPrimary));
+                } else if (leaderBoardDataEvent is Empty || leaderBoardDataEvent is Initial) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Image.asset(
+                            'assets/leaderboard.png',
+                            height: 70,
+                            width: 70,
+                          ),
+                        ),
+                        const Text(AppText.LEADERBOARD_RANKING_CONTENT,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: Constants.montserratSemibold,
+                                color: Constants.colorOnSurface)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(AppText.DUMMY_DESC,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: Constants.montserratRegular,
+                                color: Constants.colorText)),
+                      ],
+                    ),
+                  );
                 } else if (leaderBoardDataEvent is Data) {
                   final items = leaderBoardDataEvent.data as List<Song>;
                   return ListView.builder(
@@ -123,7 +166,11 @@ class HomeScreen extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: items.length,
                       itemBuilder: (_, index) => _SingleLeaderboardItem(
-                          index: index, song: items[index], onclick: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [false, items[index]])));
+                          index: index,
+                          song: items[index],
+                          onclick: () => Navigator.pushNamed(
+                              context, MySongDetailScreen.route,
+                              arguments: [false, items[index]])));
                 }
                 return const SizedBox();
               })
@@ -280,7 +327,11 @@ class RoundedContainer extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       child: Text('${state.statistics.totalWins}',
-                          textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: Constants.montserratMedium,
+                              fontSize: 26,
+                              color: Constants.colorOnPrimary)),
                     ),
                   ),
                   const Divider(color: Constants.scaffoldColor, thickness: 1),
@@ -288,12 +339,20 @@ class RoundedContainer extends StatelessWidget {
                     height: 10,
                   ),
                   const Text(AppText.TOTAL_LOSES,
-                      textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 12, color: Constants.colorOnPrimary)),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratMedium,
+                          fontSize: 12,
+                          color: Constants.colorOnPrimary)),
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
                       child: Text('${state.statistics.totalLoses}',
-                          textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 26, color: Constants.colorOnPrimary)),
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontFamily: Constants.montserratMedium,
+                              fontSize: 26,
+                              color: Constants.colorOnPrimary)),
                     ),
                   )
                 ],
@@ -311,7 +370,8 @@ class _SingleLeaderboardItem extends StatelessWidget {
   final int index;
   final Function() onclick;
 
-  const _SingleLeaderboardItem({required this.index, required this.song, required this.onclick});
+  const _SingleLeaderboardItem(
+      {required this.index, required this.song, required this.onclick});
 
   @override
   Widget build(BuildContext context) {
@@ -331,25 +391,35 @@ class _SingleLeaderboardItem extends StatelessWidget {
               SizedBox(height: index == 0 ? 90 : 30),
               Text('${index + 1}${ranking(index)}',
                   textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
+
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 padding: const EdgeInsets.all(10),
                 height: 75,
                 width: size.width,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: Constants.colorGreen), color: Constants.colorPrimaryVariant),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 0.5, color: Constants.colorGreen),
+                    color: Constants.colorPrimaryVariant),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Image(image: AssetImage('assets/3x/play.png'), width: 30, height: 30),
+                    const Image(
+                        image: AssetImage('assets/3x/play.png'),
+                        width: 30,
+                        height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('00:30', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
                         Text('Perform/${song.bandName}', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 14, color: colorGet(index))),
                         Text('Vote ${song.votesCount}',
-                            textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorOnPrimary)),
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                fontFamily: Constants.montserratRegular,
+                                fontSize: 14,
+                                color: Constants.colorOnPrimary)),
                       ],
                     )
                   ],
@@ -360,7 +430,12 @@ class _SingleLeaderboardItem extends StatelessWidget {
         ),
         Column(
           children: [
-            index == 0 ? const Image(image: AssetImage('assets/crown.png'), width: 30, height: 30) : const SizedBox(),
+            index == 0
+                ? const Image(
+                    image: AssetImage('assets/crown.png'),
+                    width: 30,
+                    height: 30)
+                : const SizedBox(),
             Container(
                 width: index == 0 ? 100 : 70,
                 height: index == 0 ? 100 : 70,
@@ -408,7 +483,9 @@ class NotificationView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20),
               margin: const EdgeInsets.only(top: 80.0, left: 20, right: 20),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Constants.colorSecondaryVariant.withOpacity(0.8)),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Constants.colorSecondaryVariant.withOpacity(0.8)),
               child: Column(
                 children: const [
                   NotificationTile(),
@@ -443,17 +520,26 @@ class NotificationTile extends StatelessWidget {
             children: const [
               Text(
                 '${AppText.SONG_NAME} ep.5 ',
-                style: TextStyle(fontSize: 13, color: Constants.colorPrimary, fontFamily: Constants.montserratRegular),
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Constants.colorPrimary,
+                    fontFamily: Constants.montserratRegular),
               ),
               Text(
                 'song',
-                style: TextStyle(fontSize: 13, color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular),
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Constants.colorOnSurface,
+                    fontFamily: Constants.montserratRegular),
               ),
             ],
           ),
           const Text(
             'is in a battle field',
-            style: TextStyle(fontSize: 14, color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular),
+            style: TextStyle(
+                fontSize: 14,
+                color: Constants.colorOnSurface,
+                fontFamily: Constants.montserratRegular),
           ),
         ],
       ),
