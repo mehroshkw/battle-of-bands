@@ -124,6 +124,17 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     }
   }
 
+  Future<void> updateMySongs(Song song) async {
+
+    print('new song-------------------->$song');
+    final mySongDataEvent=state.mySongDataEvent;
+    if(mySongDataEvent is Data){
+      final songData=mySongDataEvent.data as List<Song>;
+      songData.insert(0, song);
+      emit(state.copyWith(mySongDataEvent: Data(data: songData)));
+    }
+  }
+
   void toggleVote() {
     emit(state.copyWith(isVote: !state.isVote));
   }
