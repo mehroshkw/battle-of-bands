@@ -51,9 +51,17 @@
     <string>Battle of bands app requires the access of photo library in order to access the picture.</string>
     <key>NSCameraUsageDescription</key>
     <string>Battle of bands app requires the access of camera in order to take the profile picture.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Microphone access is required to record audio.</string>
     <key>NSAppleMusicUsageDescription</key>
-    <string>Access to your music library is required to select audio files.</string>
+    <string>Battle of bands app requires the access music library in order to access the audio files.</string>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+    <key>UISupportsDocumentBrowser</key>
+    <true/>
+    <key>UIBackgroundModes</key>
+    <array>
+       <string>fetch</string>
+       <string>remote-notification</string>
+    </array>
+
 </dict>
 </plist>

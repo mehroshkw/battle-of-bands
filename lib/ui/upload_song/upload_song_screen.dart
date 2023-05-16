@@ -5,6 +5,7 @@ import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../common/app_button.dart';
@@ -61,7 +62,7 @@ class UploadSongScreen extends StatelessWidget {
       try {
         final player = AudioPlayer();
         // print("player...  ${player.setSourceUrl(filePath)}");
-        final url =  player.setSourceUrl(filePath);
+        final url = player.setSourceUrl(filePath);
 
         print("url========== $url");
         final duration = await player.getDuration();
@@ -98,83 +99,80 @@ class UploadSongScreen extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  final result = await FilePicker.platform.pickFiles(
+                  final FilePickerResult? result = await FilePicker.platform.pickFiles(
                     allowMultiple: false,
-                    type: FileType.audio,
                     // allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
                   );
-                  checkDuration(result!);
-                  if(result==null)return;
+                  // checkDuration(result!);
+                  if (result == null) return;
                   bloc.updateFilePath(result.files.single.path!);
                 },
                 child: BlocBuilder<UploadSongBloc, UploadSongState>(
-                    buildWhen: (p,c)=>p.file!=c.file,
+                    buildWhen: (p, c) => p.file != c.file,
                     builder: (_, state) {
-                  return Container(
-                    height: size.height / 8,
-                    width: size.width,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/add_song.png'),
-                          fit: BoxFit.fill,
+                      return Container(
+                        height: size.height / 8,
+                        width: size.width,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/add_song.png'),
+                              fit: BoxFit.fill,
+                            ),
+                            color: Constants.scaffoldColor),
+                        child: Text(
+                          state.file.path.isNotEmpty ? state.file.name : AppText.UPLOAD_AUDIO_FILE,
+                          style: const TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface, fontSize: 18),
                         ),
-                        color: Constants.scaffoldColor),
-                    child: Text(
-                      state.file.path.isNotEmpty ? state.file.name : AppText.UPLOAD_AUDIO_FILE,
-                      style: const TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface, fontSize: 18),
-                    ),
-                  );
-                }),
+                      );
+                    }),
               ),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (p,c)=>p.file!=c.file,
-
+                  buildWhen: (p, c) => p.file != c.file,
                   builder: (_, state) {
-
-                return state.file.path.isNotEmpty
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              AppText.UPLOAD_DESCRIPTION,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface.withOpacity(0.6), fontSize: 14),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(AppText.TRIM_FILE,
-                                textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Image.asset('assets/record_slider.png'),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    return state.file.path.isNotEmpty
+                        ? Column(
                             children: [
-                              Text(
-                                AppText.SONG_START,
-                                style: TextStyle(
-                                  fontFamily: Constants.montserratLight,
-                                  color: Constants.colorOnSurface.withOpacity(0.7),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(
+                                  AppText.UPLOAD_DESCRIPTION,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface.withOpacity(0.6), fontSize: 14),
                                 ),
                               ),
-                              Text(
-                                AppText.SONG_END_TIME,
-                                style: TextStyle(
-                                  fontFamily: Constants.montserratLight,
-                                  color: Constants.colorOnSurface.withOpacity(0.7),
-                                ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(AppText.TRIM_FILE,
+                                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Image.asset('assets/record_slider.png'),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppText.SONG_START,
+                                    style: TextStyle(
+                                      fontFamily: Constants.montserratLight,
+                                      color: Constants.colorOnSurface.withOpacity(0.7),
+                                    ),
+                                  ),
+                                  Text(
+                                    AppText.SONG_END_TIME,
+                                    style: TextStyle(
+                                      fontFamily: Constants.montserratLight,
+                                      color: Constants.colorOnSurface.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                        ],
-                      )
-                    : const SizedBox();
-              }),
+                          )
+                        : const SizedBox();
+                  }),
               const SizedBox(
                 height: 20,
               ),

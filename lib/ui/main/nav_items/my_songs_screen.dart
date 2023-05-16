@@ -168,10 +168,9 @@ class AllSongsScreen extends StatelessWidget {
                 text: 'Upload Song',
                 onClick: () {
 
-                  final bool result = Navigator.pushNamed(context, UploadSongScreen.route) as bool;
-                  if(result) {
-                    bloc.getAllGenre();
-                  }
+                  final  result = Navigator.pushNamed(context, UploadSongScreen.route);
+                  if(result==true) bloc.getAllGenre();
+
                 },
                 color: Constants.colorPrimary,
               ),

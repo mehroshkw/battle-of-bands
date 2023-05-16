@@ -57,6 +57,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
     final leaderBoard = await _sharedWebService.getLeaderboard(genre.id, user.id);
+    leaderBoard.sort((b, a) => a.votesCount.compareTo(b.votesCount));
     if (leaderBoard.isEmpty) {
       emit(state.copyWith(leaderBoardDataEvent: const Empty(message: '')));
       return;

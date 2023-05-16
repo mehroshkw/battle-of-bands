@@ -112,14 +112,18 @@ class BattleScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     itemCount: items.length,
                     itemBuilder: (BuildContext context, int index) {
+                      final song = items[index];
                       return SongWidget(
                         song: items[index],
                         onChanged: () {
                           MaterialDialogHelper.instance()
                             ..injectContext(context)
-                            ..showVoteDialogue(positiveClickListener: () {
-                              bloc.voteUnVoteBattleSong(items[index]);
-                            });
+                            ..showVoteDialogue(
+                                 vote:song.isVoted?'Un Vote':'Vote',
+                                title: song.title,
+                                positiveClickListener: () {
+                                  bloc.voteUnVoteBattleSong(song);
+                                });
                         },
                       );
                     },
@@ -146,6 +150,7 @@ class SongWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<MainScreenBloc>();
     final Size size = MediaQuery.of(context).size;
+    print(song.isVoted);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -194,11 +199,7 @@ class SongWidget extends StatelessWidget {
                         child: Text(
                           '${AppText.PERFORMER_BAND}${song.bandName}',
                           textAlign: TextAlign.left,
-
-                          style: const TextStyle(
-                              fontFamily: Constants.montserratLight,
-                              fontSize: 16,
-                              color: Constants.colorText),
+                          style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 16, color: Constants.colorText),
                         ),
                       ),
                     ),
@@ -265,7 +266,7 @@ class SongWidget extends StatelessWidget {
                   isChecked: song.isVoted,
                   onChanged: (bool? value) {
                     if (value == null) return;
-                      onChanged.call();
+                    onChanged.call();
                   },
                 ),
               ))
@@ -308,12 +309,12 @@ class CustomCheckbox extends StatelessWidget {
               width: 18.0,
               height: 18.0,
               child: isChecked
-                  ? null
-                  : const Icon(
+                  ? const Icon(
                       Icons.check,
                       color: Colors.white,
                       size: 14.0,
-                    ),
+                    )
+                  : null,
             ),
           ),
           const Text(
