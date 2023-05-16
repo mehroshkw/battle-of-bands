@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../backend/server_response.dart';
 import '../../data/meta_data.dart';
@@ -10,6 +13,7 @@ class UploadSongState extends Equatable {
   final bool nameError;
   final bool genreError;
   final List<Genre> allGenre;
+  final XFile file;
   final int genreId;
 
   final bool bandNameError;
@@ -22,12 +26,13 @@ class UploadSongState extends Equatable {
     required this.genreId,
     required this.genreError,
     required this.allGenre,
+    required this.file,
     required this.bandNameError,
   });
 
-  UploadSongState.initial() : this(isShowTrim: false, dataEvent: const Initial(), errorText: '', nameError: false, genreError: false, allGenre: <Genre>[], bandNameError: false,genreId: -1);
+  UploadSongState.initial() : this(isShowTrim: false, dataEvent: const Initial(), errorText: '', nameError: false, genreError: false, allGenre: <Genre>[], bandNameError: false,genreId: -1,file: XFile(''));
 
-  UploadSongState copyWith({bool? isShowTrim, DataEvent? dataEvent, bool? nameError, bool? genreError, bool? bandNameError, List<Genre>? allGenre, String? errorText,int?genreId}) =>
+  UploadSongState copyWith({bool? isShowTrim, DataEvent? dataEvent, bool? nameError, bool? genreError, bool? bandNameError, List<Genre>? allGenre, String? errorText,int?genreId,XFile? file}) =>
       UploadSongState(
         isShowTrim: isShowTrim ?? this.isShowTrim,
         dataEvent: dataEvent ?? this.dataEvent,
@@ -36,10 +41,11 @@ class UploadSongState extends Equatable {
         nameError: nameError ?? this.nameError,
         genreError: genreError ?? this.genreError,
         genreId: genreId??this.genreId,
+        file: file??this.file,
         bandNameError: bandNameError ?? this.bandNameError,
       );
 
   @override
   // TODO: implement props
-  List<Object?> get props => [isShowTrim, dataEvent, errorText, nameError, bandNameError, genreError,allGenre,genreId];
+  List<Object?> get props => [isShowTrim, dataEvent, errorText, nameError, bandNameError, genreError,allGenre,genreId,file];
 }

@@ -73,10 +73,10 @@ class MySongDetailScreen extends StatelessWidget {
                child: Text(
                 '${AppText.PERFORMER_BAND }${song.bandName}',
                 textAlign: TextAlign.left,
-                style: TextStyle(
+                style: const TextStyle(
                     fontFamily: Constants.montserratLight,
                     fontSize: 20,
-                    color: Constants.colorOnSurface.withOpacity(0.8)),
+                    color: Constants.colorText),
             ),
              ),
              Padding(

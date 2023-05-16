@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../backend/shared_web_services.dart';
 import '../../helper/shared_preference_helper.dart';
 
@@ -28,13 +25,9 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   void updateGenreError(bool value, String errorText) => emit(state.copyWith(genreError: value, errorText: errorText));
 
-  void updatebBandNameError(bool value, String errorText) => emit(state.copyWith(bandNameError: value, errorText: errorText));
+  void updateBandNameError(bool value, String errorText) => emit(state.copyWith(bandNameError: value, errorText: errorText));
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
-
-  void toggleVote() {
-    emit(state.copyWith(isShowTrim: !state.isShowTrim));
-  }
 
   getAllGenre() async {
     final allGenre = await _sharedWebService.getAllGenre();
@@ -45,48 +38,30 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     emit(state.copyWith(genreId: genre.id));
   }
 
-  Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
-    );
-
-    if (result != null) {
-      File file = File(result.files.single.path!);
-    } else {
-      // User canceled the picker
-    }
+  Future<void> updateFilePath(String filePath) async {
+   emit(state.copyWith(file: XFile(filePath)));
   }
 
   Future<AddSongResponse?> uploadSong() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return null;
-    final int userId = user.id;
-    final String genreId = genreController.text;
+    final String userId = user.id.toString();
+    final String genreId = state.genreId.toString();
     final String externalUrl = urlController.text;
     final String title = songTitleController.text;
     final String bandName = bandNameController.text;
-    const String song = "audioPath.value";
+    final String songPath = state.file.path;
 
     final body = {
-      'id': userId.toString(),
+      'AppUserId': userId,
       'title': title,
-      'genreId': genreId,
+      'GenreIds': genreId,
       'bandName': bandName,
-      'externalUrl': externalUrl,
+      'ExternalUrl': 'https://www.google.com/',
     };
-    final response = await _sharedWebService.addSong(body, song);
-    final data = state.dataEvent;
-    // if(data is !Data){
-    //   state.dataEvent = Data(data: <SongResponse>[response.songs!]);
-    // }
-    if (data is Data) {
-      final notes = data.data as List<Song>;
-      final tempList = List.of(notes);
-      tempList.add(response.songs!);
-      // state.dataEvent = Data(data: tempList);
-    }
+    print(body);
+    final response = await _sharedWebService.addSong(body, songPath);
+    print("response ======> $response");
     return response;
   }
 }

@@ -37,6 +37,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   Future<void> getUser() async {
+    print("xyz");
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
     emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id, userDb: user.dateOfBirth, userImage: user.imagePath));

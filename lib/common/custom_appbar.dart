@@ -37,7 +37,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             Text(
               userEmail,
               style: const TextStyle(
-                color: Constants.colorOnSurface,
+                color: Constants.colorText,
                 fontFamily: Constants.montserratLight,
                 fontSize: 16,
               ),

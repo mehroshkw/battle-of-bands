@@ -1,9 +1,12 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../common/app_button.dart';
 import '../../common/app_text_field.dart';
 import '../../common/custom_appbar.dart';
@@ -32,6 +35,7 @@ class UploadSongScreen extends StatelessWidget {
         return;
       }
       snackbarHelper.showSnackbar(snackbar: SnackbarMessage.success(message: AppText.SONG_UPLOADED));
+      Navigator.pop(context, true);
     } catch (_) {
       dialogHelper.dismissProgress();
       dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () {
@@ -44,6 +48,46 @@ class UploadSongScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<UploadSongBloc>();
     final size = context.screenSize;
+
+    checkDuration(FilePickerResult result) async {
+      final PlatformFile file = result.files.first;
+      final String filePath = file.path!;
+
+      print(filePath);
+      print(file);
+
+      int? fileDurationMillis;
+
+      try {
+        final player = AudioPlayer();
+        // print("player...  ${player.setSourceUrl(filePath)}");
+        final url =  player.setSourceUrl(filePath);
+
+        print("url========== $url");
+        final duration = await player.getDuration();
+        print(duration);
+        fileDurationMillis = duration!.inMilliseconds;
+        print("duration ======= $fileDurationMillis");
+      } catch (e) {
+        print("something went wrong");
+      }
+
+      if (fileDurationMillis != null) {
+        final minDurationMillis = const Duration(seconds: 10).inMilliseconds;
+        final maxDurationMillis = const Duration(seconds: 30).inMilliseconds;
+
+        if (fileDurationMillis >= minDurationMillis && fileDurationMillis <= maxDurationMillis) {
+          // File duration meets the requirements, proceed with the upload
+          print("song is fine to upload");
+          // bloc.updateFilePath(result.files.single.path!);
+        } else {
+          print("song does not meet the upload requirements");
+        }
+      } else {
+        print("Unable to retrieve file duration");
+      }
+    }
+
     return Scaffold(
         appBar: const CustomAppbar(
           screenName: AppText.UPLOAD_SONG,
@@ -54,10 +98,18 @@ class UploadSongScreen extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  bloc.pickFile();
-                  // bloc.toggleVote();
+                  final result = await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    type: FileType.audio,
+                    // allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
+                  );
+                  checkDuration(result!);
+                  if(result==null)return;
+                  bloc.updateFilePath(result.files.single.path!);
                 },
-                child: BlocBuilder<UploadSongBloc, UploadSongState>(builder: (_, state) {
+                child: BlocBuilder<UploadSongBloc, UploadSongState>(
+                    buildWhen: (p,c)=>p.file!=c.file,
+                    builder: (_, state) {
                   return Container(
                     height: size.height / 8,
                     width: size.width,
@@ -69,14 +121,18 @@ class UploadSongScreen extends StatelessWidget {
                         ),
                         color: Constants.scaffoldColor),
                     child: Text(
-                      state.isShowTrim ? AppText.SONG_NAME_MP : AppText.UPLOAD_AUDIO_FILE,
+                      state.file.path.isNotEmpty ? state.file.name : AppText.UPLOAD_AUDIO_FILE,
                       style: const TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface, fontSize: 18),
                     ),
                   );
                 }),
               ),
-              BlocBuilder<UploadSongBloc, UploadSongState>(builder: (_, state) {
-                return state.isShowTrim
+              BlocBuilder<UploadSongBloc, UploadSongState>(
+                  buildWhen: (p,c)=>p.file!=c.file,
+
+                  builder: (_, state) {
+
+                return state.file.path.isNotEmpty
                     ? Column(
                         children: [
                           Padding(
@@ -220,7 +276,7 @@ class UploadSongScreen extends StatelessWidget {
                     onChanged: (String? value) {
                       if (value == null) return;
                       if (value.isNotEmpty && state.bandNameError) {
-                        bloc.updatebBandNameError(false, '');
+                        bloc.updateBandNameError(false, '');
                       }
                     },
                     isError: state.bandNameError,
@@ -279,7 +335,7 @@ class UploadSongScreen extends StatelessWidget {
                       return;
                     }
                     if (bandName.isEmpty) {
-                      bloc.updatebBandNameError(true, AppText.BANDNAME_EMPTY);
+                      bloc.updateBandNameError(true, AppText.BANDNAME_EMPTY);
                       return;
                     }
                     _uploadSong(bloc, context, MaterialDialogHelper.instance());

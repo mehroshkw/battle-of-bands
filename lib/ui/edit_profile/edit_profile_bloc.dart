@@ -50,9 +50,8 @@ class EditProfileBloc extends Cubit<EditProfileState> {
       XFile file = imageDataEvent.data as XFile;
       imagePath = file.path;
     }
-    final response = await _sharedWebService.updateProfile(previousUser.id.toString(),name, dob, email, imagePath);
+    final response = await _sharedWebService.updateProfile(previousUser.id.toString(),name,email, dob, imagePath);
     if (response.status && response.user != null) {
-      print("respnse === ${response.user}");
       await sharedPreferenceHelper.insertUser(response.user!);
     }
     return response;

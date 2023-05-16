@@ -166,7 +166,7 @@ class SongWidget extends StatelessWidget {
                           style: TextStyle(
                               fontFamily: Constants.montserratLight,
                               fontSize: 16,
-                              color: Constants.colorOnPrimary),
+                              color: Constants.colorText),
                         ),
                       ),
                     ),
@@ -181,19 +181,19 @@ class SongWidget extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: const [
               Text(
                 AppText.SONG_START_TIME,
                 style: TextStyle(
                   fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface.withOpacity(0.7),
+                  color: Constants.colorText,
                 ),
               ),
               Text(
                 AppText.SONG_END_TIME,
                 style: TextStyle(
                   fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface.withOpacity(0.7),
+                  color: Constants.colorText,
                 ),
               ),
             ],

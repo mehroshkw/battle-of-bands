@@ -177,7 +177,11 @@ class AllSongsScreen extends StatelessWidget {
               child: AppButton(
                 text: 'Upload Song',
                 onClick: () {
-                  Navigator.pushNamed(context, UploadSongScreen.route);
+
+                  final bool result = Navigator.pushNamed(context, UploadSongScreen.route) as bool;
+                  if(result) {
+                    bloc.getAllGenre();
+                  }
                 },
                 color: Constants.colorPrimary,
               ),
