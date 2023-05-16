@@ -316,6 +316,10 @@ class _SingleLeaderboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
+    ImageProvider image = const AssetImage('assets/3x/song_icon.png');
+    if (song.user.imagePath.isNotEmpty) {
+      image = NetworkImage('$BASE_URL_IMAGE/${song.user.imagePath}');
+    }
 
     return SizedBox(
       child: Stack(alignment: Alignment.center, children: [
@@ -325,10 +329,8 @@ class _SingleLeaderboardItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: index == 0 ? 90 : 30),
-              Text(
-                  '${index + 1}${index == 0 ? 'st' : index == 1 ? 'st' : '3dr'}',
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
+              Text('${index + 1}${ranking(index)}',
+                  textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 18, color: Constants.colorOnPrimary)),
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 padding: const EdgeInsets.all(10),
@@ -345,16 +347,7 @@ class _SingleLeaderboardItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('00:30', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
-                        Text('Perform/${song.bandName}',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontFamily: Constants.montserratMedium,
-                                fontSize: 14,
-                                color: index == 0
-                                    ? Constants.colorYellow
-                                    : index == 1
-                                        ? const Color(0xffC0C0C0)
-                                        : Constants.colorPrimary)),
+                        Text('Perform/${song.bandName}', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 14, color: colorGet(index))),
                         Text('Vote ${song.votesCount}',
                             textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorOnPrimary)),
                       ],
@@ -369,23 +362,37 @@ class _SingleLeaderboardItem extends StatelessWidget {
           children: [
             index == 0 ? const Image(image: AssetImage('assets/crown.png'), width: 30, height: 30) : const SizedBox(),
             Container(
-              width: index == 0 ? 100 : 70,
-              height: index == 0 ? 100 : 70,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                      width: 4,
-                      color: index == 0
-                          ? Constants.colorYellow
-                          : index == 1
-                              ? Color(0xffC0C0C0)
-                              : Constants.colorPrimary),
-                  image: const DecorationImage(image: AssetImage('assets/3x/song_icon.png'))),
-            )
+                width: index == 0 ? 100 : 70,
+                height: index == 0 ? 100 : 70,
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 4, color: colorGet(index)), image: DecorationImage(image: image, fit: BoxFit.cover)))
           ],
         )
       ]),
     );
+  }
+
+  colorGet(int index) {
+    switch (index) {
+      case 0:
+        return Constants.colorYellow;
+      case 1:
+        return const Color(0xffC0C0C0);
+      default:
+        return Constants.colorPrimary;
+    }
+  }
+
+  ranking(int index) {
+    switch (index) {
+      case 0:
+        return 'st';
+      case 1:
+        return 'nd';
+      case 2:
+        return 'rd';
+      default:
+        return 'th';
+    }
   }
 }
 

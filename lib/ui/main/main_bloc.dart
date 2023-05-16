@@ -4,7 +4,10 @@ import 'package:battle_of_bands/ui/main/mian_bloc_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../backend/server_response.dart';
+import '../../data/snackbar_message.dart';
+import '../../helper/network_helper.dart';
 import '../../helper/shared_preference_helper.dart';
+import '../../util/app_strings.dart';
 
 class MainScreenBloc extends Cubit<MainScreenState> {
   BuildContext? textFieldContext;
@@ -16,6 +19,8 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   TextEditingController genreController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
   final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
+
+  NetworkHelper get _networkHelper => NetworkHelper.instance();
 
   MainScreenBloc() : super(MainScreenState.initial()) {
     getAllGenre();
@@ -72,12 +77,54 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     emit(state.copyWith(mySongDataEvent: Data(data: mySongs)));
   }
 
-  void toggleVote() {
-    emit(state.copyWith(isVote: !state.isVote));
+  Future<void> updateBattleByChangeGenreId(Genre genre) async {
+    battlesGenreController.text = genre.title;
+    emit(state.copyWith(battleDataEvent: const Loading()));
+    final user = await sharedPreferenceHelper.user;
+    if (user == null) return;
+    final battleSongs = await _sharedWebService.getAllSongs(genre.id, user.id);
+    if (battleSongs.isEmpty) {
+      emit(state.copyWith(battleDataEvent: const Empty(message: '')));
+      return;
+    }
+    emit(state.copyWith(battleDataEvent: Data(data: battleSongs)));
   }
 
-  void toggleNoMusic() {
-    emit(state.copyWith(isNoMusic: !state.isNoMusic));
+  Future<void> voteUnVoteBattleSong(Song song) async {
+    if (!(await _networkHelper.isNetworkConnected)) {
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
+      await Future.delayed(const Duration(seconds: 1));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
+      return;
+    }
+    final user = await sharedPreferenceHelper.user;
+    if (user == null) {
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
+      await Future.delayed(const Duration(seconds: 1));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
+      return;
+    }
+    DataEvent lastBattleDataEvent = state.battleDataEvent;
+    final isVoted = !song.isVoted;
+    final updateSong = song.copyWith(isVoted: isVoted, votesCount: isVoted ? song.votesCount + 1 : song.votesCount - 1);
+    if (lastBattleDataEvent is Data) {
+      final songs = lastBattleDataEvent.data as List<Song>;
+      final indexOfSong = songs.indexWhere((element) => element.id == song.id);
+      if (indexOfSong != -1) {
+        songs.removeAt(indexOfSong);
+        songs.insert(indexOfSong, updateSong);
+        emit(state.copyWith(battleDataEvent: Data(data: List.of(songs))));
+      }
+    }
+    try {
+      await _sharedWebService.voteUnVote(song.id, user.id, isVoted);
+    } catch (_) {
+      emit(state.copyWith(battleDataEvent: lastBattleDataEvent));
+    }
+  }
+
+  void toggleVote() {
+    emit(state.copyWith(isVote: !state.isVote));
   }
 
   void logout() {

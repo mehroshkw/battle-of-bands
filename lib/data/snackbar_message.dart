@@ -8,6 +8,9 @@ class SnackbarMessage {
   SnackbarMessage.success({required String message, bool isLongDuration = false})
       : this(message: message, isForSuccess: true, isLongDuration: isLongDuration);
 
+  SnackbarMessage.empty()
+      : this(message: '', isForSuccess: false, isLongDuration: false);
+
   SnackbarMessage.error({required String message, bool isLongDuration = false})
       : this(message: message, isForSuccess: false, isLongDuration: isLongDuration);
 

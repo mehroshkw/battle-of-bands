@@ -87,7 +87,7 @@ class AppBarWithGenre extends StatelessWidget with PreferredSizeWidget {
              ),
            ),
          ),
-         SizedBox(height: 20,),
+         const SizedBox(height: 20,),
          genreField,
        ],
      ),

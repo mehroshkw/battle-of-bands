@@ -2,6 +2,8 @@ import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../data/snackbar_message.dart';
+
 class MainScreenState extends Equatable {
   final int index;
   final bool isVote;
@@ -15,6 +17,8 @@ class MainScreenState extends Equatable {
   final String userImage;
   final DataEvent leaderBoardDataEvent;
   final DataEvent mySongDataEvent;
+  final DataEvent battleDataEvent;
+  final SnackbarMessage snackbarMessage;
 
   const MainScreenState(
       {required this.index,
@@ -28,7 +32,9 @@ class MainScreenState extends Equatable {
       required this.userDb,
       required this.userImage,
       required this.leaderBoardDataEvent,
-      required this.mySongDataEvent});
+      required this.mySongDataEvent,
+      required this.battleDataEvent,
+      required this.snackbarMessage});
 
   MainScreenState.initial()
       : this(
@@ -43,7 +49,9 @@ class MainScreenState extends Equatable {
             userDb: '',
             userImage: '',
             leaderBoardDataEvent: const Initial(),
-            mySongDataEvent: const Initial());
+            mySongDataEvent: const Initial(),
+            battleDataEvent: const Initial(),
+            snackbarMessage: SnackbarMessage.empty());
 
   MainScreenState copyWith(
           {int? index,
@@ -57,7 +65,9 @@ class MainScreenState extends Equatable {
           String? userDb,
           String? userImage,
           DataEvent? leaderBoardDataEvent,
-          DataEvent? mySongDataEvent}) =>
+          DataEvent? mySongDataEvent,
+          DataEvent? battleDataEvent,
+          SnackbarMessage? snackbarMessage}) =>
       MainScreenState(
           index: index ?? this.index,
           isVote: isVote ?? this.isVote,
@@ -70,9 +80,11 @@ class MainScreenState extends Equatable {
           userImage: userImage ?? this.userImage,
           userDb: userDb ?? this.userDb,
           leaderBoardDataEvent: leaderBoardDataEvent ?? this.leaderBoardDataEvent,
-          mySongDataEvent: mySongDataEvent ?? this.mySongDataEvent);
+          mySongDataEvent: mySongDataEvent ?? this.mySongDataEvent,
+          battleDataEvent: battleDataEvent ?? this.battleDataEvent,
+          snackbarMessage: snackbarMessage ?? this.snackbarMessage);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent, userDb, userImage];
+  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent, userDb, userImage, battleDataEvent, snackbarMessage];
 }

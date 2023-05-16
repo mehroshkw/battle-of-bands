@@ -47,19 +47,18 @@ class AllSongsScreen extends StatelessWidget {
                 ),
                 itemBuilder: (context) {
                   return state.allGenre
-                      .map((Genre genre) =>
-                      PopupMenuItem(
-                        value: genre,
-                        child: SizedBox(
-                          height: 20,
-                          child: Text(genre.title,
-                              style: const TextStyle(
-                                fontFamily: Constants.montserratMedium,
-                                fontSize: 15,
-                                color: Constants.colorOnPrimary,
-                              )),
-                        ),
-                      ))
+                      .map((Genre genre) => PopupMenuItem(
+                            value: genre,
+                            child: SizedBox(
+                              height: 20,
+                              child: Text(genre.title,
+                                  style: const TextStyle(
+                                    fontFamily: Constants.montserratMedium,
+                                    fontSize: 15,
+                                    color: Constants.colorOnPrimary,
+                                  )),
+                            ),
+                          ))
                       .toList();
                 },
                 onSelected: (genre) => bloc.updateMySongsByChangeGenreId(genre),
@@ -82,67 +81,59 @@ class AllSongsScreen extends StatelessWidget {
         final mySongDataEvent = state.mySongDataEvent;
         if (mySongDataEvent is Loading) {
           return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
-        }
-
-        else if (mySongDataEvent is Empty) {
-          return GestureDetector(
-            onTap: () {
-              bloc.toggleNoMusic();
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 60,
-                ),
-                Image.asset(
-                  "assets/no_music.png",
-                  height: 70,
-                  width: 70,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    AppText.NO_SONG,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: Constants.montserratRegular,
-                      color: Constants.colorOnSurface,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(6.0),
-                  child: Text(
-                    AppText.UPLOAD_YOUR_NEW_SONG,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: Constants.montserratRegular,
-                      color: Constants.colorOnSurface,
-                    ),
-                  ),
-                ),
-                Text(
-                  AppText.DUMMY_SONG_DESC,
+        } else if (mySongDataEvent is Empty) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 60,
+              ),
+              Image.asset(
+                "assets/no_music.png",
+                height: 70,
+                width: 70,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  AppText.NO_SONG,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: Constants.montserratLight,
-                    color: Constants.colorOnSurface.withOpacity(0.8),
+                    fontSize: 20,
+                    fontFamily: Constants.montserratRegular,
+                    color: Constants.colorOnSurface,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 50,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(6.0),
+                child: Text(
+                  AppText.UPLOAD_YOUR_NEW_SONG,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: Constants.montserratRegular,
+                    color: Constants.colorOnSurface,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Text(
+                AppText.DUMMY_SONG_DESC,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: Constants.montserratLight,
+                  color: Constants.colorOnSurface.withOpacity(0.8),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+            ],
           );
-        }
-        else if (mySongDataEvent is Data) {
+        } else if (mySongDataEvent is Data) {
           final items = mySongDataEvent.data as List<Song>;
           return Expanded(
             child: SizedBox(
@@ -156,32 +147,30 @@ class AllSongsScreen extends StatelessWidget {
                   itemBuilder: (_, index) {
                     final song = items[index];
                     return GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: true),
-                    child: _SingeSongItemWidget(song: song),
+                      onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [true, song]),
+                      child: _SingeSongItemWidget(song: song),
                     );
                   },
                 ),
               ),
             ),
           );
-        }
-        else {
+        } else {
           return const SizedBox();
         }
       }),
       BlocBuilder<MainScreenBloc, MainScreenState>(
-        builder: (_, state) =>
-            SizedBox(
-              width: size.width - 30,
-              height: 50,
-              child: AppButton(
-                text: 'Upload Song',
-                onClick: () {
-                  Navigator.pushNamed(context, UploadSongScreen.route);
-                },
-                color: Constants.colorPrimary,
-              ),
-            ),
+        builder: (_, state) => SizedBox(
+          width: size.width - 30,
+          height: 50,
+          child: AppButton(
+            text: 'Upload Song',
+            onClick: () {
+              Navigator.pushNamed(context, UploadSongScreen.route);
+            },
+            color: Constants.colorPrimary,
+          ),
+        ),
       )
     ]);
   }
@@ -195,14 +184,11 @@ class _SingeSongItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<MainScreenBloc>();
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-            song.date,
+        Text(song.date,
             style: TextStyle(
               fontFamily: Constants.montserratLight,
               color: Constants.colorOnSurface.withOpacity(0.7),

@@ -1,6 +1,9 @@
+import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
+import 'package:battle_of_bands/helper/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../backend/server_response.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
 import '../../../helper/dilogue_helper.dart';
@@ -14,65 +17,75 @@ class BattleScreen extends StatelessWidget {
 
   const BattleScreen({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
-    return  Column(
+    return Column(
       children: [
-        const SizedBox(height: kToolbarHeight-20),
+        BlocListener<MainScreenBloc, MainScreenState>(
+            listenWhen: (previous, current) => previous.snackbarMessage != current.snackbarMessage,
+            listener: (_, state) async {
+              final snackbarMessage = state.snackbarMessage;
+              if (snackbarMessage.message.isEmpty) return;
+              SnackbarHelper.instance
+                ..injectContext(context)
+                ..showSnackbar(
+                  snackbar: snackbarMessage,
+                );
+            },
+            child: const SizedBox(height: kToolbarHeight - 20)),
         AppBarWithGenre(
           screenName: AppText.BATTLES,
-          genreField:
-              BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
-            return PopupMenuButton<String>(
-              enabled: true,
-              color: Constants.colorPrimaryVariant,
-              shadowColor: Colors.transparent,
-              splashRadius: 0,
-              elevation: 0,
-              padding: EdgeInsets.zero,
-              offset: const Offset(0, -20),
-              tooltip: '',
-              constraints: BoxConstraints(minWidth: size.width - 25),
-              position: PopupMenuPosition.under,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              itemBuilder: (context) {
-                return ['Rock', 'Pop', 'Classic']
-                    .map((String genre) => PopupMenuItem(
-                          value: genre,
-                          child: SizedBox(
-                            height: 20,
-                            child: Text(genre,
-                                style: const TextStyle(
-                                  fontFamily: Constants.montserratMedium,
-                                  fontSize: 15,
-                                  color: Constants.colorOnPrimary,
-                                )),
-                          ),
-                        ))
-                    .toList();
-              },
-              onSelected: (value) =>
-                  bloc.battlesGenreController.text = value.toString(),
-              child: GenreField(
-                controller: bloc.battlesGenreController,
-                hint: AppText.GENRE,
-                readOnly: true,
-                textInputType: TextInputType.text,
-                isError: false,
-                suffixIcon: const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Constants.colorOnSurface,
-                  size: 20,
-                ),
-              ),
-            );
-          }),
+          genreField: BlocBuilder<MainScreenBloc, MainScreenState>(
+              buildWhen: (previous, current) => previous.allGenre != current.allGenre,
+              builder: (_, state) {
+                return PopupMenuButton<Genre>(
+                  enabled: true,
+                  color: Constants.colorPrimaryVariant,
+                  shadowColor: Colors.transparent,
+                  splashRadius: 0,
+                  elevation: 0,
+                  padding: EdgeInsets.zero,
+                  offset: const Offset(0, -20),
+                  tooltip: '',
+                  constraints: BoxConstraints(minWidth: size.width - 25),
+                  position: PopupMenuPosition.under,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  itemBuilder: (context) {
+                    return state.allGenre
+                        .map((Genre genre) => PopupMenuItem(
+                              value: genre,
+                              child: SizedBox(
+                                height: 20,
+                                child: Text(genre.title,
+                                    style: const TextStyle(
+                                      fontFamily: Constants.montserratMedium,
+                                      fontSize: 15,
+                                      color: Constants.colorOnPrimary,
+                                    )),
+                              ),
+                            ))
+                        .toList();
+                  },
+                  onSelected: (genre) => bloc.updateBattleByChangeGenreId(genre),
+                  child: GenreField(
+                    controller: bloc.battlesGenreController,
+                    hint: AppText.GENRE,
+                    readOnly: true,
+                    textInputType: TextInputType.text,
+                    isError: false,
+                    suffixIcon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: Constants.colorOnSurface,
+                      size: 20,
+                    ),
+                  ),
+                );
+              }),
         ),
         Expanded(
           child: Container(
@@ -86,15 +99,35 @@ class BattleScreen extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  return SongWidget(onChanged: (){
-                    MaterialDialogHelper.instance()..injectContext(context)..showVoteDialogue();
-                  },);
-                },
-              ),
+              child: BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
+                final battleDataEvent = state.battleDataEvent;
+                if (battleDataEvent is Loading) {
+                  return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
+                } else if (battleDataEvent is Empty) {
+                  return const Text(AppText.BATTLE_CONTENT,
+                      textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface));
+                } else if (battleDataEvent is Data) {
+                  final items = battleDataEvent.data as List<Song>;
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SongWidget(
+                        song: items[index],
+                        onChanged: () {
+                          MaterialDialogHelper.instance()
+                            ..injectContext(context)
+                            ..showVoteDialogue(positiveClickListener: () {
+                              bloc.voteUnVoteBattleSong(items[index]);
+                            });
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
             ),
           ),
         )
@@ -105,7 +138,9 @@ class BattleScreen extends StatelessWidget {
 
 class SongWidget extends StatelessWidget {
   final Function onChanged;
-  const SongWidget({Key? key, required this.onChanged}) : super(key: key);
+  final Song song;
+
+  const SongWidget({Key? key, required this.onChanged, required this.song}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +150,7 @@ class SongWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       width: size.width - 30,
-      decoration: BoxDecoration(
-          color: Constants.colorPrimaryVariant.withOpacity(0.95),
-          borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: Constants.colorPrimaryVariant.withOpacity(0.95), borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -125,10 +158,12 @@ class SongWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
-                  height: 90,
-                  width: 90,
-                  child: Image.asset('assets/song_icon.png')),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                      height: 90,
+                      width: 90,
+                      child: song.user.imagePath.isEmpty ? Image.asset('assets/song_icon.png') : Image.network('$BASE_URL_IMAGE/${song.user.imagePath}', fit: BoxFit.cover))),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,29 +179,22 @@ class SongWidget extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10, left: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10, left: 10),
                       child: Text(
-                        AppText.SONG_NAME,
+                        song.title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontFamily: Constants.montserratBold,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Constants.colorOnPrimary),
+                        style: const TextStyle(fontFamily: Constants.montserratBold, fontSize: 20, fontWeight: FontWeight.bold, color: Constants.colorOnPrimary),
                       ),
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: 10, left: 10),
+                        padding: const EdgeInsets.only(bottom: 10, left: 10),
                         child: Text(
-                          AppText.PERFORMER_BAND,
+                          '${AppText.PERFORMER_BAND}${song.bandName}',
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: Constants.montserratLight,
-                              fontSize: 16,
-                              color: Constants.colorOnPrimary),
+                          style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 16, color: Constants.colorOnPrimary),
                         ),
                       ),
                     ),
@@ -224,31 +252,24 @@ class SongWidget extends StatelessWidget {
                 shape: BoxShape.rectangle,
                 color: Constants.colorPrimaryVariant.withOpacity(0.95),
               ),
-              child: BlocBuilder<MainScreenBloc, MainScreenState>(
-                  builder: (_, state) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    right: 8.0,
-                    left: 20.0,
-                  ),
-                  child: CustomCheckbox(
-                    isChecked: state.isVote,
-                    onChanged: (bool? value) {
-                      if (value == null) return;
-                      bloc.toggleVote();
-                      if (value) {
-                        onChanged.call();
-                      }
-                    },
-                  ),
-                );
-              }))
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 8.0,
+                  left: 20.0,
+                ),
+                child: CustomCheckbox(
+                  isChecked: song.isVoted,
+                  onChanged: (bool? value) {
+                    if (value == null) return;
+                      onChanged.call();
+                  },
+                ),
+              ))
         ],
       ),
     );
   }
 }
-
 
 class CustomCheckbox extends StatelessWidget {
   final bool isChecked;
@@ -264,42 +285,42 @@ class CustomCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<MainScreenBloc>();
     return InkWell(
-     onTap: () {
-       onChanged.call(isChecked);
-     },
-     child: Row(
-       children: [
-         Padding(
-           padding: const EdgeInsets.only(left: 4.0, right: 8),
-           child: Container(
-             decoration: BoxDecoration(
-               border: Border.all(
-                 color: Colors.white,
-                 width: 1.0,
-               ),
-               borderRadius: BorderRadius.circular(4.0),
-               color: Colors.transparent,
-             ),
-             width: 18.0,
-             height: 18.0,
-             child: isChecked
-                 ? null
-                 : const Icon(
-               Icons.check,
-               color: Colors.white,
-               size: 14.0,
-             ),
-           ),
-         ),
-         const Text(
-           AppText.VOTE,
-           style: TextStyle(
-             fontFamily: Constants.montserratLight,
-             color: Constants.colorOnSurface,
-           ),
-         ),
-       ],
-     ),
-      );
+      onTap: () {
+        onChanged.call(isChecked);
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0, right: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(4.0),
+                color: Colors.transparent,
+              ),
+              width: 18.0,
+              height: 18.0,
+              child: isChecked
+                  ? null
+                  : const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 14.0,
+                    ),
+            ),
+          ),
+          const Text(
+            AppText.VOTE,
+            style: TextStyle(
+              fontFamily: Constants.montserratLight,
+              color: Constants.colorOnSurface,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

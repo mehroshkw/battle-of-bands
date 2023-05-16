@@ -54,32 +54,27 @@ class SharedWebService {
       'dob': dob,
     });
     final responseBody = await response.transform(utf8.decoder).join();
-    final data =
-        LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
   /// Login user
 
-  Future<LoginAuthenticationResponse> login(
-      String email, String password) async {
+  Future<LoginAuthenticationResponse> login(String email, String password) async {
     print(email);
     print(password);
-    final response = await _post(Uri.parse("$BASE_URL/Account/Login"),
-        {'email': email, 'password': password});
+    final response = await _post(Uri.parse("$BASE_URL/Account/Login"), {'email': email, 'password': password});
     print('response ======>>> $response');
     final responseBody = await response.transform(utf8.decoder).join();
     print('responseBody ======>>> $responseBody');
-    final data =
-        LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     print('data ======>>> $data');
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
   /// forget password
   Future<LoginAuthenticationResponse> forgetPassword(String email) async {
-    final response = await _post(
-        Uri.parse("$BASE_URL/Account/ForgetPassword"), {'email': email});
+    final response = await _post(Uri.parse("$BASE_URL/Account/ForgetPassword"), {'email': email});
     final responseBody = await response.transform(utf8.decoder).join();
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
@@ -88,28 +83,16 @@ class SharedWebService {
   Future<IBaseResponse> changePassword(String currentPassword, String newPassword) async {
     final loginResponse = await _loginResponse;
     if (loginResponse == null) throw const IdNotFoundException();
-    print('id::: ${loginResponse.id}');
-    final response = await _post(Uri.parse('$BASE_URL/Admin/ChangePassword'), {
-      'id': loginResponse.id,
-      'oldPassword': currentPassword,
-      'newPassword': newPassword
-    });
-    print('response === $response');
+    final response = await _post(Uri.parse('$BASE_URL/Admin/ChangePassword'), {'id': loginResponse.id, 'oldPassword': currentPassword, 'newPassword': newPassword});
     final responseBody = await response.transform(utf8.decoder).join();
-    print('responsebody === $responseBody');
     return StatusMessageResponse.fromJson(json.decode(responseBody));
   }
 
   /// Edit Profile
 
-  Future<LoginAuthenticationResponse> updateProfile(
-      String id,String name,String email, String dob, String image) async {
-
+  Future<LoginAuthenticationResponse> updateProfile(String id, String name, String email, String dob, String image) async {
     print('image path=========================>$image');
-    final headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'multipart/form-data'
-    };
+    final headers = {'Accept': 'application/json', 'Content-Type': 'multipart/form-data'};
     final body = {
       'id': id,
       'fullName': name,
@@ -119,7 +102,7 @@ class SharedWebService {
     };
     final uri = Uri.parse('$BASE_URL/Account/ProfileUpdate');
     final request = http.MultipartRequest('POST', uri);
-    if(image.isNotEmpty){
+    if (image.isNotEmpty) {
       final imageFile = await http.MultipartFile.fromPath('image', image);
       request.files.add(imageFile);
     }
@@ -140,36 +123,47 @@ class SharedWebService {
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
     return Statistics.fromJson(responseBody);
   }
+
   Future<List<Genre>> getAllGenre() async {
     final uri = Uri.parse('$BASE_URL/Genre/GetAllGenre');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
     return (responseBody as List<dynamic>).map((e) => Genre.fromJson(e)).toList();
   }
-  Future<List<Song>> getLeaderboard(int genreId,int userId) async {
+
+  Future<List<Song>> getLeaderboard(int genreId, int userId) async {
     final uri = Uri.parse('$BASE_URL/Dashboard/GetLeaderboard?appUserId=$userId&genreId=$genreId');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
     return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
   }
-  Future<List<Song>> getAllMySongs(int genreId,int userId) async {
-    print('genre id---->$genreId');
-    final uri = Uri.parse('$BASE_URL/Song/GetAllMySongs?appUserId=4&genreId=$genreId');
+
+  Future<List<Song>> getAllMySongs(int genreId, int userId) async {
+    final uri = Uri.parse('$BASE_URL/Song/GetAllMySongs?appUserId=$userId&genreId=$genreId');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
-    print('response --------->$responseBody');
     return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+  }
+
+  Future<List<Song>> getAllSongs(int genreId, int userId) async {
+    final uri = Uri.parse('$BASE_URL/Song/GetAllSongByGenreId??appUserId=$userId&genreId=$genreId');
+    final response = await _get(uri);
+    final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+  }
+
+  Future<void> voteUnVote(int songId, int userId, bool isVoted) async {
+    final response = await _post(Uri.parse('$BASE_URL/Song/Vote'), {"songId": songId, "appUserId": userId, "isVoted": isVoted});
+    final responseBody = await response.transform(utf8.decoder).join();
+    print('response body-----------vote');
   }
 
   /// upload song
   Future<AddSongResponse> addSong(Map<String, String> body, String song) async {
-    final headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'multipart/form-data'
-    };
+    final headers = {'Accept': 'application/json', 'Content-Type': 'multipart/form-data'};
     final uri = Uri.parse('$BASE_URL/Song/AddSong');
     final request = http.MultipartRequest('POST', uri);
-    if(song.isNotEmpty){
+    if (song.isNotEmpty) {
       final uploadSong = await http.MultipartFile.fromPath('fileUrl', song);
       request.files.add(uploadSong);
     }
