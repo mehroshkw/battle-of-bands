@@ -21,6 +21,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     getAllGenre();
     getUser();
     getStatistics();
+    getUser();
   }
 
   getStatistics() async {
@@ -38,7 +39,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   Future<void> getUser() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id));
+    emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id, userDb: user.dateOfBirth, userImage: user.imagePath));
   }
 
   void updateIndex(int index) {
@@ -77,5 +78,9 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   void toggleNoMusic() {
     emit(state.copyWith(isNoMusic: !state.isNoMusic));
+  }
+
+  void logout() {
+    sharedPreferenceHelper.clear();
   }
 }

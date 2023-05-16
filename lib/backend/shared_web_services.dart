@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import '../data/exception.dart';
@@ -6,7 +7,6 @@ import 'server_response.dart';
 import 'package:http/http.dart' as http;
 
 class SharedWebService {
-  // final String BASE_URL = "http://reekrootsapi.triaxo.com/api";
   final String BASE_URL = "http://192.168.1.2:5069/api";
 
   final HttpClient _client = HttpClient();
@@ -54,15 +54,33 @@ class SharedWebService {
       'dob': dob,
     });
     final responseBody = await response.transform(utf8.decoder).join();
-    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    final data =
+        LoginAuthenticationResponse.fromJson(json.decode(responseBody));
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
   /// Login user
-  Future<LoginAuthenticationResponse> login(String email, String password) async {
-    final response = await _post(Uri.parse("$BASE_URL/Account/Login"), {'email': email, 'password': password});
+
+  Future<LoginAuthenticationResponse> login(
+      String email, String password) async {
+    print(email);
+    print(password);
+    final response = await _post(Uri.parse("$BASE_URL/Account/Login"),
+        {'email': email, 'password': password});
+    print('response ======>>> $response');
     final responseBody = await response.transform(utf8.decoder).join();
-    final data = LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    print('responseBody ======>>> $responseBody');
+    final data =
+        LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    print('data ======>>> $data');
+    return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+  }
+
+  /// forget password
+  Future<LoginAuthenticationResponse> forgetPassword(String email) async {
+    final response = await _post(
+        Uri.parse("$BASE_URL/Account/ForgetPassword"), {'email': email});
+    final responseBody = await response.transform(utf8.decoder).join();
     return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
   }
 
@@ -70,28 +88,52 @@ class SharedWebService {
   Future<IBaseResponse> changePassword(String currentPassword, String newPassword) async {
     final loginResponse = await _loginResponse;
     if (loginResponse == null) throw const IdNotFoundException();
-    final response = await _post(Uri.parse('$BASE_URL/Accounts/ChangePassword'), {'userId': loginResponse.id, 'currentPassword': currentPassword, 'newPassword': newPassword});
+    print('id::: ${loginResponse.id}');
+    final response = await _post(Uri.parse('$BASE_URL/Admin/ChangePassword'), {
+      'id': loginResponse.id,
+      'oldPassword': currentPassword,
+      'newPassword': newPassword
+    });
+    print('response === $response');
     final responseBody = await response.transform(utf8.decoder).join();
+    print('responsebody === $responseBody');
     return StatusMessageResponse.fromJson(json.decode(responseBody));
   }
 
   /// Edit Profile
-  Future<LoginAuthenticationResponse> editProfile(String? id, String name, String schoolName, String email, String userName, String password, String imagePath) async {
+
+  Future<LoginAuthenticationResponse> updateProfile(
+      String id,String name,String email, String dob, String image) async {
+
+    print('image path=========================>$image');
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data'
+    };
     final body = {
       'id': id,
-      'name': name,
-      'schoolName': schoolName,
+      'fullName': name,
       'email': email,
-      'userName': userName,
-      'password': password,
-      'imagePath': imagePath,
+      'dob': dob,
+      // 'Password':'@Test1234'
     };
-    final uri = Uri.parse('$BASE_URL/Accounts/UpdateUser');
-    final response = await _post(uri, body);
-    final responseBody = await response.transform(utf8.decoder).join();
-    return LoginAuthenticationResponse.fromJson(json.decode(responseBody));
+    final uri = Uri.parse('$BASE_URL/Account/ProfileUpdate');
+    final request = http.MultipartRequest('POST', uri);
+    if(image.isNotEmpty){
+      final imageFile = await http.MultipartFile.fromPath('image', image);
+      request.files.add(imageFile);
+    }
+
+    request.headers.addAll(headers);
+
+    request.fields.addAll(body);
+    final response = await request.send();
+    final responseData = await response.stream.bytesToString();
+    print("responsedata === $responseData");
+    return LoginAuthenticationResponse.fromJson(json.decode(responseData));
   }
 
+  /// get statistics
   Future<Statistics> getStatistics(int userId) async {
     final uri = Uri.parse('$BASE_URL/Dashboard/GetStatistics?appUserId=$userId');
     final response = await _get(uri);
@@ -117,5 +159,24 @@ class SharedWebService {
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
     print('response --------->$responseBody');
     return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+  }
+
+  /// upload song
+  Future<AddSongResponse> addSong(Map<String, String> body, String song) async {
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data'
+    };
+    final uri = Uri.parse('$BASE_URL/Song/AddSong');
+    final request = http.MultipartRequest('POST', uri);
+    if(song.isNotEmpty){
+      final uploadSong = await http.MultipartFile.fromPath('fileUrl', song);
+      request.files.add(uploadSong);
+    }
+    request.headers.addAll(headers);
+    request.fields.addAll(body);
+    final response = await request.send();
+    final responseData = await response.stream.bytesToString();
+    return AddSongResponse.fromJson(json.decode(responseData));
   }
 }

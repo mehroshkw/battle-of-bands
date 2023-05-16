@@ -2,34 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../backend/server_response.dart';
 import '../../../backend/shared_web_services.dart';
-import '../../../helper/shared_preference_helper.dart';
-import 'login_state.dart';
+import 'forget_password_state.dart';
 
-class LoginBloc extends Cubit<LoginBlocState>{
+class ForgetPasswordBloc extends Cubit<ForgetPasswordState>{
 
   /// Text Editing Controllers
  final TextEditingController emailController = TextEditingController();
- final TextEditingController passwordController = TextEditingController();
  final SharedWebService _sharedWebService = SharedWebService.instance();
 
-  LoginBloc():super( LoginBlocState.initial());
+ ForgetPasswordBloc():super( ForgetPasswordState.initial());
 
  void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 
  void updateEmailError(bool value, String errorText) => emit(state.copyWith(emailError: value, errorText: errorText));
 
- void updatePasswordError(bool value, String errorText) => emit(state.copyWith(passwordError: value, errorText: errorText));
-
- Future<IBaseResponse> login() async {
+ Future<IBaseResponse> forgetPassword() async {
    final String email = emailController.text;
-   final String password = passwordController.text;
-   print('email: $email');
-   print('pass: $password');
-   final response = await _sharedWebService.login(email, password);
+   final response = await _sharedWebService.forgetPassword(email);
    print("reached here========");
    if (response.status && response.user != null) {
      print('Hell --> ${response.user}');
-     await SharedPreferenceHelper.instance().insertUser(response.user!);
    }
    return response;
  }
@@ -37,7 +29,6 @@ class LoginBloc extends Cubit<LoginBlocState>{
  @override
  Future<void> close() {
    emailController.dispose();
-   passwordController.dispose();
    return super.close();
  }
 

@@ -11,6 +11,8 @@ class MainScreenState extends Equatable {
   final int userId;
   final String userName;
   final String userEmail;
+  final String userDb;
+  final String userImage;
   final DataEvent leaderBoardDataEvent;
   final DataEvent mySongDataEvent;
 
@@ -23,6 +25,8 @@ class MainScreenState extends Equatable {
       required this.userId,
       required this.userName,
       required this.userEmail,
+      required this.userDb,
+      required this.userImage,
       required this.leaderBoardDataEvent,
       required this.mySongDataEvent});
 
@@ -36,6 +40,8 @@ class MainScreenState extends Equatable {
             userId: -1,
             userName: '',
             userEmail: '',
+            userDb: '',
+            userImage: '',
             leaderBoardDataEvent: const Initial(),
             mySongDataEvent: const Initial());
 
@@ -48,6 +54,8 @@ class MainScreenState extends Equatable {
           int? userId,
           String? userName,
           String? userEmail,
+          String? userDb,
+          String? userImage,
           DataEvent? leaderBoardDataEvent,
           DataEvent? mySongDataEvent}) =>
       MainScreenState(
@@ -59,10 +67,12 @@ class MainScreenState extends Equatable {
           userEmail: userEmail ?? this.userEmail,
           userId: userId ?? this.userId,
           allGenre: allGenre ?? this.allGenre,
+          userImage: userImage ?? this.userImage,
+          userDb: userDb ?? this.userDb,
           leaderBoardDataEvent: leaderBoardDataEvent ?? this.leaderBoardDataEvent,
           mySongDataEvent: mySongDataEvent ?? this.mySongDataEvent);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent];
+  List<Object?> get props => [index, isVote, isNoMusic, statistics, allGenre, leaderBoardDataEvent, mySongDataEvent, userDb, userImage];
 }

@@ -43,6 +43,7 @@ abstract class AppText {
   static const String GENRE = 'Genre';
   static const String SONG_NAME = "Designer's Life eps.5";
   static const String PERFORMER_BAND = "Performer/";
+  static const String PERFORMER_BAND_ = "Performer/Band Name";
   static const String SONG_START_TIME = "00:20";
   static const String SONG_START = "00:10 - 00:20";
   static const String SONG_END_TIME = "00:30";
@@ -95,6 +96,9 @@ abstract class AppText {
       'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
 
   /// errors
+  static const String TITLE_EMPTY = "Title cannot be empty";
+  static const String BANDNAME_EMPTY = "Bandname cannot be empty";
+  static const String GENRE_EMPTY = "Genre cannot be empty";
   static const String INVALID_EMAIL = 'Invalid Email Address';
   static const String TRY_AGAIN = 'Try Again';
   static const String CANCEL = 'Cancel';
@@ -137,4 +141,13 @@ abstract class AppText {
   static const String DOB_EMPTY = "DOB cannot be empty";
   static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
   static const String LEADERBOARD_RANKING_CONTENT = "Leaderboard ranking not show right now. if you upload songs then rank of your song show here ...";
+  static const String SENDING = "Sending...";
+  static const String EMAIL_SENT = "Email Sent Successfully";
+  static const String UPDATING_PASSWORD = "Updating Password...";
+  static const String PASSWORD_CHANGED = "Password Changed Successfully";
+  static const String UPDATING_PROFILE = "Updating Profile...";
+  static const String PROFILE_UPDATED = "Profile Updated Successfully";
+  static const String UPLOADING_SONG = "Uploading Song";
+  static const String SONG_UPLOADED = "Song Uploaded Successfully";
+
 }
