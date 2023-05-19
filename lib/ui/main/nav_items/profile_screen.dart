@@ -39,155 +39,157 @@ class ProfileScreen extends StatelessWidget {
               child: Image.asset('assets/edit.png'))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            /// IMAGE
-            BlocBuilder<MainScreenBloc, MainScreenState>(
-                buildWhen: (previous, current) => previous.userImage != current.userImage,
-                builder: (_, state) {
-                  ImageProvider image;
-                  if (state.userImage.isNotEmpty) {
-                    image = NetworkImage('$BASE_URL_IMAGE/${state.userImage}');
-                  } else {
-                    image = const AssetImage('assets/profile.png');
-                  }
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100), border: Border.all(color: Constants.colorPrimary), image: DecorationImage(image: image, fit: BoxFit.cover)),
-                      width: 120,
-                      height: 120,
-                    ),
-                  );
-                }),
-            BlocBuilder<MainScreenBloc, MainScreenState>(
-              // buildWhen: (previous, current) => previous.userName != current.userName,
-              builder: (_, state) => Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  state.userName,
-                  style: const TextStyle(
-                    color: Constants.colorOnSurface,
-                    fontFamily: Constants.montserratMedium,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  AppText.EMAIL,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: Constants.montserratRegular,
-                    color: Constants.colorOnSurface,
-                  ),
-                ),
-                BlocBuilder<MainScreenBloc, MainScreenState>(
-                  // buildWhen: (previous, current) => previous.userEmail != current.userEmail,
-                  builder: (_, state) => Text(
-                    state.userEmail,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontFamily: Constants.montserratLight,
-                      color: Constants.colorText
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Divider(
-                color: Constants.colorOnSurface,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  AppText.DOB,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: Constants.montserratRegular,
-                    color: Constants.colorOnSurface,
-                  ),
-                ),
-                BlocBuilder<MainScreenBloc, MainScreenState>(
-                  // buildWhen: (previous, current) => previous.userDb != current.userDb,
-                  builder: (_, state) => Text(
-                    state.userDb,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontFamily: Constants.montserratLight,
-                      color: Constants.colorText,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Divider(
-                color: Constants.colorOnSurface,
-              ),
-            ),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      ChangePassword.route,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              /// IMAGE
+              BlocBuilder<MainScreenBloc, MainScreenState>(
+                  buildWhen: (previous, current) => previous.userImage != current.userImage,
+                  builder: (_, state) {
+                    ImageProvider image;
+                    if (state.userImage.isNotEmpty) {
+                      image = NetworkImage('$BASE_URL_IMAGE/${state.userImage}');
+                    } else {
+                      image = const AssetImage('assets/profile.png');
+                    }
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100), border: Border.all(color: Constants.colorPrimary), image: DecorationImage(image: image, fit: BoxFit.cover)),
+                        width: 120,
+                        height: 120,
+                      ),
                     );
-                  },
-                  child: const Text(
-                    AppText.CHANGE_PASSORD,
+                  }),
+              BlocBuilder<MainScreenBloc, MainScreenState>(
+                // buildWhen: (previous, current) => previous.userName != current.userName,
+                builder: (_, state) => Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    state.userName,
+                    style: const TextStyle(
+                      color: Constants.colorOnSurface,
+                      fontFamily: Constants.montserratMedium,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    AppText.EMAIL,
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: Constants.montserratRegular,
-                      color: Constants.colorPrimary,
+                      color: Constants.colorOnSurface,
                     ),
                   ),
+                  BlocBuilder<MainScreenBloc, MainScreenState>(
+                    // buildWhen: (previous, current) => previous.userEmail != current.userEmail,
+                    builder: (_, state) => Text(
+                      state.userEmail,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: Constants.montserratLight,
+                        color: Constants.colorText
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Divider(
+                  color: Constants.colorOnSurface,
                 ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Divider(
-                color: Constants.colorOnSurface,
               ),
-            ),
-            const SizedBox(
-              height: 140,
-            ),
-            SizedBox(
-              width: size.width - 30,
-              height: 50,
-              child: AppButton(
-                text: AppText.LOGOUT,
-                onClick: () {
-                  MaterialDialogHelper.instance()
-                    ..injectContext(context)
-                    ..showLogOutDialogue(positiveClickListener: () {
-                      bloc.logout();
-                      Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (route) => false);
-                    });
-                },
-                color: Constants.colorPrimary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    AppText.DOB,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: Constants.montserratRegular,
+                      color: Constants.colorOnSurface,
+                    ),
+                  ),
+                  BlocBuilder<MainScreenBloc, MainScreenState>(
+                    // buildWhen: (previous, current) => previous.userDb != current.userDb,
+                    builder: (_, state) => Text(
+                      state.userDb,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: Constants.montserratLight,
+                        color: Constants.colorText,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Divider(
+                  color: Constants.colorOnSurface,
+                ),
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        ChangePassword.route,
+                      );
+                    },
+                    child: const Text(
+                      AppText.CHANGE_PASSORD,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: Constants.montserratRegular,
+                        color: Constants.colorPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Divider(
+                  color: Constants.colorOnSurface,
+                ),
+              ),
+              const SizedBox(
+                height: 140,
+              ),
+              SizedBox(
+                width: size.width - 30,
+                height: 50,
+                child: AppButton(
+                  text: AppText.LOGOUT,
+                  onClick: () {
+                    MaterialDialogHelper.instance()
+                      ..injectContext(context)
+                      ..showLogOutDialogue(positiveClickListener: () {
+                        bloc.logout();
+                        Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (route) => false);
+                      });
+                  },
+                  color: Constants.colorPrimary,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
