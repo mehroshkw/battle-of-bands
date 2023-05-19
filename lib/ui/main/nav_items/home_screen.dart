@@ -1,7 +1,7 @@
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
-import 'package:battle_of_bands/ui/my_song_details.dart';
+import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,7 +109,9 @@ class HomeScreen extends StatelessWidget {
               BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
                 final leaderBoardDataEvent = state.leaderBoardDataEvent;
                 if (leaderBoardDataEvent is Loading) {
-                  return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
+                  return SizedBox(
+                      height: size.height/3,
+                      child: const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary)));
                 } else if (leaderBoardDataEvent is Empty || leaderBoardDataEvent is Initial) {
                   return Center(
                     child: Column(
@@ -363,7 +365,7 @@ class _SingleLeaderboardItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('00:30', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
+                        Text(formatDuration(song.duration.toInt()), textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorGradientDark)),
                         Text('Perform/${song.bandName}', textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 14, color: colorGet(index))),
                         Text('Vote ${song.votesCount}',
                             textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratRegular, fontSize: 14, color: Constants.colorOnPrimary)),
@@ -386,6 +388,16 @@ class _SingleLeaderboardItem extends StatelessWidget {
         )
       ]),
     );
+  }
+
+  String formatDuration(int duration) {
+    final minutes = duration ~/ 60;
+    final seconds = duration % 60;
+
+    final formattedMinutes = minutes.toString().padLeft(2, '0');
+    final formattedSeconds = seconds.toString().padLeft(2, '0');
+
+    return '$formattedMinutes:$formattedSeconds';
   }
 
   colorGet(int index) {

@@ -107,7 +107,7 @@ class MaterialDialogHelper {
         });
   }
 
-  void showVoteDialogue( {String? vote,String? title, Function? positiveClickListener,Function? negativeClickListener}) {
+  void showVoteDialogue( {String? title, Function? positiveClickListener,Function? negativeClickListener}) {
     final context = _context;
     if (context == null) return;
     showDialog(
@@ -142,7 +142,7 @@ class MaterialDialogHelper {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children:  [
-                               Text("$vote for ", textAlign: TextAlign.center, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 20, color: Constants.colorOnSurface)),
+                               const Text("Vote for ", textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 20, color: Constants.colorOnSurface)),
                               Text("$title ", textAlign: TextAlign.center, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 20, color: Constants.colorPrimary)),
                             ],
                           )),

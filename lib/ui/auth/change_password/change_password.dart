@@ -34,7 +34,6 @@ class ChangePassword extends StatelessWidget {
                   SnackbarMessage.success(message: AppText.PASSWORD_CHANGED))
           : snackbarHelper.showSnackbar(
               snackbar: SnackbarMessage.error(message: response.message));
-      Navigator.pop(context);
     } catch (_) {
       dialogHelper
         ..dismissProgress()

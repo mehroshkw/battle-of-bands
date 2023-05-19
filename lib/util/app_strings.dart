@@ -44,10 +44,11 @@ abstract class AppText {
   static const String SONG_NAME = "Designer's Life eps.5";
   static const String PERFORMER_BAND = "Performer/";
   static const String PERFORMER_BAND_ = "Performer/Band Name";
-  static const String SONG_START_TIME = "00:20";
+  static const String SONG_START_TIME = "00:00";
   static const String SONG_START = "00:10 - 00:20";
   static const String SONG_END_TIME = "00:30";
   static const String VOTE = "Vote";
+  static const String CAST_VOTE = "Cast Vote";
 
   /// All songs
   static const String MY_SONG = 'My Song';

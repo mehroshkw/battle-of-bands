@@ -7,7 +7,8 @@ import 'server_response.dart';
 import 'package:http/http.dart' as http;
 
 class SharedWebService {
-  final String BASE_URL = "http://192.168.1.2:5069/api";
+  // final String BASE_URL = "http://192.168.1.2:5069/api";
+  final String BASE_URL = "http://battleofbands.triaxo.com/api";
 
   final HttpClient _client = HttpClient();
   final Duration _timeoutDuration = const Duration(seconds: 20);
@@ -83,8 +84,10 @@ class SharedWebService {
   Future<IBaseResponse> changePassword(String currentPassword, String newPassword) async {
     final loginResponse = await _loginResponse;
     if (loginResponse == null) throw const IdNotFoundException();
-    final response = await _post(Uri.parse('$BASE_URL/Admin/ChangePassword'), {'id': loginResponse.id, 'oldPassword': currentPassword, 'newPassword': newPassword});
+    final response = await _post(Uri.parse('$BASE_URL/Account/ChangePassword'), {'appUserId': loginResponse.id, 'oldPassword': currentPassword, 'newPassword': newPassword});
+    print("response============== ${response.statusCode} /${loginResponse.id}");
     final responseBody = await response.transform(utf8.decoder).join();
+    print("responseodyy============== $responseBody");
     return StatusMessageResponse.fromJson(json.decode(responseBody));
   }
 
@@ -98,7 +101,6 @@ class SharedWebService {
       'fullName': name,
       'email': email,
       'dob': dob,
-      // 'Password':'@Test1234'
     };
     final uri = Uri.parse('$BASE_URL/Account/ProfileUpdate');
     final request = http.MultipartRequest('POST', uri);
@@ -146,14 +148,15 @@ class SharedWebService {
   }
 
   Future<List<Song>> getAllSongs(int genreId, int userId) async {
-    final uri = Uri.parse('$BASE_URL/Song/GetAllSongByGenreId??appUserId=$userId&genreId=$genreId');
+    final uri = Uri.parse('$BASE_URL/Song/GetAllSongByGenreId?appUserId=$userId&genreId=$genreId');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    print('responsebody---------------------->$responseBody');
     return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
   }
 
-  Future<void> voteUnVote(int songId, int userId, bool isVoted) async {
-    final response = await _post(Uri.parse('$BASE_URL/Song/Vote'), {"songId": songId, "appUserId": userId, "isVoted": isVoted});
+  Future<void> voteSong(int songId, int userId, bool isVoted, int losserSongId) async {
+    final response = await _post(Uri.parse('$BASE_URL/Song/Vote'), {"songId": songId, "appUserId": userId, "isVoted": isVoted, "losserSongId": losserSongId});
     final responseBody = await response.transform(utf8.decoder).join();
     print('response body-----------vote');
   }

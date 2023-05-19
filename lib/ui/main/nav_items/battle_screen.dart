@@ -1,3 +1,4 @@
+import 'package:battle_of_bands/common/app_button.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/helper/snackbar_helper.dart';
@@ -25,7 +26,8 @@ class BattleScreen extends StatelessWidget {
     return Column(
       children: [
         BlocListener<MainScreenBloc, MainScreenState>(
-            listenWhen: (previous, current) => previous.snackbarMessage != current.snackbarMessage,
+            listenWhen: (previous, current) =>
+                previous.snackbarMessage != current.snackbarMessage,
             listener: (_, state) async {
               final snackbarMessage = state.snackbarMessage;
               if (snackbarMessage.message.isEmpty) return;
@@ -39,7 +41,8 @@ class BattleScreen extends StatelessWidget {
         AppBarWithGenre(
           screenName: AppText.BATTLES,
           genreField: BlocBuilder<MainScreenBloc, MainScreenState>(
-              buildWhen: (previous, current) => previous.allGenre != current.allGenre,
+              buildWhen: (previous, current) =>
+                  previous.allGenre != current.allGenre,
               builder: (_, state) {
                 return PopupMenuButton<Genre>(
                   enabled: true,
@@ -71,7 +74,8 @@ class BattleScreen extends StatelessWidget {
                             ))
                         .toList();
                   },
-                  onSelected: (genre) => bloc.updateBattleByChangeGenreId(genre),
+                  onSelected: (genre) =>
+                      bloc.updateBattleByChangeGenreId(genre),
                   child: GenreField(
                     controller: bloc.battlesGenreController,
                     hint: AppText.GENRE,
@@ -97,87 +101,146 @@ class BattleScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
-                final battleDataEvent = state.battleDataEvent;
-                if (battleDataEvent is Loading) {
-                  return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
-                } else if (battleDataEvent is Empty || battleDataEvent is Initial) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/no_music.png",
-                        height: 70,
-                        width: 70,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          AppText.NO_SONG,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: Constants.montserratRegular,
-                            color: Constants.colorOnSurface,
-                          ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: BlocBuilder<MainScreenBloc, MainScreenState>(
+                  builder: (_, state) => state.isBeginBattle
+                      ? BlocBuilder<MainScreenBloc, MainScreenState>(
+                          builder: (_, state) {
+                          final battleDataEvent = state.battleDataEvent;
+                          if (battleDataEvent is Loading) {
+                            return SizedBox(
+                              height: size.height/1.5,
+                              child: const Center(
+                                  child: CircularProgressIndicator.adaptive(
+                                      backgroundColor: Constants.colorPrimary)),
+                            );
+                          } else if (battleDataEvent is Empty ||
+                              battleDataEvent is Initial) {
+                            return SizedBox(
+                              height: size.height/2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/no_music.png",
+                                    height: 70,
+                                    width: 70,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      AppText.NO_SONG,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: Constants.montserratRegular,
+                                        color: Constants.colorOnSurface,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.all(6.0),
+                                    child: Text(
+                                      AppText.SELECT_A_GENRE,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: Constants.montserratRegular,
+                                        color: Constants.colorOnSurface,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    AppText.DUMMY_SONG_DESC,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: Constants.montserratLight,
+                                      color: Constants.colorOnSurface
+                                          .withOpacity(0.8),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else if (battleDataEvent is Data) {
+                            final items = battleDataEvent.data as List<Song>;
+                            final song1 = items.first;
+                            final song2 = items.last;
+                            return Column(
+                              children: [
+                                SongWidget(
+                                  song: song1,
+                                  onClickCalled: () {
+                                    MaterialDialogHelper.instance()
+                                      ..injectContext(context)
+                                      ..showVoteDialogue(
+                                          title: song1.title,
+                                          positiveClickListener: () {
+                                            bloc.voteBattleSong(
+                                                song1, song2.id);
+                                          });
+                                  }, setUrl: (){
+                                  bloc.setSongUrl("$BASE_URL_IMAGE/${song1.fileUrl}",items.indexOf(song1));
+                                },
+                                ),
+                                Image.asset(
+                                  'assets/vs_icon.png',
+                                  height: 70,
+                                  width: 70,
+                                ),
+                                SongWidget(
+                                  song: song2,
+                                  onClickCalled: () {
+                                    MaterialDialogHelper.instance()
+                                      ..injectContext(context)
+                                      ..showVoteDialogue(
+                                          title: song2.title,
+                                          positiveClickListener: () {
+                                            bloc.voteBattleSong(
+                                                song2, song1.id);
+                                          });
+                                  }, setUrl: (){
+                                  bloc.setSongUrl("$BASE_URL_IMAGE/${song2.fileUrl}", items.indexOf(song2));
+                                  bloc.togglePlayPause();
+                                },
+                                )
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        })
+                      : SizedBox(
+                          height: size.height / 1.6,
+                          child: GestureDetector(
+                              onTap: () {
+                                if (bloc
+                                    .battlesGenreController.text.isNotEmpty) {
+                                  bloc.toggleBeginBattle();
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Image.asset(
+                                  bloc.battlesGenreController.text.isEmpty
+                                      ? "assets/begin_battle_dim.png"
+                                      : "assets/begin_battle.png",
+                                  height: 250,
+                                  width: 250,
+                                  fit: BoxFit.contain,
+                                ),
+                              )),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(6.0),
-                        child: Text(
-                          AppText.SELECT_A_GENRE,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: Constants.montserratRegular,
-                            color: Constants.colorOnSurface,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        AppText.DUMMY_SONG_DESC,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: Constants.montserratLight,
-                          color: Constants.colorOnSurface.withOpacity(0.8),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                    ],
-                  );
-                } else if (battleDataEvent is Data) {
-                  final items = battleDataEvent.data as List<Song>;
-                  return ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final song = items[index];
-                      return SongWidget(
-                        song: items[index],
-                        onChanged: () {
-                          MaterialDialogHelper.instance()
-                            ..injectContext(context)
-                            ..showVoteDialogue(
-                                 vote:song.isVoted?'Un Vote':'Vote',
-                                title: song.title,
-                                positiveClickListener: () {
-                                  bloc.voteUnVoteBattleSong(song);
-                                });
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              }),
+                ),
+              ),
             ),
           ),
         )
@@ -187,10 +250,12 @@ class BattleScreen extends StatelessWidget {
 }
 
 class SongWidget extends StatelessWidget {
-  final Function onChanged;
+  final Function onClickCalled;
+  final Function setUrl;
   final Song song;
 
-  const SongWidget({Key? key, required this.onChanged, required this.song}) : super(key: key);
+  const SongWidget({Key? key, required this.onClickCalled, required this.song, required this.setUrl})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +266,9 @@ class SongWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       width: size.width - 30,
-      decoration: BoxDecoration(color: Constants.colorPrimaryVariant.withOpacity(0.95), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+          color: Constants.colorPrimaryVariant.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -214,7 +281,11 @@ class SongWidget extends StatelessWidget {
                   child: SizedBox(
                       height: 90,
                       width: 90,
-                      child: song.user.imagePath.isEmpty ? Image.asset('assets/song_icon.png') : Image.network('$BASE_URL_IMAGE/${song.user.imagePath}', fit: BoxFit.cover))),
+                      child: song.user.imagePath.isEmpty
+                          ? Image.asset('assets/song_icon.png')
+                          : Image.network(
+                              '$BASE_URL_IMAGE/${song.user.imagePath}',
+                              fit: BoxFit.cover))),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +306,11 @@ class SongWidget extends StatelessWidget {
                       child: Text(
                         song.title,
                         textAlign: TextAlign.left,
-                        style: const TextStyle(fontFamily: Constants.montserratBold, fontSize: 20, fontWeight: FontWeight.bold, color: Constants.colorOnPrimary),
+                        style: const TextStyle(
+                            fontFamily: Constants.montserratBold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Constants.colorOnPrimary),
                       ),
                     ),
                     Align(
@@ -245,7 +320,10 @@ class SongWidget extends StatelessWidget {
                         child: Text(
                           '${AppText.PERFORMER_BAND}${song.bandName}',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 16, color: Constants.colorText),
+                          style: const TextStyle(
+                              fontFamily: Constants.montserratLight,
+                              fontSize: 16,
+                              color: Constants.colorText),
                         ),
                       ),
                     ),
@@ -254,36 +332,93 @@ class SongWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
-            width: size.width,
-            child: Image.asset('assets/song_slider.png'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                AppText.SONG_START_TIME,
-                style: TextStyle(
-                  fontFamily: Constants.montserratLight,
-                  color: Constants.colorText,
+          Slider(
+              value: bloc.sliderValue(),
+              onChanged: (value) {
+              },
+              onChangeStart: (value) {
+                bloc.audioPlayer.pause();
+                bloc.togglePlayPause();
+              },
+              onChangeEnd: (value) {
+                final duration = bloc.audioPlayer.duration;
+                if (duration != null) {
+                  final seekPosition = (value * duration.inMilliseconds.toDouble()).round();
+                  bloc.audioPlayer.seek(Duration(milliseconds: seekPosition));
+                  bloc.audioPlayer.play(); // Resume playing after seeking
+                  bloc.togglePlayPause();
+                }
+              }),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 13.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BlocBuilder<MainScreenBloc, MainScreenState>(
+                  // buildWhen: (previous, current) => ,
+                  builder: (_, state) => Text(
+                    bloc.formatDuration(state.currentDuration.inSeconds),
+                    style: TextStyle(
+                      fontFamily: Constants.montserratLight,
+                      color: Constants.colorOnSurface.withOpacity(0.7),
+                    ),
+                  ),
                 ),
-              ),
-              Text(
-                AppText.SONG_END_TIME,
-                style: TextStyle(
-                  fontFamily: Constants.montserratLight,
-                  color: Constants.colorText,
+                Text(
+                  bloc.formatDuration(song.duration.toInt()),
+                  style: const TextStyle(
+                    fontFamily: Constants.montserratLight,
+                    color: Constants.colorText,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image.asset('assets/3x/previous.png', height: 20, width: 20),
-              Image.asset('assets/3x/back.png', height: 20, width: 20),
-              Image.asset('assets/3x/play_big.png', height: 50, width: 50),
-              Image.asset('assets/3x/forward.png', height: 20, width: 20),
+              GestureDetector(
+                  onTap: () {
+                    bloc.backwardTenSeconds();
+                  },
+                  child: Image.asset('assets/3x/back.png',
+                      height: 20, width: 20)),
+              BlocBuilder<MainScreenBloc, MainScreenState>(
+                builder: (_, state) => GestureDetector(
+                    onTap: () => setUrl.call(),
+                    child: state.isPlaying
+                        ? Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Constants.colorPrimary),
+                      child: const Icon(
+                        Icons.pause,
+                        size: 40,
+                        color: Constants.colorOnSurface,
+                      ),
+                    )
+                        : Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Constants.colorPrimary),
+                      child: const Icon(
+                        Icons.play_arrow_rounded,
+                        size: 40,
+                        color: Constants.colorOnSurface,
+                      ),
+                    )),
+              ),
+              GestureDetector(
+                  onTap: () {
+                    bloc.forwardTenSeconds();
+                  },
+                  child: Image.asset('assets/3x/forward.png',
+                      height: 20, width: 20)),
               Image.asset('assets/3x/next.png', height: 20, width: 20),
             ],
           ),
@@ -297,24 +432,17 @@ class SongWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: Constants.colorPrimary,
-                  width: 1,
+                  color: Constants.colorOnSurface,
+                  width: 0.4,
                 ),
                 shape: BoxShape.rectangle,
-                color: Constants.colorPrimaryVariant.withOpacity(0.95),
+                color: Constants.colorPrimary,
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 8.0,
-                  left: 20.0,
-                ),
-                child: CustomCheckbox(
-                  isChecked: song.isVoted,
-                  onChanged: (bool? value) {
-                    if (value == null) return;
-                    onChanged.call();
-                  },
-                ),
+              child: AppButton(
+                text: AppText.CAST_VOTE,
+                onClick: () {
+                  onClickCalled.call();
+                },
               ))
         ],
       ),

@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:battle_of_bands/backend/server_response.dart';
-import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
+import 'package:easy_audio_trimmer/easy_audio_trimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,19 +14,27 @@ class UploadSongBloc extends Cubit<UploadSongState> {
   TextEditingController songTitleController = TextEditingController();
   TextEditingController bandNameController = TextEditingController();
   TextEditingController urlController = TextEditingController();
-  final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
+  final SharedPreferenceHelper sharedPreferenceHelper =
+      SharedPreferenceHelper.instance();
 
   final SharedWebService _sharedWebService = SharedWebService.instance();
+
+  final GlobalKey trimmerKey = GlobalKey();
+
+  Trimmer trimmer = Trimmer();
 
   UploadSongBloc() : super(UploadSongState.initial()) {
     getAllGenre();
   }
 
-  void updateNameError(bool value, String errorText) => emit(state.copyWith(nameError: value, errorText: errorText));
+  void updateNameError(bool value, String errorText) =>
+      emit(state.copyWith(nameError: value, errorText: errorText));
 
-  void updateGenreError(bool value, String errorText) => emit(state.copyWith(genreError: value, errorText: errorText));
+  void updateGenreError(bool value, String errorText) =>
+      emit(state.copyWith(genreError: value, errorText: errorText));
 
-  void updateBandNameError(bool value, String errorText) => emit(state.copyWith(bandNameError: value, errorText: errorText));
+  void updateBandNameError(bool value, String errorText) =>
+      emit(state.copyWith(bandNameError: value, errorText: errorText));
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 
@@ -33,14 +42,42 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final allGenre = await _sharedWebService.getAllGenre();
     emit(state.copyWith(allGenre: allGenre));
   }
-  void changeGenre(Genre genre){
-    genreController.text=genre.title;
+
+  void changeGenre(Genre genre) {
+    genreController.text = genre.title;
     emit(state.copyWith(genreId: genre.id));
   }
 
   Future<void> updateFilePath(String filePath) async {
-   emit(state.copyWith(file: XFile(filePath)));
+    await trimmer.loadAudio(audioFile: File(filePath));
+    trimDuration();
+    emit(state.copyWith(file: XFile(filePath)));
   }
+
+  Future<void> clearFilePath() async {
+    trimmer.dispose;
+    emit(state.copyWith(file: XFile(''),duration: 0.0));
+  }
+
+  void trimDuration() async {
+    await trimmer.saveTrimmedAudio(
+      startValue: state.start,
+      endValue: state.end,
+      onSave: (String? trimmedFile) {
+        if(trimmedFile==null)return;
+        final duration = (state.end - state.start) / 1000;
+        print('duration---------------------------------------------------------------->$duration');
+        emit(state.copyWith(duration: duration));
+        print('duration---------------------------------------------------------------->${state.duration}');
+      },
+    );
+  }
+  String? trimFile(){
+    if(trimmer.currentAudioFile==null) return null;
+    return trimmer.currentAudioFile!.path;
+  }
+
+
 
   Future<AddSongResponse?> uploadSong() async {
     final user = await sharedPreferenceHelper.user;
@@ -50,7 +87,9 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final String externalUrl = urlController.text;
     final String title = songTitleController.text;
     final String bandName = bandNameController.text;
-    final String songPath = state.file.path;
+    final String songPath = trimFile()!;
+    final double duration = state.duration;
+    print("==================================> $duration");
 
     final body = {
       'AppUserId': userId,
@@ -58,10 +97,17 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       'GenreIds': genreId,
       'bandName': bandName,
       'ExternalUrl': 'https://www.google.com/',
+      'duration': duration.toString(),
     };
-    print(body);
+    print("body ======>>>>>>>>>>>> $body");
     final response = await _sharedWebService.addSong(body, songPath);
     print("response ======> $response");
     return response;
+  }
+
+  @override
+  Future<void> close() {
+    trimmer.dispose();
+    return super.close();
   }
 }

@@ -25,6 +25,7 @@ class ChangePasswordScreenBloc extends Cubit<ChangePasswordScreenState> {
 
   Future<IBaseResponse> changePassword() async {
     final response = await _sharedWebService.changePassword(passwordTextController.text, newPasswordTextController.text);
+    print("bloc response============== $response");
     if (response.status) {
       passwordTextController.text = '';
       newPasswordTextController.text = '';

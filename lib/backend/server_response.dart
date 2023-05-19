@@ -1,4 +1,5 @@
-const String BASE_URL_IMAGE = 'http://192.168.1.2:5069';
+// const String BASE_URL_IMAGE = 'http://192.168.1.2:5069';
+const String BASE_URL_IMAGE = 'http://battleofbands.triaxo.com';
 
 abstract class IBaseResponse {
   final bool status;
@@ -51,15 +52,15 @@ class LoginAuthenticationResponse extends StatusMessageResponse {
 class AddSongResponse extends StatusMessageResponse {
   final Song? songs;
 
-  AddSongResponse(this.songs, bool status, String message) : super(status: status, message: message);
+  AddSongResponse(this.songs, bool status, String message)
+      : super(status: status, message: message);
 
   factory AddSongResponse.fromJson(
     Map<String, dynamic> json,
   ) {
     final statusMessageResponse = StatusMessageResponse.fromJson(json);
-    final songsJson = json.containsKey('dataList')
-        ? json['dataList'] as Map<String, dynamic>?
-        : null;
+    final songsJson =
+        json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
     return songsJson == null
         ? AddSongResponse(
             null, statusMessageResponse.status, statusMessageResponse.message)
@@ -164,6 +165,7 @@ class Song {
   final String date;
   final int votesCount;
   final String bandName;
+  final num duration;
   final LoginResponse user;
   final bool isVoted;
 
@@ -176,19 +178,43 @@ class Song {
       required this.user,
       required this.bandName,
       required this.fileUrl,
+      required this.duration,
       required this.isVoted});
 
   factory Song.fromJson(Map<String, dynamic> json) {
     final int id = json.containsKey('id') ? json['id'] ?? 0 : 0;
     final String title = json.containsKey('title') ? json['title'] ?? '' : '';
     final String date = json.containsKey('date') ? (json['date']) ?? '' : '';
-    final int votesCount = json.containsKey('votesCount') ? json['votesCount'] ?? 0 : 0;
-    final String fileUrl = json.containsKey('fileUrl') ? json['fileUrl'] ?? '' : '';
-    final String bandName = json.containsKey('bandName') ? json['bandName'] ?? '' : '';
-    final bool isVoted = json.containsKey('isVoted') ? json['isVoted'] ?? false : false;
-    final Genre genre = json.containsKey('genre') ? Genre.fromJson(json['genre'] ?? Genre.empty()) : Genre.empty();
-    final LoginResponse user = json.containsKey('appUser') ? LoginResponse.fromJson(json['appUser'] ?? LoginResponse.empty()) : LoginResponse.empty();
-    return Song(id: id, title: title, votesCount: votesCount, date: date, genre: genre, fileUrl: fileUrl, user: user, bandName: bandName, isVoted: isVoted);
+    final int votesCount =
+        json.containsKey('votesCount') ? json['votesCount'] ?? 0 : 0;
+    final String fileUrl =
+        json.containsKey('fileUrl') ? json['fileUrl'] ?? '' : '';
+    final String bandName =
+        json.containsKey('bandName') ? json['bandName'] ?? '' : '';
+    final num duration =
+        json.containsKey('duration') ? json['duration'] ?? 0.0 : 0.0;
+    final bool isVoted =
+        json.containsKey('isVoted') ? json['isVoted'] ?? false : false;
+    final Genre genre = json.containsKey('genre')
+        ? Genre.fromJson(json['genre'] ?? Genre.empty())
+        : Genre.empty();
+    final LoginResponse user =
+    // json.containsKey('appUser')
+    //     ? json['appUser'] == 'null'
+    //         ? LoginResponse.empty()
+    //         : LoginResponse.fromJson(json['appUser']) :
+    LoginResponse.empty();
+    return Song(
+        id: id,
+        title: title,
+        votesCount: votesCount,
+        date: date,
+        genre: genre,
+        fileUrl: fileUrl,
+        user: user,
+        bandName: bandName,
+        duration: duration,
+        isVoted: isVoted);
   }
 
   Song copyWith({int? votesCount, bool? isVoted}) => Song(
@@ -200,8 +226,8 @@ class Song {
       date: date,
       votesCount: votesCount ?? this.votesCount,
       bandName: bandName,
+      duration: duration,
       isVoted: isVoted ?? this.isVoted);
-
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -210,7 +236,8 @@ class Song {
         'votesCount': votesCount,
         'fileUrl': fileUrl,
         'bandName': bandName,
-        'appUser': user
+        'appUser': user,
+        'duration': duration,
       };
 }
 

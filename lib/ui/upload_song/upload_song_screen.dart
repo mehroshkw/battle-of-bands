@@ -1,13 +1,11 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
+import 'package:easy_audio_trimmer/easy_audio_trimmer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../common/app_button.dart';
 import '../../common/app_text_field.dart';
 import '../../common/custom_appbar.dart';
@@ -51,44 +49,45 @@ class UploadSongScreen extends StatelessWidget {
     final bloc = context.read<UploadSongBloc>();
     final size = context.screenSize;
 
-    checkDuration(FilePickerResult result) async {
-      final PlatformFile file = result.files.first;
-      final String filePath = file.path!;
 
-      print(filePath);
-      print(file);
-
-      int? fileDurationMillis;
-
-      try {
-        final player = AudioPlayer();
-        // print("player...  ${player.setSourceUrl(filePath)}");
-        final url = player.setSourceUrl(filePath);
-
-        print("url========== $url");
-        final duration = await player.getDuration();
-        print(duration);
-        fileDurationMillis = duration!.inMilliseconds;
-        print("duration ======= $fileDurationMillis");
-      } catch (e) {
-        print("something went wrong");
-      }
-
-      if (fileDurationMillis != null) {
-        final minDurationMillis = const Duration(seconds: 10).inMilliseconds;
-        final maxDurationMillis = const Duration(seconds: 30).inMilliseconds;
-
-        if (fileDurationMillis >= minDurationMillis && fileDurationMillis <= maxDurationMillis) {
-          // File duration meets the requirements, proceed with the upload
-          print("song is fine to upload");
-          // bloc.updateFilePath(result.files.single.path!);
-        } else {
-          print("song does not meet the upload requirements");
-        }
-      } else {
-        print("Unable to retrieve file duration");
-      }
-    }
+    // checkDuration(FilePickerResult result) async {
+    //   final PlatformFile file = result.files.first;
+    //   final String filePath = file.path!;
+    //
+    //   print(filePath);
+    //   print(file);
+    //
+    //   int? fileDurationMillis;
+    //
+    //   try {
+    //     final player = AudioPlayer();
+    //     // print("player...  ${player.setSourceUrl(filePath)}");
+    //     final url = player.setSourceUrl(filePath);
+    //
+    //     print("url========== $url");
+    //     final duration = await player.getDuration();
+    //     print(duration);
+    //     fileDurationMillis = duration!.inMilliseconds;
+    //     print("duration ======= $fileDurationMillis");
+    //   } catch (e) {
+    //     print("something went wrong");
+    //   }
+    //
+    //   if (fileDurationMillis != null) {
+    //     final minDurationMillis = const Duration(seconds: 10).inMilliseconds;
+    //     final maxDurationMillis = const Duration(seconds: 30).inMilliseconds;
+    //
+    //     if (fileDurationMillis >= minDurationMillis && fileDurationMillis <= maxDurationMillis) {
+    //       // File duration meets the requirements, proceed with the upload
+    //       print("song is fine to upload");
+    //       // bloc.updateFilePath(result.files.single.path!);
+    //     } else {
+    //       print("song does not meet the upload requirements");
+    //     }
+    //   } else {
+    //     print("Unable to retrieve file duration");
+    //   }
+    // }
 
     return Scaffold(
         appBar: const CustomAppbar(
@@ -100,10 +99,13 @@ class UploadSongScreen extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
+                  bloc.clearFilePath();
                   final FilePickerResult? result = await FilePicker.platform.pickFiles(
                     allowMultiple: false,
+                    type: FileType.audio,
                     // allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
                   );
+                  // audioFilePath = result!.files.first.path;
                   // checkDuration(result!);
                   if (result == null) return;
                   bloc.updateFilePath(result.files.single.path!);
@@ -112,6 +114,7 @@ class UploadSongScreen extends StatelessWidget {
                     buildWhen: (p, c) => p.file != c.file,
                     builder: (_, state) {
                       return Container(
+                        padding: const EdgeInsets.all(10.0),
                         height: size.height / 8,
                         width: size.width,
                         alignment: Alignment.center,
@@ -129,7 +132,7 @@ class UploadSongScreen extends StatelessWidget {
                     }),
               ),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (p, c) => p.file != c.file,
+                  buildWhen: (p, c) => p.file != c.file||p.duration!=c.duration,
                   builder: (_, state) {
                     return state.file.path.isNotEmpty
                         ? Column(
@@ -149,27 +152,53 @@ class UploadSongScreen extends StatelessWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Image.asset('assets/record_slider.png'),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppText.SONG_START,
-                                    style: TextStyle(
-                                      fontFamily: Constants.montserratLight,
-                                      color: Constants.colorOnSurface.withOpacity(0.7),
-                                    ),
+                                child: TrimViewer(
+                                  trimmer:bloc.trimmer,
+                                  viewerHeight: 50.0,
+                                  viewerWidth: MediaQuery.of(context).size.width,
+                                  // maxAudioLength: const Duration(minutes: 10),
+                                  onChangeStart: (value) => state.start = value,
+                                  onChangeEnd: (value) => state.end = value,
+                                  backgroundColor: Constants.colorTextLight,
+                                  barColor: Constants.colorOnSurface,
+                                  durationStyle: DurationStyle.FORMAT_MM_SS,
+                                  durationTextStyle: const TextStyle(
+                                    fontFamily: Constants.montserratLight,
+                                    color: Constants.colorText,
                                   ),
-                                  Text(
-                                    AppText.SONG_END_TIME,
-                                    style: TextStyle(
-                                      fontFamily: Constants.montserratLight,
-                                      color: Constants.colorOnSurface.withOpacity(0.7),
-                                    ),
+                                  paddingFraction:4,
+                                  allowAudioSelection: true,
+                                  areaProperties: TrimAreaProperties.edgeBlur(blurEdges: true,blurColor: Constants.colorPrimary,borderRadius: 3),
+                                  editorProperties: const TrimEditorProperties(
+                                    circleSize: 0,
+                                    borderPaintColor: Constants.colorPrimary,
+                                    borderWidth: 2,
+                                    borderRadius: 5,
+                                    scrubberPaintColor: Constants.colorPrimary,
+                                    circlePaintColor: Constants.colorPrimary,
                                   ),
-                                ],
+                                  // key: bloc.trimmerKey,
+                                ),
                               ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       AppText.SONG_START,
+                              //       style: TextStyle(
+                              //         fontFamily: Constants.montserratLight,
+                              //         color: Constants.colorOnSurface.withOpacity(0.7),
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       AppText.SONG_END_TIME,
+                              //       style: TextStyle(
+                              //         fontFamily: Constants.montserratLight,
+                              //         color: Constants.colorOnSurface.withOpacity(0.7),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           )
                         : const SizedBox();
@@ -322,6 +351,7 @@ class UploadSongScreen extends StatelessWidget {
                 child: AppButton(
                   text: AppText.UPLOAD,
                   onClick: () {
+                    FocusScope.of(context).unfocus();
                     final name = bloc.songTitleController.text;
                     final bandName = bloc.bandNameController.text;
                     final genre = bloc.genreController.text;

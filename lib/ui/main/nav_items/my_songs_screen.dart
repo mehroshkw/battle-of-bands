@@ -1,7 +1,7 @@
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
-import 'package:battle_of_bands/ui/my_song_details.dart';
+import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,7 +80,9 @@ class AllSongsScreen extends StatelessWidget {
       BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
         final mySongDataEvent = state.mySongDataEvent;
         if (mySongDataEvent is Loading) {
-          return const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary));
+          return SizedBox(
+              height: size.height/2,
+              child: const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary)));
         } else if (mySongDataEvent is Empty || mySongDataEvent is Initial) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -223,7 +225,7 @@ class _SingeSongItemWidget extends StatelessWidget {
                       style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 14, color: Constants.colorPrimary),
                     ),
                     Text(
-                      AppText.SONG_END_TIME,
+                      bloc.formatDuration(song.duration.toInt()),
                       style: TextStyle(
                         fontFamily: Constants.montserratLight,
                         color: Constants.colorOnSurface.withOpacity(0.7),

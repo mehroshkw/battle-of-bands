@@ -11,7 +11,8 @@ import 'package:battle_of_bands/ui/edit_profile/edit_profile.dart';
 import 'package:battle_of_bands/ui/edit_profile/edit_profile_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_bloc.dart';
 import 'package:battle_of_bands/ui/main/main_screen.dart';
-import 'package:battle_of_bands/ui/my_song_details.dart';
+import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
+import 'package:battle_of_bands/ui/song_details/my_song_details_bloc.dart';
 import 'package:battle_of_bands/ui/splash_screen.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
@@ -95,8 +96,10 @@ class _AppRouter {
           final arguments=settings.arguments as List<dynamic>;
           final bool isMySong=arguments.first as bool;
           final song=arguments.last as Song;
-          final screen = MySongDetailScreen(isMySong: isMySong,song: song);
-          return _getPageRoute(screen);
+          final screen = MySongDetailScreen(isMySong: isMySong);
+          return MaterialPageRoute(
+              builder: (_) =>
+                  BlocProvider(create: (_) => MySongDetailsBloc(song: song), child: screen));
         }
       case UploadSongScreen.route:
         {
