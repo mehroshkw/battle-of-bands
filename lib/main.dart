@@ -1,6 +1,6 @@
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
-import 'package:battle_of_bands/ui/auth/change_password/change_password_screen_bloc.dart';
+import 'package:battle_of_bands/ui/auth/change_password/change_password_bloc.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_pass_bloc.dart';
 import 'package:battle_of_bands/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:battle_of_bands/ui/auth/login/login_bloc.dart';

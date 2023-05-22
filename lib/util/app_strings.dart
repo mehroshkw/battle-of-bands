@@ -48,7 +48,7 @@ abstract class AppText {
   static const String SONG_START = "00:10 - 00:20";
   static const String SONG_END_TIME = "00:30";
   static const String VOTE = "Vote";
-  static const String CAST_VOTE = "Cast Vote";
+  static const String CAST_VOTE = "Click to Vote";
 
   /// All songs
   static const String MY_SONG = 'My Song';

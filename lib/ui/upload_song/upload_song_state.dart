@@ -29,7 +29,7 @@ class UploadSongState extends Equatable {
     required this.bandNameError,
     required this.duration,
     required this.start,
-    required this.end,
+    required this.end
   });
 
   UploadSongState.initial()
@@ -72,7 +72,7 @@ class UploadSongState extends Equatable {
         bandNameError: bandNameError ?? this.bandNameError,
         duration: duration ?? this.duration,
         start: start ?? this.start,
-        end: end ?? this.end,
+        end: end ?? this.end
       );
 
   @override

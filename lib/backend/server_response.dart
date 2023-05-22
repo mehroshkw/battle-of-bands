@@ -1,5 +1,4 @@
-// const String BASE_URL_IMAGE = 'http://192.168.1.2:5069';
-const String BASE_URL_IMAGE = 'http://battleofbands.triaxo.com';
+const String BASE_URL_DATA = 'http://battleofbands.triaxo.com';
 
 abstract class IBaseResponse {
   final bool status;
@@ -35,9 +34,7 @@ class LoginAuthenticationResponse extends StatusMessageResponse {
   LoginAuthenticationResponse(this.user, bool status, String message)
       : super(status: status, message: message);
 
-  factory LoginAuthenticationResponse.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory LoginAuthenticationResponse.fromJson(Map<String, dynamic> json) {
     final statusMessageResponse = StatusMessageResponse.fromJson(json);
     final userJson =
         json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
@@ -55,9 +52,7 @@ class AddSongResponse extends StatusMessageResponse {
   AddSongResponse(this.songs, bool status, String message)
       : super(status: status, message: message);
 
-  factory AddSongResponse.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory AddSongResponse.fromJson(Map<String, dynamic> json) {
     final statusMessageResponse = StatusMessageResponse.fromJson(json);
     final songsJson =
         json.containsKey('data') ? json['data'] as Map<String, dynamic>? : null;
@@ -76,13 +71,12 @@ class LoginResponse {
   final String dateOfBirth;
   final String emailAddress;
 
-  LoginResponse({
-    required this.id,
-    required this.imagePath,
-    required this.name,
-    required this.dateOfBirth,
-    required this.emailAddress,
-  });
+  LoginResponse(
+      {required this.id,
+      required this.imagePath,
+      required this.name,
+      required this.dateOfBirth,
+      required this.emailAddress});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     final int id = json.containsKey('id') ? json['id'] : 0;
@@ -94,37 +88,34 @@ class LoginResponse {
     final String emailAddress =
         json.containsKey('email') ? json['email'] ?? '' : '';
     return LoginResponse(
-      id: id,
-      imagePath: imagePath,
-      name: name,
-      dateOfBirth: dateOfBirth,
-      emailAddress: emailAddress,
-    );
+        id: id,
+        imagePath: imagePath,
+        name: name,
+        dateOfBirth: dateOfBirth,
+        emailAddress: emailAddress);
   }
 
   LoginResponse.empty()
       : this(id: 0, imagePath: '', name: '', dateOfBirth: '', emailAddress: '');
 
-  LoginResponse copyWith({
-    String? imagePath,
-    String? name,
-    String? dateOfBirth,
-    String? emailAddress,
-  }) =>
+  LoginResponse copyWith(
+          {String? imagePath,
+          String? name,
+          String? dateOfBirth,
+          String? emailAddress}) =>
       LoginResponse(
-        id: id,
-        imagePath: imagePath ?? this.imagePath,
-        name: name ?? this.name,
-        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-        emailAddress: emailAddress ?? this.emailAddress,
-      );
+          id: id,
+          imagePath: imagePath ?? this.imagePath,
+          name: name ?? this.name,
+          dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+          emailAddress: emailAddress ?? this.emailAddress);
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'imagePath': imagePath,
         'fullName': name,
         'dob': dateOfBirth,
-        'email': emailAddress,
+        'email': emailAddress
       };
 }
 
@@ -198,12 +189,11 @@ class Song {
     final Genre genre = json.containsKey('genre')
         ? Genre.fromJson(json['genre'] ?? Genre.empty())
         : Genre.empty();
-    final LoginResponse user =
-    // json.containsKey('appUser')
-    //     ? json['appUser'] == 'null'
-    //         ? LoginResponse.empty()
-    //         : LoginResponse.fromJson(json['appUser']) :
-    LoginResponse.empty();
+    final LoginResponse user = json.containsKey('appUser')
+        ? json['appUser'] == 'null'
+            ? LoginResponse.empty()
+            : LoginResponse.fromJson(json['appUser'])
+        : LoginResponse.empty();
     return Song(
         id: id,
         title: title,
@@ -237,7 +227,7 @@ class Song {
         'fileUrl': fileUrl,
         'bandName': bandName,
         'appUser': user,
-        'duration': duration,
+        'duration': duration
       };
 }
 
