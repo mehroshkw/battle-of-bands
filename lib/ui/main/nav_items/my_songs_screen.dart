@@ -147,10 +147,10 @@ class AllSongsScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   itemCount: items.length,
                   itemBuilder: (_, index) {
-                    final song = items[index];
+                    final song = items;
                     return GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [true, song]),
-                      child: _SingeSongItemWidget(song: song),
+                      onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [true, song, index]),
+                      child: _SingeSongItemWidget(song: song[index]),
                     );
                   },
                 ),

@@ -64,5 +64,10 @@
     </array>
     <key>NSMicrophoneUsageDescription</key>
     <string>Battle of bands app requires the access music library in order to access the audio files.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

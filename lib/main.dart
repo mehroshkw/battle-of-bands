@@ -94,12 +94,13 @@ class _AppRouter {
       case MySongDetailScreen.route:
         {
           final arguments=settings.arguments as List<dynamic>;
-          final bool isMySong=arguments.first as bool;
-          final song=arguments.last as Song;
+          final bool isMySong=arguments[0] as bool;
+          final song=arguments[1] as List<Song>;
+          final int index = arguments[2] as int;
           final screen = MySongDetailScreen(isMySong: isMySong);
           return MaterialPageRoute(
               builder: (_) =>
-                  BlocProvider(create: (_) => MySongDetailsBloc(song: song), child: screen));
+                  BlocProvider(create: (_) => MySongDetailsBloc(song: song, index: index), child: screen));
         }
       case UploadSongScreen.route:
         {
