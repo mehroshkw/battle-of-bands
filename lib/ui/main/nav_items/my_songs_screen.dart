@@ -12,7 +12,7 @@ import '../../../common/custom_appbar.dart';
 import '../../../util/app_strings.dart';
 import '../../../util/constants.dart';
 import '../main_bloc.dart';
-import '../mian_bloc_state.dart';
+import '../mian_state.dart';
 
 class AllSongsScreen extends StatelessWidget {
   static const String key_title = '/all_songs';
@@ -71,13 +71,15 @@ class AllSongsScreen extends StatelessWidget {
                   suffixIcon: const Icon(
                     Icons.keyboard_arrow_down_rounded,
                     color: Constants.colorOnSurface,
-                    size: 20,
-                  ),
-                ),
+                    size: 20
+                  )
+                )
               );
-            }),
+            })
       ),
-      BlocBuilder<MainScreenBloc, MainScreenState>(builder: (_, state) {
+      BlocBuilder<MainScreenBloc, MainScreenState>(
+          buildWhen: (p, c)=> p.mySongDataEvent != c.mySongDataEvent,
+          builder: (_, state) {
         final mySongDataEvent = state.mySongDataEvent;
         if (mySongDataEvent is Loading) {
           return SizedBox(
@@ -89,12 +91,12 @@ class AllSongsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 60,
+                height: 60
               ),
               Image.asset(
                 "assets/no_music.png",
                 height: 70,
-                width: 70,
+                width: 70
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -103,12 +105,12 @@ class AllSongsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: Constants.montserratRegular,
-                    color: Constants.colorOnSurface,
-                  ),
-                ),
+                    color: Constants.colorOnSurface
+                  )
+                )
               ),
               const SizedBox(
-                height: 10,
+                height: 10
               ),
               const Padding(
                 padding: EdgeInsets.all(6.0),
@@ -117,23 +119,23 @@ class AllSongsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: Constants.montserratRegular,
-                    color: Constants.colorOnSurface,
-                  ),
-                ),
+                    color: Constants.colorOnSurface
+                  )
+                )
               ),
               Text(
-                AppText.DUMMY_SONG_DESC,
+                AppText.MY_SONGS_SHOW_HERE,
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: Constants.montserratLight,
                   color: Constants.colorOnSurface.withOpacity(0.8),
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.center
               ),
               const SizedBox(
-                height: 50,
-              ),
-            ],
+                height: 50
+              )
+            ]
           );
         } else if (mySongDataEvent is Data) {
           final items = mySongDataEvent.data as List<Song>;
@@ -150,32 +152,29 @@ class AllSongsScreen extends StatelessWidget {
                     final song = items;
                     return GestureDetector(
                       onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [true, song, index]),
-                      child: _SingeSongItemWidget(song: song[index]),
+                      child: _SingeSongItemWidget(song: song[index])
                     );
-                  },
-                ),
-              ),
-            ),
+                  }
+                )
+              )
+            )
           );
         } else {
           return const SizedBox();
         }
       }),
-      BlocBuilder<MainScreenBloc, MainScreenState>(
-        builder: (_, state) =>
-            SizedBox(
-              width: size.width - 30,
-              height: 50,
-              child: AppButton(
-                text: 'Upload Song',
-                onClick: () async {
-                  final result =await Navigator.pushNamed(context, UploadSongScreen.route);
-                  if(result==null)return;
-                    bloc.updateMySongs(result as Song);
-                },
-                color: Constants.colorPrimary,
-              ),
-            ),
+      SizedBox(
+        width: size.width - 30,
+        height: 50,
+        child: AppButton(
+          text: 'Upload Song',
+          onClick: () async {
+            final result =await Navigator.pushNamed(context, UploadSongScreen.route);
+            if(result==null)return;
+              bloc.updateMySongs(result as Song);
+          },
+          color: Constants.colorPrimary
+        )
       )
     ]);
   }

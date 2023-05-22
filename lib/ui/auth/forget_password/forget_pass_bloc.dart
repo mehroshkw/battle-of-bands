@@ -4,32 +4,30 @@ import '../../../backend/server_response.dart';
 import '../../../backend/shared_web_services.dart';
 import 'forget_password_state.dart';
 
-class ForgetPasswordBloc extends Cubit<ForgetPasswordState>{
-
+class ForgetPasswordBloc extends Cubit<ForgetPasswordState> {
   /// Text Editing Controllers
- final TextEditingController emailController = TextEditingController();
- final SharedWebService _sharedWebService = SharedWebService.instance();
+  final TextEditingController emailController = TextEditingController();
+  final SharedWebService _sharedWebService = SharedWebService.instance();
 
- ForgetPasswordBloc():super( ForgetPasswordState.initial());
+  ForgetPasswordBloc() : super(ForgetPasswordState.initial());
 
- void updateErrorText(String error) => emit(state.copyWith(errorText: error));
+  void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 
- void updateEmailError(bool value, String errorText) => emit(state.copyWith(emailError: value, errorText: errorText));
+  void updateEmailError(bool value, String errorText) =>
+      emit(state.copyWith(emailError: value, errorText: errorText));
 
- Future<IBaseResponse> forgetPassword() async {
-   final String email = emailController.text;
-   final response = await _sharedWebService.forgetPassword(email);
-   print("reached here========");
-   if (response.status && response.user != null) {
-     print('Hell --> ${response.user}');
-   }
-   return response;
- }
+  Future<IBaseResponse> forgetPassword() async {
+    final String email = emailController.text;
+    final response = await _sharedWebService.forgetPassword(email);
+    if (response.status && response.user != null) {
+      return response;
+    }
+    return response;
+  }
 
- @override
- Future<void> close() {
-   emailController.dispose();
-   return super.close();
- }
-
+  @override
+  Future<void> close() {
+    emailController.dispose();
+    return super.close();
+  }
 }

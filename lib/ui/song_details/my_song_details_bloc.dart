@@ -19,7 +19,7 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
 
   void songPlayer(int index) {
     emit(state.copyWith(isPlayerReady: true, index: index));
-    audioPlayer.setUrl("$BASE_URL_IMAGE/${song[index].fileUrl}");
+    audioPlayer.setUrl("$BASE_URL_DATA/${song[index].fileUrl}");
     processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
       if (event == ProcessingState.completed) {
         emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));

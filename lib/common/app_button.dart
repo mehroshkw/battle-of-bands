@@ -13,7 +13,8 @@ class AppButton extends StatelessWidget {
   final String fontFamily;
 
   const AppButton(
-      {required this.text,
+      {super.key,
+      required this.text,
       required this.onClick,
       this.borderRadius = 30,
       this.color,
@@ -25,12 +26,16 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
-      constraints: const BoxConstraints(minHeight: 44, maxHeight: 44),
-      onPressed: isEnabled ? () => onClick?.call() : null,
-      fillColor: isEnabled ? color : Colors.white54,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
-      child: Text(text, style: TextStyle(color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: fontSize)),
-    );
+        constraints: const BoxConstraints(minHeight: 44, maxHeight: 44),
+        onPressed: isEnabled ? () => onClick?.call() : null,
+        fillColor: isEnabled ? color : Colors.white54,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius)),
+        child: Text(text,
+            style: TextStyle(
+                color: Constants.colorOnSurface,
+                fontFamily: Constants.montserratRegular,
+                fontSize: fontSize)));
   }
 }
 
@@ -46,7 +51,8 @@ class IconAppButton extends StatelessWidget {
   final String fontFamily;
 
   const IconAppButton(
-      {required this.text,
+      {super.key,
+      required this.text,
       required this.onClick,
       this.borderRadius = 8,
       this.color,
@@ -62,11 +68,19 @@ class IconAppButton extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 44, maxHeight: 44),
         onPressed: isEnabled ? () => onClick?.call() : null,
         fillColor: isEnabled ? color : Colors.white54,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-          prefixIcon != null ? prefixIcon! : const SizedBox(),
-          SizedBox(width: prefixIcon != null ? 15 : 0),
-          Text(text, style: TextStyle(color: textColor, fontFamily: fontFamily, fontSize: fontSize))
-        ]));
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius)),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              prefixIcon != null ? prefixIcon! : const SizedBox(),
+              SizedBox(width: prefixIcon != null ? 15 : 0),
+              Text(text,
+                  style: TextStyle(
+                      color: textColor,
+                      fontFamily: fontFamily,
+                      fontSize: fontSize))
+            ]));
   }
 }

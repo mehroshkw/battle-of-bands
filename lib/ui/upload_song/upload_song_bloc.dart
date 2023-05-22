@@ -66,10 +66,8 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       onSave: (String? trimmedFile) {
         if(trimmedFile==null)return;
         final duration = (state.end - state.start) / 1000;
-        print('duration---------------------------------------------------------------->$duration');
         emit(state.copyWith(duration: duration));
-        print('duration---------------------------------------------------------------->${state.duration}');
-      },
+      }
     );
   }
   String? trimFile(){
@@ -89,7 +87,6 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final String bandName = bandNameController.text;
     final String songPath = trimFile()!;
     final double duration = state.duration;
-    print("==================================> $duration");
 
     final body = {
       'AppUserId': userId,
@@ -97,11 +94,9 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       'GenreIds': genreId,
       'bandName': bandName,
       'ExternalUrl': 'https://www.google.com/',
-      'duration': duration.toString(),
+      'duration': duration.toString()
     };
-    print("body ======>>>>>>>>>>>> $body");
     final response = await _sharedWebService.addSong(body, songPath);
-    print("response ======> $response");
     return response;
   }
 

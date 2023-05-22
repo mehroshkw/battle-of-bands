@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/common/custom_appbar.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
@@ -32,12 +31,14 @@ class EditProfile extends StatelessWidget {
       final response = await bloc.updateProfile();
       dialogHelper.dismissProgress();
       final snackbarHelper = SnackbarHelper.instance..injectContext(context);
-      if(!response.status){
-        snackbarHelper.showSnackbar(snackbar: SnackbarMessage.error(message: response.message));
+      if (!response.status) {
+        snackbarHelper.showSnackbar(
+            snackbar: SnackbarMessage.error(message: response.message));
         return;
       }
-      snackbarHelper.showSnackbar(snackbar: SnackbarMessage.success(message: AppText.PROFILE_UPDATED));
-      Navigator.pop(context,true);
+      snackbarHelper.showSnackbar(
+          snackbar: SnackbarMessage.success(message: AppText.PROFILE_UPDATED));
+      Navigator.pop(context, true);
     } catch (_) {
       dialogHelper
         ..dismissProgress()
@@ -52,58 +53,53 @@ class EditProfile extends StatelessWidget {
     final bloc = context.read<EditProfileBloc>();
 
     return Scaffold(
-        appBar: const CustomAppbar(
-          screenName: AppText.EDIT_PROFILE,
-        ),
+        appBar: const CustomAppbar(screenName: AppText.EDIT_PROFILE),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
+            padding: const EdgeInsets.all(20.0),
+            child: Column(children: [
               SizedBox(
                   width: 130,
                   height: 130,
-                  child: Stack(
-                    children: [
-                      BlocBuilder<EditProfileBloc, EditProfileState>(
-                          buildWhen: (previous, current) =>
-                              previous.fileDataEvent != current.fileDataEvent ||
-                              previous.imageUrl != current.imageUrl,
-                          builder: (_, state) {
-                            final eventData = state.fileDataEvent;
-                            ImageProvider image;
-                            if (eventData is! Data) {
-                              if (state.imageUrl.isNotEmpty) {
-                                image = NetworkImage(
-                                    '$BASE_URL_IMAGE/${state.imageUrl}');
-                              } else {
-                                image = const AssetImage('assets/profile.png');
-                              }
+                  child: Stack(children: [
+                    BlocBuilder<EditProfileBloc, EditProfileState>(
+                        buildWhen: (previous, current) =>
+                            previous.fileDataEvent != current.fileDataEvent ||
+                            previous.imageUrl != current.imageUrl,
+                        builder: (_, state) {
+                          final eventData = state.fileDataEvent;
+                          ImageProvider image;
+                          if (eventData is! Data) {
+                            if (state.imageUrl.isNotEmpty) {
+                              image = NetworkImage(
+                                  '$BASE_URL_DATA/${state.imageUrl}');
                             } else {
-                              final imageData = eventData.data as XFile;
-                              image = FileImage(File(imageData.path));
+                              image = const AssetImage('assets/profile.png');
                             }
-                            return Container(
-                                width: 130,
-                                height: 130,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2,
-                                        color: Constants.colorPrimary),
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: image, fit: BoxFit.cover)));
-                          }),
-                      Positioned(
-                          right: 3,
-                          bottom: 0,
-                          child: GestureDetector(
-                              onTap: () async {
-                                final selectedImage = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                if (selectedImage == null) return;
-                                bloc.handleImageSelection(selectedImage);
-                              },
-                              child: Container(
+                          } else {
+                            final imageData = eventData.data as XFile;
+                            image = FileImage(File(imageData.path));
+                          }
+                          return Container(
+                              width: 130,
+                              height: 130,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 2, color: Constants.colorPrimary),
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: image, fit: BoxFit.cover)));
+                        }),
+                    Positioned(
+                        right: 3,
+                        bottom: 0,
+                        child: GestureDetector(
+                            onTap: () async {
+                              final selectedImage = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              if (selectedImage == null) return;
+                              bloc.handleImageSelection(selectedImage);
+                            },
+                            child: Container(
                                 height: 30,
                                 width: 30,
                                 padding: const EdgeInsets.all(3),
@@ -114,66 +110,51 @@ class EditProfile extends StatelessWidget {
                                         color: Constants.colorPrimary,
                                         width: 1)),
                                 child: const Icon(Icons.camera_alt,
-                                    color: Constants.colorOnPrimary, size: 16),
-                              )))
-                    ],
-                  )),
-              const SizedBox(
-                height: 30,
-              ),
+                                    color: Constants.colorOnPrimary,
+                                    size: 16))))
+                  ])),
+              const SizedBox(height: 30),
               Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.FULL_NAME,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratRegular,
-                        fontSize: 16,
-                        color: Constants.colorOnPrimary)),
-              ),
-              BlocBuilder<EditProfileBloc, EditProfileState>(
-                builder: (_, state) => SizedBox(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.FULL_NAME,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratRegular,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary))),
+              SizedBox(
                   width: size.width,
                   height: 70,
                   child: AppTextField(
-                    hint: "Diana Agron",
-                    controller: bloc.nameController,
-                    textInputType: TextInputType.text,
-                    isError: false,
-                  ),
-                ),
-              ),
+                      hint: "Diana Agron",
+                      controller: bloc.nameController,
+                      textInputType: TextInputType.text,
+                      isError: false)),
               Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.DOB,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratRegular,
-                        fontSize: 16,
-                        color: Constants.colorOnPrimary)),
-              ),
-              BlocBuilder<EditProfileBloc, EditProfileState>(
-                builder: (_, state) =>  SizedBox(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.DOB,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratRegular,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary))),
+              SizedBox(
                   width: size.width,
                   height: 70,
                   child: AppTextField(
-                    hint: '25 July 1996',
-                    textInputType: TextInputType.datetime,
-                    controller: bloc.dobController,
-                    isError: false,
-                  ),
-                ),
-              ),
+                      hint: '25 July 1996',
+                      textInputType: TextInputType.datetime,
+                      controller: bloc.dobController,
+                      isError: false)),
               Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.EMAIL_ADDRESS,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: Constants.montserratRegular,
-                        fontSize: 16,
-                        color: Constants.colorOnPrimary)),
-              ),
-              BlocBuilder<EditProfileBloc, EditProfileState>(
-                builder: (_, state) =>  SizedBox(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.EMAIL_ADDRESS,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratRegular,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary))),
+              SizedBox(
                   width: size.width,
                   height: 70,
                   child: AppTextField(
@@ -181,27 +162,19 @@ class EditProfile extends StatelessWidget {
                     textInputType: TextInputType.emailAddress,
                     controller: bloc.emailController,
                     isError: false,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
+                  )),
+              const SizedBox(height: 40),
               SizedBox(
-                height: 50,
-                width: size.width,
-                child: AppButton(
-                  text: AppText.SAVE,
-                  onClick: () {
-                    context.unfocus();
-                    _updatedProfile(context, bloc);
-                  },
-                  color: Constants.colorPrimary,
-                ),
-              ),
-            ],
-          ),
-        ));
+                  height: 50,
+                  width: size.width,
+                  child: AppButton(
+                      text: AppText.SAVE,
+                      onClick: () {
+                        context.unfocus();
+                        _updatedProfile(context, bloc);
+                      },
+                      color: Constants.colorPrimary))
+            ])));
   }
 
   Future<void> getImg() async {

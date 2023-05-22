@@ -24,7 +24,7 @@ class SignupBloc extends Cubit<SignUpScreenBlocState> {
   void toggleConfirmPassword() => emit(state.copyWith(
       isNotShowConfirmPassword: !state.isNotShowConfirmPassword));
 
-  SignupBloc() : super(SignUpScreenBlocState.initial());
+  SignupBloc() : super(const SignUpScreenBlocState.initial());
 
   void updateNameError(bool value, String errorText) =>
       emit(state.copyWith(nameError: value, errorText: errorText));
@@ -42,10 +42,8 @@ class SignupBloc extends Cubit<SignUpScreenBlocState> {
       emit(state.copyWith(confirmPasswordError: value, errorText: errorText));
 
   void handleDateFromDate(DateTime dateTime) {
-    print('date time==================.$dateTime');
     final formattedDatetime =
         '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-    // emit(state.copyWith(dobError: ''));
     dobController.text = formattedDatetime;
   }
 
@@ -55,10 +53,8 @@ class SignupBloc extends Cubit<SignUpScreenBlocState> {
     final email = emailController.text;
     final password = passwordController.text;
     final dob = dobController.text;
-    print("reached here ====");
     final response = await _sharedWebService.signup(name, email, password, dob);
     if (response.status && response.user != null) {
-      print("user not empty ${response.user}");
       await SharedPreferenceHelper.instance().insertUser(response.user!);
     }
     return response;
