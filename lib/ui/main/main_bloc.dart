@@ -177,7 +177,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   void backwardTenSeconds() {
     if (!state.isPlayerReady) return;
     final currentDuration = state.currentDuration;
-    currentDuration.inSeconds - 15 < 0
+    currentDuration.inSeconds - 10 < 0
         ? audioPlayer.seek(const Duration(seconds: 0))
         : audioPlayer.seek(Duration(seconds: currentDuration.inSeconds - 10));
   }
@@ -185,7 +185,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   void forwardTenSeconds() {
     if (!state.isPlayerReady) return;
     final currentDuration = state.currentDuration;
-    audioPlayer.seek(Duration(seconds: currentDuration.inSeconds + 15));
+    audioPlayer.seek(Duration(seconds: currentDuration.inSeconds + 10));
   }
 
   double sliderValue() {

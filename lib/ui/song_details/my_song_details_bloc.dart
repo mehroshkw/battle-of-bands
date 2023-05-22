@@ -6,17 +6,23 @@ import 'dart:async';
 
 class MySongDetailsBloc extends Cubit<MySongDetailsState> {
   final AudioPlayer audioPlayer = AudioPlayer();
-  final Song song;
+  final List<Song> song;
+  int index;
 
   late StreamSubscription<Duration> durationStreamSubscription;
   late StreamSubscription<ProcessingState> processingStreamSubscription;
 
-  MySongDetailsBloc({required this.song}) : super( MySongDetailsState.initial()) {
-    print('Duration --> ${song.fileUrl}');
-    final duration = double.tryParse(song.duration.toString());
+  MySongDetailsBloc({required this.song, required this.index}) : super( MySongDetailsState.initial()) {
+    emit(state.copyWith(index: index));
+    songPlayer(index);
+  }
+
+  void songPlayer(int index){
+    print('Duration --> ${song[index].fileUrl}');
+    final duration = double.tryParse(song[index].duration.toString());
     if (duration != null) Duration(milliseconds: (duration * 1000).round());
-    audioPlayer.setUrl("$BASE_URL_IMAGE/${song.fileUrl}").then((duration) {
-      emit(state.copyWith(isPlayerReady: true));
+    audioPlayer.setUrl("$BASE_URL_IMAGE/${song[index].fileUrl}").then((duration) {
+      emit(state.copyWith(isPlayerReady: true,index: index));
     });
 
     processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
@@ -51,7 +57,7 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
   void backwardTenSeconds() {
     if (!state.isPlayerReady) return;
     final currentDuration = state.currentDuration;
-    currentDuration.inSeconds - 15 < 0
+    currentDuration.inSeconds - 10 < 0
         ? audioPlayer.seek(const Duration(seconds: 0))
         : audioPlayer.seek(Duration(seconds: currentDuration.inSeconds - 10));
   }
@@ -59,7 +65,7 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
   void forwardTenSeconds() {
     if (!state.isPlayerReady) return;
     final currentDuration = state.currentDuration;
-    audioPlayer.seek(Duration(seconds: currentDuration.inSeconds + 15));
+    audioPlayer.seek(Duration(seconds: currentDuration.inSeconds + 10));
   }
 
     String formatDuration(int duration) {
@@ -75,8 +81,7 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
   double sliderValue() {
     final position = audioPlayer.position;
     final duration = audioPlayer.duration;
-
-    if (position != null && duration != null && duration.inMilliseconds > 0) {
+    if (duration != null && duration.inMilliseconds > 0) {
       final currentPosition = position.inMilliseconds.toDouble();
       final totalDuration = duration.inMilliseconds.toDouble();
       final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
@@ -84,6 +89,20 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
       return finalDuration;
     } else {
       return 0.0;
+    }
+  }
+
+  void playPreviousSong() {
+    if (index > 0) {
+      index--;
+      songPlayer(index);
+    }
+  }
+
+  void playNextSong() {
+    if (index < song.length - 1) {
+      index++;
+      songPlayer(index);
     }
   }
 
