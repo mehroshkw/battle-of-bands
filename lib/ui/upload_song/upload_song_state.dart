@@ -18,6 +18,7 @@ class UploadSongState extends Equatable {
   double duration;
   double end;
   double start;
+  bool isPlaying;
   final bool bandNameError;
 
   UploadSongState(
@@ -33,6 +34,7 @@ class UploadSongState extends Equatable {
       required this.bandNameError,
       required this.duration,
       required this.start,
+      this.isPlaying = false,
       required this.end});
 
   UploadSongState.initial()
@@ -49,6 +51,7 @@ class UploadSongState extends Equatable {
             file: File(''),
             duration: 0.0,
             start: 0.0,
+            isPlaying: false,
             end: 0.0);
 
   UploadSongState copyWith(
@@ -63,6 +66,7 @@ class UploadSongState extends Equatable {
           File? file,
           double? duration,
           bool? isLoading,
+          bool? isPlaying,
           double? start,
           double? end}) =>
       UploadSongState(
@@ -78,9 +82,25 @@ class UploadSongState extends Equatable {
           bandNameError: bandNameError ?? this.bandNameError,
           duration: duration ?? this.duration,
           start: start ?? this.start,
+          isPlaying: isPlaying ?? this.isPlaying,
           end: end ?? this.end);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [isShowTrim, dataEvent, errorText, nameError, bandNameError, genreError, allGenre, genreId, file, duration, start, end, isLoading];
+  List<Object?> get props => [
+        isShowTrim,
+        dataEvent,
+        errorText,
+        nameError,
+        bandNameError,
+        genreError,
+        allGenre,
+        genreId,
+        file,
+        duration,
+        start,
+        end,
+        isLoading,
+        isPlaying
+      ];
 }

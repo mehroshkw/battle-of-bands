@@ -80,6 +80,19 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     return await _sharedWebService.addSong(body, songPath);
   }
 
+  playTrimmedSong() async {
+    final isPlayingBack = await trimmer.audioPlaybackControl(
+      startValue: state.start,
+      endValue: state.end,
+    );
+    emit(state.copyWith(isPlaying: isPlayingBack));
+
+  }
+
+  isPlayingUpdate(bool value){
+    emit(state.copyWith(isPlaying: value));
+  }
+
   trimmerDispose() {
     trimmer.dispose();
   }
