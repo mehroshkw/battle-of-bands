@@ -60,7 +60,7 @@ abstract class AppText {
   static const String SELECT_A_GENRE = 'Select a genre to see song list';
   static const String DUMMY_DESC = 'Leaderboard will be displayed here once we have ratings to show.';
   static const String BATTLE_TO_SHOW = 'Battle song will be displayed here once we have battle to show.';
-  static const String MY_SONGS_SHOW_HERE = 'MY song will be displayed here once we have Upload to show.';
+  static const String MY_SONGS_SHOW_HERE = 'Song will be displayed here once you have upload it.';
 
   /// my song details screen
   static const String GENRE_NAME = 'Genre Name';

@@ -125,19 +125,19 @@ class HomeScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(15.0),
                             child: Image.asset('assets/leaderboard.png',
                                 height: 70, width: 70)),
-                        const Text(AppText.LEADERBOARD_RANKING_CONTENT,
+                        const Text(AppText.LEADER_BOARD_CONTENT_DUMMY,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 20,
                                 fontFamily: Constants.montserratSemibold,
                                 color: Constants.colorOnSurface)),
-                        const SizedBox(height: 5),
-                        const Text(AppText.LEADER_BOARD_CONTENT_DUMMY,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: Constants.montserratRegular,
-                                color: Constants.colorText)),
+                        // const SizedBox(height: 5),
+                        // const Text(AppText.LEADER_BOARD_CONTENT_DUMMY,
+                        //     textAlign: TextAlign.center,
+                        //     style: TextStyle(
+                        //         fontSize: 14,
+                        //         fontFamily: Constants.montserratRegular,
+                        //         color: Constants.colorText)),
                       ]));
                     } else if (leaderBoardDataEvent is Data) {
                       final items = leaderBoardDataEvent.data as List<Song>;

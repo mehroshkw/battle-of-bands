@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../backend/server_response.dart';
@@ -10,27 +12,28 @@ class UploadSongState extends Equatable {
   final bool nameError;
   final bool genreError;
   final List<Genre> allGenre;
-  final XFile file;
+  final File file;
+  final bool isLoading;
   final int genreId;
-   double duration;
-   double end;
-   double start;
+  double duration;
+  double end;
+  double start;
   final bool bandNameError;
 
-   UploadSongState({
-    required this.isShowTrim,
-    required this.dataEvent,
-    required this.errorText,
-    required this.nameError,
-    required this.genreId,
-    required this.genreError,
-    required this.allGenre,
-    required this.file,
-    required this.bandNameError,
-    required this.duration,
-    required this.start,
-    required this.end
-  });
+  UploadSongState(
+      {required this.isShowTrim,
+      required this.dataEvent,
+      required this.errorText,
+      required this.nameError,
+      required this.genreId,
+      required this.genreError,
+      required this.allGenre,
+      required this.file,
+      required this.isLoading,
+      required this.bandNameError,
+      required this.duration,
+      required this.start,
+      required this.end});
 
   UploadSongState.initial()
       : this(
@@ -41,8 +44,9 @@ class UploadSongState extends Equatable {
             genreError: false,
             allGenre: <Genre>[],
             bandNameError: false,
+            isLoading: false,
             genreId: -1,
-            file: XFile(''),
+            file: File(''),
             duration: 0.0,
             start: 0.0,
             end: 0.0);
@@ -56,39 +60,27 @@ class UploadSongState extends Equatable {
           List<Genre>? allGenre,
           String? errorText,
           int? genreId,
-          XFile? file,
+          File? file,
           double? duration,
+          bool? isLoading,
           double? start,
           double? end}) =>
       UploadSongState(
-        isShowTrim: isShowTrim ?? this.isShowTrim,
-        dataEvent: dataEvent ?? this.dataEvent,
-        errorText: errorText ?? this.errorText,
-        allGenre: allGenre ?? this.allGenre,
-        nameError: nameError ?? this.nameError,
-        genreError: genreError ?? this.genreError,
-        genreId: genreId ?? this.genreId,
-        file: file ?? this.file,
-        bandNameError: bandNameError ?? this.bandNameError,
-        duration: duration ?? this.duration,
-        start: start ?? this.start,
-        end: end ?? this.end
-      );
+          isShowTrim: isShowTrim ?? this.isShowTrim,
+          dataEvent: dataEvent ?? this.dataEvent,
+          errorText: errorText ?? this.errorText,
+          allGenre: allGenre ?? this.allGenre,
+          isLoading: isLoading ?? this.isLoading,
+          nameError: nameError ?? this.nameError,
+          genreError: genreError ?? this.genreError,
+          genreId: genreId ?? this.genreId,
+          file: file ?? this.file,
+          bandNameError: bandNameError ?? this.bandNameError,
+          duration: duration ?? this.duration,
+          start: start ?? this.start,
+          end: end ?? this.end);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [
-        isShowTrim,
-        dataEvent,
-        errorText,
-        nameError,
-        bandNameError,
-        genreError,
-        allGenre,
-        genreId,
-        file,
-        duration,
-        start,
-        end
-      ];
+  List<Object?> get props => [isShowTrim, dataEvent, errorText, nameError, bandNameError, genreError, allGenre, genreId, file, duration, start, end, isLoading];
 }

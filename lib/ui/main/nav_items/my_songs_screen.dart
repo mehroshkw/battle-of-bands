@@ -5,7 +5,6 @@ import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
@@ -115,23 +114,24 @@ class AllSongsScreen extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(6.0),
                 child: Text(
-                  AppText.UPLOAD_YOUR_NEW_SONG,
+                  AppText.MY_SONGS_SHOW_HERE,
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: Constants.montserratRegular,
                     color: Constants.colorOnSurface
-                  )
+                  ),
+                  textAlign: TextAlign.center,
                 )
               ),
-              Text(
-                AppText.MY_SONGS_SHOW_HERE,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface.withOpacity(0.8),
-                ),
-                textAlign: TextAlign.center
-              ),
+              // Text(
+              //   AppText.MY_SONGS_SHOW_HERE,
+              //   style: TextStyle(
+              //     fontSize: 14,
+              //     fontFamily: Constants.montserratLight,
+              //     color: Constants.colorOnSurface.withOpacity(0.8),
+              //   ),
+              //   textAlign: TextAlign.center
+              // ),
               const SizedBox(
                 height: 50
               )
