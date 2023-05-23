@@ -19,7 +19,7 @@ import '../../helper/material_dialogue_content.dart';
 import '../../helper/snackbar_helper.dart';
 
 class EditProfile extends StatelessWidget {
-  static const String route = '/edit_profile_screen';
+  static const String route = 'edit_profile_screen';
 
   const EditProfile({Key? key}) : super(key: key);
 

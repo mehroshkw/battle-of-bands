@@ -42,7 +42,7 @@ dependencies:
   cached_network_image: ^3.2.3
   file_picker: ^5.3.0
   connectivity_plus: ^4.0.0
-  easy_audio_trimmer: ^1.0.1+2
+  easy_audio_trimmer: ^1.0.1+1
   just_audio: ^0.9.33
   share_plus: ^7.0.1
 

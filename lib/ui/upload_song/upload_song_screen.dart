@@ -39,10 +39,8 @@ class UploadSongScreen extends StatelessWidget {
       }
       snackbarHelper.showSnackbar(
           snackbar: SnackbarMessage.success(message: AppText.SONG_UPLOADED));
-      // bloc.trimmerDispose();
       Navigator.pop(context, response.songs);
-    } catch (e, s) {
-      print("e: $e, s: $s");
+    } catch (_) {
       dialogHelper.dismissProgress();
       dialogHelper.showMaterialDialogWithContent(
           MaterialDialogContent.networkError(), () {

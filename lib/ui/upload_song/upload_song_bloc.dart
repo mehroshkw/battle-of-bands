@@ -13,12 +13,8 @@ class UploadSongBloc extends Cubit<UploadSongState> {
   final TextEditingController bandNameController = TextEditingController();
   final TextEditingController urlController = TextEditingController();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
   final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
-
   final SharedWebService _sharedWebService = SharedWebService.instance();
-
-  final GlobalKey trimmerKey = GlobalKey();
   final Trimmer trimmer = Trimmer();
   double end = 0.0;
   double start = 0.0;
@@ -51,7 +47,6 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     await trimmer.loadAudio(audioFile: File(filePath));
     emit(state.copyWith(isLoading: false));
   }
-  /// 00:34-02:12
 
   Future<void> trimmerSaveFile() => trimmer.saveTrimmedAudio(
       startValue: start,
@@ -86,15 +81,10 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       endValue: state.end,
     );
     emit(state.copyWith(isPlaying: isPlayingBack));
-
   }
 
-  isPlayingUpdate(bool value){
+  isPlayingUpdate(bool value) {
     emit(state.copyWith(isPlaying: value));
-  }
-
-  trimmerDispose() {
-    trimmer.dispose();
   }
 
   @override

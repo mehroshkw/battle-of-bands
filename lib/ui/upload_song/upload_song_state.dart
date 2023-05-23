@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:equatable/equatable.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../backend/server_response.dart';
 import '../../data/meta_data.dart';
 

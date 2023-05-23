@@ -16,7 +16,7 @@ import '../signup/signup_screen.dart';
 import 'login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
-  static const String route = '/login_screen';
+  static const String route = 'login_screen';
 
   const LoginScreen({Key? key}) : super(key: key);
 

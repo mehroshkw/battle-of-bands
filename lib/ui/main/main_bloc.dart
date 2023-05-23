@@ -20,8 +20,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   TextEditingController battlesGenreController = TextEditingController();
   TextEditingController genreController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
-  final SharedPreferenceHelper sharedPreferenceHelper =
-      SharedPreferenceHelper.instance();
+  final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
 
   NetworkHelper get _networkHelper => NetworkHelper.instance();
 
@@ -46,22 +45,16 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   getAllGenre() async {
     final allGenre = await _sharedWebService.getAllGenre();
-    if(allGenre.isEmpty)return;
+    if (allGenre.isEmpty) return;
     updateLeaderBoardByChangeGenreId(allGenre.first);
     updateMySongsByChangeGenreId(allGenre.first);
     emit(state.copyWith(allGenre: allGenre));
-
   }
 
   Future<void> getUser() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    emit(state.copyWith(
-        userEmail: user.emailAddress,
-        userName: user.name,
-        userId: user.id,
-        userDb: user.dateOfBirth,
-        userImage: user.imagePath));
+    emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id, userDb: user.dateOfBirth, userImage: user.imagePath));
   }
 
   void updateIndex(int index) {
@@ -111,18 +104,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   Future<void> voteBattleSong(Song song, int losserSongId) async {
     if (!(await _networkHelper.isNetworkConnected)) {
-      emit(state.copyWith(
-          snackbarMessage: SnackbarMessage.error(
-              message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
     }
     final user = await sharedPreferenceHelper.user;
     if (user == null) {
-      emit(state.copyWith(
-          snackbarMessage: SnackbarMessage.error(
-              message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
@@ -160,14 +149,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   void togglePlayPause(int index) {
-    if(state.songIndex!=index)return;
+    if (state.songIndex != index) return;
     final isPlaying = state.isPlaying;
     isPlaying ? audioPlayer.pause() : audioPlayer.play();
     emit(state.copyWith(isPlaying: !isPlaying));
   }
 
   void backwardTenSeconds(int index) {
-    if (!state.isPlayerReady && state.songIndex!=index) return;
+    if (!state.isPlayerReady && state.songIndex != index) return;
     if (!state.isPlayerReady) return;
 
     final currentDuration = state.currentDuration;
@@ -181,14 +170,13 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   void forwardTenSeconds(int index) {
-    if (!state.isPlayerReady && state.songIndex!=index) return;
+    if (!state.isPlayerReady && state.songIndex != index) return;
     if (!state.isPlayerReady) return;
 
     final currentDuration = state.currentDuration;
     final seekDuration = Duration(seconds: currentDuration.inSeconds + 10);
 
     if (audioPlayer.duration != null && seekDuration >= audioPlayer.duration!) {
-      // Song has ended, do not perform seek forward
       return;
     }
 
@@ -196,16 +184,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   double sliderValue(int index) {
-    if(state.songIndex!=index) return 0;
+    if (state.songIndex != index) return 0;
     final position = audioPlayer.position;
     final duration = audioPlayer.duration;
 
     if (duration != null && duration.inMilliseconds > 0) {
       final currentPosition = position.inMilliseconds.toDouble();
       final totalDuration = duration.inMilliseconds.toDouble();
-      final finalDuration = (currentPosition / totalDuration).isNaN
-          ? 1.0
-          : currentPosition / totalDuration;
+      final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
 
       return finalDuration;
     } else {
@@ -214,12 +200,11 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   void setSongUrl(String songUrl, int songIndex) {
-    print("fileURL ====== $songUrl and index $songIndex");
     emit(state.copyWith(isPlayerReady: true));
     audioPlayer.setUrl(songUrl);
-    emit(state.copyWith(songIndex: songIndex,fileUrl: songUrl));
+    emit(state.copyWith(songIndex: songIndex, fileUrl: songUrl));
     processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
-      if (event == ProcessingState.completed && state.songIndex==songIndex) {
+      if (event == ProcessingState.completed && state.songIndex == songIndex) {
         emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));
         audioPlayer.pause();
         audioPlayer.seek(const Duration(seconds: 0));
@@ -230,28 +215,10 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       if (state.currentDuration.inSeconds == event.inSeconds) {
         return;
       }
-      if(state.songIndex!=songIndex)return;
+      if (state.songIndex != songIndex) return;
       emit(state.copyWith(currentDuration: event));
     });
   }
-
-  // void playPreviousSong() {
-  //   print("current song index play previous==========> ${state.songIndex}");
-  //   if (state.songIndex > 0) {
-  //     int indexSong=state.songIndex;
-  //     emit(state.copyWith(songIndex: indexSong --));
-  //     print("new song index play previous==========> ${state.songIndex}");
-  //     setSongUrl(state.fileUrl, state.songIndex);
-  //   }
-  // }
-  //
-  // void playNextSong() {
-  //   print("current song index in play next song==========> ${state.songIndex}");
-  //   int indexSong=state.songIndex;
-  //   emit(state.copyWith(songIndex: indexSong ++));
-  //   print("new song index in play next song==========> ${state.songIndex}");
-  //   setSongUrl(state.fileUrl, state.songIndex);
-  // }
 
   @override
   Future<void> close() {
