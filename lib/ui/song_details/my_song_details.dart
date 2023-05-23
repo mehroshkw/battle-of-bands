@@ -24,8 +24,7 @@ class MySongDetailScreen extends StatelessWidget {
     final size = context.screenSize;
 
     return Scaffold(
-        appBar:
-            CustomAppbar(screenName: isMySong ? AppText.MY_SONG : AppText.SONG),
+        appBar: CustomAppbar(screenName: isMySong ? AppText.MY_SONG : AppText.SONG),
         body: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(15.0),

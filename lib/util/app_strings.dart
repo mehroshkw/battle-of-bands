@@ -11,8 +11,7 @@ abstract class AppText {
   static const String FORGET_PASSWORD = 'Forget Password';
   static const String DONT_HAVE_ACCOUNT = 'Don\'t have an Account? ';
   static const String SIGN_UP = 'Sign Up';
-  static const String DUMMY_DESC =
-      'Lorem Ipsum is simply dummy text of the printing \nand typesetting industry.';
+  static const String LEADER_BOARD_CONTENT_DUMMY = 'Leaderboard will be displayed here once we have ratings to show.';
 
   /// Forget password screen
   static const String SEND = 'Send';
@@ -59,8 +58,9 @@ abstract class AppText {
   static const String NO_SONG = 'No Song';
   static const String UPLOAD_YOUR_NEW_SONG = 'Upload your new song';
   static const String SELECT_A_GENRE = 'Select a genre to see song list';
-  static const String DUMMY_SONG_DESC =
-      'Lorem Ipsum is simply dummy text of the \nprinting and typesetting industry.';
+  static const String DUMMY_DESC = 'Leaderboard will be displayed here once we have ratings to show.';
+  static const String BATTLE_TO_SHOW = 'Battle song will be displayed here once we have battle to show.';
+  static const String MY_SONGS_SHOW_HERE = 'Song will be displayed here once you have upload it.';
 
   /// my song details screen
   static const String GENRE_NAME = 'Genre Name';
@@ -94,8 +94,7 @@ abstract class AppText {
   static const String UPLOAD = 'Upload';
   static const String SONG_NAME_MP = 'Songname.mp4';
   static const String TRIM_FILE = 'Trim File';
-  static const String UPLOAD_DESCRIPTION =
-      'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
+  static const String UPLOAD_DESCRIPTION = 'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
 
   /// errors
   static const String TITLE_EMPTY = "Title cannot be empty";
@@ -109,28 +108,20 @@ abstract class AppText {
   static const String LOGGING = 'Logging In...';
   static const String NO = 'No';
   static const String USER_LIST = 'User List';
-  static const String DUMMY_TEXT =
-      'Lorem Ipsum is simply dummy text of the printing and typesetting.';
+  static const String DUMMY_TEXT = 'Lorem Ipsum is simply dummy text of the printing and typesetting.';
   static const String NO_INTERNET = 'Unable to connect with internet.';
   static const String LIMITED_NETWORK_CONNECTION = 'Limited Network Connection';
   static const String LIMITED_NETWORK_CONNECTION_CONTENT =
       'Uh..oh...We\'re unable proceed, its seems like your internet connection is broke or maybe limited. Please check it and try again.';
   static const NO_CONNECTION = 'No Connection';
-  static const NETWORK_CONNECTION_ERROR =
-      'Please check your internet connection and try again';
-  static const String PASSWORD_FIELD_CANNOT_BE_EMPTY =
-      'Password cannot be empty!';
-  static const String EMAIL_FIELD_CANNOT_BE_EMPTY =
-      'Email cannot be empty!';
+  static const NETWORK_CONNECTION_ERROR = 'Please check your internet connection and try again';
+  static const String PASSWORD_FIELD_CANNOT_BE_EMPTY = 'Password cannot be empty!';
+  static const String EMAIL_FIELD_CANNOT_BE_EMPTY = 'Email cannot be empty!';
   static const String AMOUNT_CANNOT_BE_EMPTY = 'Amount field cannot be empty!';
-  static const String NEW_PASSWORD_FIELD_CANNOT_BE_EMPTY =
-      'New Password field cannot be empty!';
-  static const String CONFIRM_PASSWORD_FIELD_CANNOT_BE_EMPTY =
-      'Confirm Password cannot be empty!';
-  static const String BOTH_PASSWORD_DOES_NOT_MATCH =
-      'Both password does not match.';
-  static const String ARE_YOU_SURE_VOTE =
-      "Are You Sure you want to \nVote for Designer's";
+  static const String NEW_PASSWORD_FIELD_CANNOT_BE_EMPTY = 'New Password field cannot be empty!';
+  static const String CONFIRM_PASSWORD_FIELD_CANNOT_BE_EMPTY = 'Confirm Password cannot be empty!';
+  static const String BOTH_PASSWORD_DOES_NOT_MATCH = 'Both password does not match.';
+  static const String ARE_YOU_SURE_VOTE = "Are You Sure you want to \nVote for Designer's";
 
   ///Home Screen
   static const String PERFORMER_BANDNAME = "Performer/";
@@ -152,5 +143,4 @@ abstract class AppText {
   static const String PROFILE_UPDATED = "Profile Updated Successfully";
   static const String UPLOADING_SONG = "Uploading Song";
   static const String SONG_UPLOADED = "Song Uploaded Successfully";
-
 }

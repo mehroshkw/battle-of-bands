@@ -27,7 +27,6 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
         audioPlayer.seek(const Duration(seconds: 0));
       }
     });
-
     durationStreamSubscription = audioPlayer.positionStream.listen((event) {
       if (state.currentDuration.inSeconds == event.inSeconds) {
         return;

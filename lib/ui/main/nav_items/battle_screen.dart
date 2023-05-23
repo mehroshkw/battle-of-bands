@@ -148,7 +148,7 @@ class BattleScreen extends StatelessWidget {
                                                             color: Constants
                                                                 .colorOnSurface))),
                                                 Text(
-                                                  AppText.DUMMY_SONG_DESC,
+                                                  AppText.BATTLE_TO_SHOW,
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontFamily: Constants

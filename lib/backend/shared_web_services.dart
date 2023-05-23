@@ -184,7 +184,9 @@ class SharedWebService {
 
   /// upload song
   Future<AddSongResponse> addSong(Map<String, String> body, String song) async {
-    print('body================ $body and song======> $song');
+
+    print('body------------->$body');
+    print('soong--------------->$song');
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data'
@@ -198,7 +200,7 @@ class SharedWebService {
     final response = await request.send();
     print("response ======> $response");
     final responseData = await response.stream.bytesToString();
-    print("responsedata ======> $responseData");
+    print('responsedata--------------------->$responseData');
     return AddSongResponse.fromJson(json.decode(responseData));
   }
 }
