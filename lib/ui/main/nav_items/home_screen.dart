@@ -151,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                               song: items[index],
                               onclick: () => Navigator.pushNamed(
                                   context, MySongDetailScreen.route,
-                                  arguments: [false, items[index]])));
+                                  arguments: [false, items,index])));
                     }
                     return const SizedBox();
                   })

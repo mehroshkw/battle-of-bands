@@ -8,11 +8,12 @@ import '../../backend/shared_web_services.dart';
 import '../../helper/shared_preference_helper.dart';
 
 class UploadSongBloc extends Cubit<UploadSongState> {
-  BuildContext? textFieldContext;
-  TextEditingController genreController = TextEditingController();
-  TextEditingController songTitleController = TextEditingController();
-  TextEditingController bandNameController = TextEditingController();
-  TextEditingController urlController = TextEditingController();
+  final TextEditingController genreController = TextEditingController();
+  final TextEditingController songTitleController = TextEditingController();
+  final TextEditingController bandNameController = TextEditingController();
+  final TextEditingController urlController = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
 
   final SharedWebService _sharedWebService = SharedWebService.instance();
@@ -50,29 +51,23 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     await trimmer.loadAudio(audioFile: File(filePath));
     emit(state.copyWith(isLoading: false));
   }
+  /// 00:34-02:12
 
-   trimmerSaveFile() async {
-    trimmer.saveTrimmedAudio(
-        startValue: start,
-        endValue: end,
-        audioFileName: DateTime.now().millisecondsSinceEpoch.toString(),
-        onSave: (String? trimmedFile) {
-
-          if (trimmedFile == null) return;
-          final duration = (end - start) / 1000;
-          print("duration=====> $duration, trimmedFile=====> $trimmedFile");
-          emit(state.copyWith(duration: duration, file: File(trimmedFile)));
-
-          print("state duration === ${state.duration} and state file ===== ${state.file}");
-        });
-  }
-
+  Future<void> trimmerSaveFile() => trimmer.saveTrimmedAudio(
+      startValue: start,
+      endValue: end,
+      audioFileName: DateTime.now().millisecondsSinceEpoch.toString(),
+      onSave: (String? trimmedFile) {
+        if (trimmedFile == null) return;
+        final duration = (end - start) / 1000;
+        emit(state.copyWith(duration: duration, file: File(trimmedFile)));
+      });
 
   Future<AddSongResponse?> uploadSong() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return null;
-    trimmerSaveFile();
-    await Future.delayed(Duration(seconds: 2));
+    await trimmerSaveFile();
+    await Future.delayed(const Duration(seconds: 2));
     final String userId = user.id.toString();
     final String genreId = state.genreId.toString();
     final String externalUrl = urlController.text;
@@ -81,21 +76,17 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
     final String songPath = state.file.path;
     final double duration = state.duration;
-
-    print("duration ====== $duration && sonpath === $songPath");
-
     final body = {'AppUserId': userId, 'title': title, 'GenreIds': genreId, 'bandName': bandName, 'ExternalUrl': 'https://www.google.com/', 'duration': duration.toString()};
-    final response = await _sharedWebService.addSong(body, songPath);
-    return response;
+    return await _sharedWebService.addSong(body, songPath);
   }
 
-  trimmerDispose(){
+  trimmerDispose() {
     trimmer.dispose();
   }
 
   @override
   Future<void> close() {
-      trimmer.dispose();
+    trimmer.dispose();
     return super.close();
   }
 }

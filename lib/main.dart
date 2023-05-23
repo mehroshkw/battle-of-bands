@@ -20,17 +20,14 @@ import 'package:battle_of_bands/util/app_strings.dart';
 import 'package:battle_of_bands/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 
 import 'helper/shared_preference_helper.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferenceHelper.initializeSharedPreferences();
-
   runApp(const _App());
 }
 
@@ -59,9 +56,7 @@ ThemeData _buildAppThemeData() {
 }
 
 class _AppRouter {
-  Route _getPageRoute(Widget screen) => Platform.isIOS
-      ? CupertinoPageRoute(builder: (_) => screen)
-      : MaterialPageRoute(builder: (_) => screen);
+  Route _getPageRoute(Widget screen) => Platform.isIOS ? CupertinoPageRoute(builder: (_) => screen) : MaterialPageRoute(builder: (_) => screen);
 
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -73,103 +68,58 @@ class _AppRouter {
       case LoginScreen.route:
         {
           const screen = LoginScreen();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => LoginBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => LoginBloc(), child: screen));
         }
       case SignupScreen.route:
         {
           const screen = SignupScreen();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => SignupBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => SignupBloc(), child: screen));
         }
       case MainScreen.route:
         {
           const screen = MainScreen();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => MainScreenBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => MainScreenBloc(), child: screen));
         }
       case MySongDetailScreen.route:
         {
-          final arguments=settings.arguments as List<dynamic>;
-          final bool isMySong=arguments[0] as bool;
-          final song=arguments[1] as List<Song>;
+          final arguments = settings.arguments as List<dynamic>;
+          final bool isMySong = arguments[0] as bool;
+          final song = arguments[1] as List<Song>;
           final int index = arguments[2] as int;
           final screen = MySongDetailScreen(isMySong: isMySong);
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => MySongDetailsBloc(song: song, index: index), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => MySongDetailsBloc(song: song, index: index), child: screen));
         }
       case UploadSongScreen.route:
         {
           const screen = UploadSongScreen();
-          return MaterialPageRoute(
-              builder: (_) =>
-              BlocProvider(create: (_) => UploadSongBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => UploadSongBloc(), child: screen));
         }
       case ChangePassword.route:
         {
           const screen = ChangePassword();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => ChangePasswordScreenBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => ChangePasswordScreenBloc(), child: screen));
         }
-        case EditProfile.route:
+      case EditProfile.route:
         {
           const screen = EditProfile();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => EditProfileBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => EditProfileBloc(), child: screen));
         }
-        case ForgetPasswordScreen.route:
+      case ForgetPasswordScreen.route:
         {
           const screen = ForgetPasswordScreen();
-          return MaterialPageRoute(
-              builder: (_) =>
-                  BlocProvider(create: (_) => ForgetPasswordBloc(), child: screen));
+          return MaterialPageRoute(builder: (_) => BlocProvider(create: (_) => ForgetPasswordBloc(), child: screen));
         }
     }
     return null;
   }
-
-  void dispose() {}
 }
 
-class _App extends StatefulWidget {
+class _App extends StatelessWidget {
   const _App();
 
   @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<_App> {
-  final _AppRouter __appRouter = _AppRouter();
-
-  @override
-  void initState() {
-    getBindings();
-    super.initState();
-  }
-
-Future<void> getBindings() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferenceHelper.initializeSharedPreferences();
-}
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: AppText.APP_NAME,
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: __appRouter.onGenerateRoute,
-        theme: _buildAppThemeData());
-  }
-
-  @override
-  void dispose() {
-    __appRouter.dispose();
-    super.dispose();
+    final appRouter = _AppRouter();
+    return MaterialApp(title: AppText.APP_NAME, debugShowCheckedModeBanner: false, onGenerateRoute: appRouter.onGenerateRoute, theme: _buildAppThemeData());
   }
 }

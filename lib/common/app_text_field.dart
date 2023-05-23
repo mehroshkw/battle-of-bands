@@ -39,45 +39,28 @@ class AppTextField extends StatelessWidget {
         decoration: BoxDecoration(
             color: Constants.colorPrimaryVariant,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                width: 0.3,
-                color: isError ? Constants.colorError : Constants.colorGreen)),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                  child: TextFormField(
-                      obscureText: isObscure,
-                      controller: controller,
-                      readOnly: readOnly,
-                      enabled: enabled,
-                      onChanged: onChanged,
-                      keyboardType: textInputType,
-                      textInputAction: textInputAction,
-                      style: const TextStyle(
-                          color: Constants.colorOnSurface,
-                          fontFamily: Constants.montserratRegular,
-                          fontSize: 14),
-                      decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.only(left: 10, right: 10),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: hint,
-                          hintStyle: const TextStyle(
-                              color: Constants.colorText,
-                              fontFamily: Constants.montserratRegular,
-                              fontSize: 13)))),
-              suffixIcon != null
-                  ? GestureDetector(
-                      onTap: () => onSuffixClick?.call(),
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 3, horizontal: 5),
-                          child: suffixIcon!))
-                  : const SizedBox()
-            ]));
+            border: Border.all(width: 0.3, color: isError ? Constants.colorError : Constants.colorGreen)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Expanded(
+              child: TextFormField(
+                  obscureText: isObscure,
+                  controller: controller,
+                  readOnly: readOnly,
+                  enabled: enabled,
+                  onChanged: onChanged,
+                  keyboardType: textInputType,
+                  textInputAction: textInputAction,
+                  style: const TextStyle(color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 14),
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.only(left: 10, right: 10),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: hint,
+                      hintStyle: const TextStyle(color: Constants.colorText, fontFamily: Constants.montserratRegular, fontSize: 13)))),
+          suffixIcon != null
+              ? GestureDetector(onTap: () => onSuffixClick?.call(), child: Padding(padding: const EdgeInsets.symmetric(horizontal: 5), child: suffixIcon!))
+              : const SizedBox()
+        ]));
   }
 }
 
@@ -115,46 +98,27 @@ class GenreField extends StatelessWidget {
         alignment: Alignment.center,
         margin: const EdgeInsets.only(bottom: 10, top: 10),
         decoration: BoxDecoration(
-            color: Constants.colorPrimaryVariant,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                color:
-                    isError ? Constants.colorError : Constants.colorOnBorder)),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                  child: TextFormField(
-                      enabled: false,
-                      obscureText: isObscure,
-                      controller: controller,
-                      readOnly: true,
-                      onChanged: onChanged,
-                      keyboardType: textInputType,
-                      textInputAction: textInputAction,
-                      style: const TextStyle(
-                          color: Constants.colorOnSurface,
-                          fontFamily: Constants.montserratRegular,
-                          fontSize: 14),
-                      decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.only(left: 10, right: 10),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: hint,
-                          hintStyle: const TextStyle(
-                              color: Constants.colorText,
-                              fontFamily: Constants.montserratRegular,
-                              fontSize: 13)))),
-              suffixIcon != null
-                  ? GestureDetector(
-                      onTap: () => onSuffixClick?.call(),
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 3, horizontal: 5),
-                          child: suffixIcon!))
-                  : const SizedBox()
-            ]));
+            color: Constants.colorPrimaryVariant, borderRadius: BorderRadius.circular(10), border: Border.all(color: isError ? Constants.colorError : Constants.colorOnBorder)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Expanded(
+              child: TextFormField(
+                  enabled: false,
+                  obscureText: isObscure,
+                  controller: controller,
+                  readOnly: true,
+                  onChanged: onChanged,
+                  keyboardType: textInputType,
+                  textInputAction: textInputAction,
+                  style: const TextStyle(color: Constants.colorOnSurface, fontFamily: Constants.montserratRegular, fontSize: 14),
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.only(left: 10, right: 10),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: hint,
+                      hintStyle: const TextStyle(color: Constants.colorText, fontFamily: Constants.montserratRegular, fontSize: 13)))),
+          suffixIcon != null
+              ? GestureDetector(onTap: () => onSuffixClick?.call(), child: Padding(padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5), child: suffixIcon!))
+              : const SizedBox()
+        ]));
   }
 }
