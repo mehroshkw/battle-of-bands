@@ -21,7 +21,8 @@ class UploadSongScreen extends StatelessWidget {
 
   const UploadSongScreen({Key? key}) : super(key: key);
 
-  Future<void> _uploadSong(UploadSongBloc bloc, BuildContext context, MaterialDialogHelper dialogHelper) async {
+  Future<void> _uploadSong(UploadSongBloc bloc, BuildContext context,
+      MaterialDialogHelper dialogHelper) async {
     dialogHelper
       ..injectContext(context)
       ..showProgressDialog(AppText.UPLOADING_SONG);
@@ -30,14 +31,18 @@ class UploadSongScreen extends StatelessWidget {
       dialogHelper.dismissProgress();
       final snackbarHelper = SnackbarHelper.instance..injectContext(context);
       if (response!.status == false && response.songs == null) {
-        snackbarHelper.showSnackbar(snackbar: SnackbarMessage.error(message: response.message));
+        snackbarHelper.showSnackbar(
+            snackbar: SnackbarMessage.error(message: response.message));
         return;
       }
-      snackbarHelper.showSnackbar(snackbar: SnackbarMessage.success(message: AppText.SONG_UPLOADED));
+      snackbarHelper.showSnackbar(
+          snackbar: SnackbarMessage.success(message: AppText.SONG_UPLOADED));
       Navigator.pop(context, response.songs);
-    } catch (_) {
+    } catch (e, s) {
+      print("e: $e, s: $s");
       dialogHelper.dismissProgress();
-      dialogHelper.showMaterialDialogWithContent(MaterialDialogContent.networkError(), () {
+      dialogHelper.showMaterialDialogWithContent(
+          MaterialDialogContent.networkError(), () {
         _uploadSong(bloc, context, dialogHelper);
       });
     }
@@ -58,17 +63,19 @@ class UploadSongScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   bloc.clearFilePath();
-                  final FilePickerResult? result = await FilePicker.platform.pickFiles(
-                    // allowMultiple: false,
-                    // type: FileType.audio,
-                    // allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
-                  );
+                  final FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                          // allowMultiple: false,
+                          // type: FileType.audio,
+                          // allowedExtensions: ['wav', 'mp3', 'aac', 'm4a', 'wma'],
+                          );
                   // audioFilePath = result!.files.first.path;
                   if (result == null) return;
                   bloc.updateFilePath(result.files.single.path!);
                 },
                 child: BlocBuilder<UploadSongBloc, UploadSongState>(
-                    buildWhen: (previous, current) => previous.file != current.file,
+                    buildWhen: (previous, current) =>
+                        previous.file != current.file,
                     builder: (_, state) {
                       return Container(
                         padding: const EdgeInsets.all(10.0),
@@ -82,14 +89,21 @@ class UploadSongScreen extends StatelessWidget {
                             ),
                             color: Constants.scaffoldColor),
                         child: Text(
-                          state.file.path.isNotEmpty ? state.file.name : AppText.UPLOAD_AUDIO_FILE,
-                          style: const TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface, fontSize: 18),
+                          state.file.path.isNotEmpty
+                              ? state.file.name
+                              : AppText.UPLOAD_AUDIO_FILE,
+                          style: const TextStyle(
+                              fontFamily: Constants.montserratBold,
+                              color: Constants.colorOnSurface,
+                              fontSize: 18),
                         ),
                       );
                     }),
               ),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (previous, current) => previous.file != current.file || previous.duration != current.duration,
+                  buildWhen: (previous, current) =>
+                      previous.file != current.file ||
+                      previous.duration != current.duration,
                   builder: (_, state) {
                     return state.file.path.isNotEmpty
                         ? Column(
@@ -99,44 +113,52 @@ class UploadSongScreen extends StatelessWidget {
                                 child: Text(
                                   AppText.UPLOAD_DESCRIPTION,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface.withOpacity(0.6), fontSize: 14),
+                                  style: TextStyle(
+                                      fontFamily: Constants.montserratBold,
+                                      color: Constants.colorOnSurface
+                                          .withOpacity(0.6),
+                                      fontSize: 14),
                                 ),
                               ),
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: const Text(AppText.TRIM_FILE,
-                                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary)),
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontFamily: Constants.montserratMedium,
+                                        fontSize: 16,
+                                        color: Constants.colorOnPrimary)),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: TrimViewer(
-                                  trimmer: bloc.trimmer,
-                                  viewerHeight: 50.0,
-                                  viewerWidth: MediaQuery.of(context).size.width,
-                                  // maxAudioLength: const Duration(minutes: 10),
-                                  onChangeStart: (value) => state.start = value,
-                                  onChangeEnd: (value) => state.end = value,
-                                  backgroundColor: Constants.colorTextLight,
-                                  barColor: Constants.colorOnSurface,
-                                  durationStyle: DurationStyle.FORMAT_MM_SS,
-                                  durationTextStyle: const TextStyle(
-                                    fontFamily: Constants.montserratLight,
-                                    color: Constants.colorText,
-                                  ),
-                                  paddingFraction: 4,
-                                  allowAudioSelection: true,
-                                  areaProperties: TrimAreaProperties.edgeBlur(blurEdges: true, blurColor: Constants.colorPrimary, borderRadius: 3),
-                                  editorProperties: const TrimEditorProperties(
-                                    circleSize: 0,
-                                    borderPaintColor: Constants.colorPrimary,
-                                    borderWidth: 2,
-                                    borderRadius: 5,
-                                    scrubberPaintColor: Constants.colorPrimary,
-                                    circlePaintColor: Constants.colorPrimary,
-                                  ),
-                                  // key: bloc.trimmerKey,
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              //   child: TrimViewer(
+                              //     trimmer: bloc.trimmer,
+                              //     viewerHeight: 50.0,
+                              //     viewerWidth: MediaQuery.of(context).size.width,
+                              //     // maxAudioLength: const Duration(minutes: 10),
+                              //     onChangeStart: (value) => state.start = value,
+                              //     onChangeEnd: (value) => state.end = value,
+                              //     backgroundColor: Constants.colorTextLight,
+                              //     barColor: Constants.colorOnSurface,
+                              //     durationStyle: DurationStyle.FORMAT_MM_SS,
+                              //     durationTextStyle: const TextStyle(
+                              //       fontFamily: Constants.montserratLight,
+                              //       color: Constants.colorText,
+                              //     ),
+                              //     paddingFraction: 4,
+                              //     allowAudioSelection: true,
+                              //     areaProperties: TrimAreaProperties.edgeBlur(blurEdges: true, blurColor: Constants.colorPrimary, borderRadius: 3),
+                              //     editorProperties: const TrimEditorProperties(
+                              //       circleSize: 0,
+                              //       borderPaintColor: Constants.colorPrimary,
+                              //       borderWidth: 2,
+                              //       borderRadius: 5,
+                              //       scrubberPaintColor: Constants.colorPrimary,
+                              //       circlePaintColor: Constants.colorPrimary,
+                              //     ),
+                              //     // key: bloc.trimmerKey,
+                              //   ),
+                              // ),
                               // Row(
                               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //   children: [
@@ -163,13 +185,24 @@ class UploadSongScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.SONG_TITLE,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary)),
+              GestureDetector(
+                onTap: () {
+                  bloc.trimDuration();
+                  bloc.trimFile();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.SONG_TITLE,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratMedium,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary)),
+                ),
               ),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (previous, current) => previous.nameError != current.nameError,
+                  buildWhen: (previous, current) =>
+                      previous.nameError != current.nameError,
                   builder: (_, state) => SizedBox(
                       width: size.width,
                       height: 70,
@@ -179,120 +212,141 @@ class UploadSongScreen extends StatelessWidget {
                         controller: bloc.songTitleController,
                         onChanged: (String? value) {
                           if (value == null) return;
-                          if (value.isNotEmpty && state.nameError) bloc.updateNameError(false, '');
+                          if (value.isNotEmpty && state.nameError)
+                            bloc.updateNameError(false, '');
                         },
                         isError: state.nameError,
                       ))),
               Container(
                 alignment: Alignment.centerLeft,
                 child: const Text(AppText.SONG_GENRE,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary)),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: Constants.montserratMedium,
+                        fontSize: 16,
+                        color: Constants.colorOnPrimary)),
               ),
               SizedBox(
                   width: size.width,
                   height: 70,
                   child: BlocBuilder<UploadSongBloc, UploadSongState>(
-                      buildWhen: (p,c)=> p.allGenre != c.allGenre,
+                      buildWhen: (p, c) => p.allGenre != c.allGenre,
                       builder: (_, state) {
-                    return PopupMenuButton<Genre>(
-                        enabled: true,
-                        color: Constants.colorPrimaryVariant,
-                        shadowColor: Colors.transparent,
-                        splashRadius: 0,
-                        elevation: 0,
-                        padding: EdgeInsets.zero,
-                        offset: const Offset(0, -20),
-                        tooltip: '',
-                        constraints: BoxConstraints(minWidth: size.width - 48),
-                        position: PopupMenuPosition.under,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        itemBuilder: (context) {
-                          return state.allGenre
-                              .map((Genre genre) => PopupMenuItem(
-                                  value: genre,
-                                  child: SizedBox(
-                                      height: 20,
-                                      child: Text(genre.title,
-                                          style: const TextStyle(
-                                            fontFamily: Constants.montserratMedium,
-                                            fontSize: 15,
-                                            color: Constants.colorOnPrimary,
-                                          )))))
-                              .toList();
-                        },
-                        onSelected: (genre) => bloc.changeGenre(genre),
-                        child: GenreField(
-                            controller: bloc.genreController,
-                            hint: AppText.GENRE,
-                            readOnly: true,
-                            textInputType: TextInputType.text,
-                            onChanged: (String? value) {
-                              if (value == null) return;
-                              if (value.isNotEmpty && state.genreError) {
-                                bloc.updateGenreError(false, '');
-                              }
+                        return PopupMenuButton<Genre>(
+                            enabled: true,
+                            color: Constants.colorPrimaryVariant,
+                            shadowColor: Colors.transparent,
+                            splashRadius: 0,
+                            elevation: 0,
+                            padding: EdgeInsets.zero,
+                            offset: const Offset(0, -20),
+                            tooltip: '',
+                            constraints:
+                                BoxConstraints(minWidth: size.width - 48),
+                            position: PopupMenuPosition.under,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            itemBuilder: (context) {
+                              return state.allGenre
+                                  .map((Genre genre) => PopupMenuItem(
+                                      value: genre,
+                                      child: SizedBox(
+                                          height: 20,
+                                          child: Text(genre.title,
+                                              style: const TextStyle(
+                                                fontFamily:
+                                                    Constants.montserratMedium,
+                                                fontSize: 15,
+                                                color: Constants.colorOnPrimary,
+                                              )))))
+                                  .toList();
                             },
-                            isError: state.genreError,
-                            suffixIcon: const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Constants.colorOnSurface,
-                              size: 20
-                            )));
-                  })),
+                            onSelected: (genre) => bloc.changeGenre(genre),
+                            child: GenreField(
+                                controller: bloc.genreController,
+                                hint: AppText.GENRE,
+                                readOnly: true,
+                                textInputType: TextInputType.text,
+                                onChanged: (String? value) {
+                                  if (value == null) return;
+                                  if (value.isNotEmpty && state.genreError) {
+                                    bloc.updateGenreError(false, '');
+                                  }
+                                },
+                                isError: state.genreError,
+                                suffixIcon: const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: Constants.colorOnSurface,
+                                    size: 20)));
+                      })),
               Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.PERFORMER_BAND_,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary))),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.PERFORMER_BAND_,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratMedium,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary))),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (previous, current) => previous.bandNameError != current.bandNameError,
+                  buildWhen: (previous, current) =>
+                      previous.bandNameError != current.bandNameError,
                   builder: (_, state) => SizedBox(
                       width: size.width,
                       height: 70,
                       child: AppTextField(
-                        hint: AppText.ENTER_PERFROMER_BAND_NAME,
-                        controller: bloc.bandNameController,
-                        textInputType: TextInputType.text,
-                        onChanged: (String? value) {
-                          if (value == null) return;
-                          if (value.isNotEmpty && state.bandNameError) {
-                            bloc.updateBandNameError(false, '');
-                          }
-                        },
-                        isError: state.bandNameError
-                      ))),
+                          hint: AppText.ENTER_PERFROMER_BAND_NAME,
+                          controller: bloc.bandNameController,
+                          textInputType: TextInputType.text,
+                          onChanged: (String? value) {
+                            if (value == null) return;
+                            if (value.isNotEmpty && state.bandNameError) {
+                              bloc.updateBandNameError(false, '');
+                            }
+                          },
+                          isError: state.bandNameError))),
               Container(
-                alignment: Alignment.centerLeft,
-                child: const Text(AppText.EXTERNAL_URL,
-                    textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary))),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(AppText.EXTERNAL_URL,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontFamily: Constants.montserratMedium,
+                          fontSize: 16,
+                          color: Constants.colorOnPrimary))),
               SizedBox(
-                width: size.width,
-                height: 70,
-                child: AppTextField(
-                  hint: AppText.URL,
-                  controller: bloc.urlController,
-                  textInputType: TextInputType.emailAddress,
-                  isError: false
-                )
-              ),
+                  width: size.width,
+                  height: 70,
+                  child: AppTextField(
+                      hint: AppText.URL,
+                      controller: bloc.urlController,
+                      textInputType: TextInputType.emailAddress,
+                      isError: false)),
               BlocBuilder<UploadSongBloc, UploadSongState>(
-                  buildWhen: (previous, current) => previous.errorText != current.errorText,
+                  buildWhen: (previous, current) =>
+                      previous.errorText != current.errorText,
                   builder: (_, state) {
                     if (state.errorText.isEmpty) return const SizedBox();
                     return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 7),
                         margin: const EdgeInsets.only(bottom: 20, top: 15),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: Constants.colorError)),
-                        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                          const Icon(Icons.warning_amber_rounded, color: Constants.colorError),
-                          const SizedBox(width: 5),
-                          Text(state.errorText, style: const TextStyle(color: Constants.colorError, fontFamily: Constants.montserratRegular, fontSize: 14))
-                        ]));
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Constants.colorError)),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.warning_amber_rounded,
+                                  color: Constants.colorError),
+                              const SizedBox(width: 5),
+                              Text(state.errorText,
+                                  style: const TextStyle(
+                                      color: Constants.colorError,
+                                      fontFamily: Constants.montserratRegular,
+                                      fontSize: 14))
+                            ]));
                   }),
-              const SizedBox(
-                height: 20
-              ),
+              const SizedBox(height: 20),
               SizedBox(
                   width: size.width - 30,
                   height: 50,
@@ -315,7 +369,8 @@ class UploadSongScreen extends StatelessWidget {
                         bloc.updateBandNameError(true, AppText.BANDNAME_EMPTY);
                         return;
                       }
-                      _uploadSong(bloc, context, MaterialDialogHelper.instance());
+                      _uploadSong(
+                          bloc, context, MaterialDialogHelper.instance());
                     },
                     color: Constants.colorPrimary,
                   ))

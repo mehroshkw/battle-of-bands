@@ -189,11 +189,7 @@ class Song {
     final Genre genre = json.containsKey('genre')
         ? Genre.fromJson(json['genre'] ?? Genre.empty())
         : Genre.empty();
-    final LoginResponse user = json.containsKey('appUser')
-        ? json['appUser'] == 'null'
-            ? LoginResponse.empty()
-            : LoginResponse.fromJson(json['appUser'])
-        : LoginResponse.empty();
+    final LoginResponse user = LoginResponse.empty();
     return Song(
         id: id,
         title: title,

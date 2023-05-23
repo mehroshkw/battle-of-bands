@@ -49,7 +49,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
   }
 
   Future<void> updateFilePath(String filePath) async {
-    await trimmer.loadAudio(audioFile: File(filePath));
+    // await trimmer.loadAudio(audioFile: XFile(filePath));
     trimDuration();
     emit(state.copyWith(file: XFile(filePath)));
   }
@@ -64,14 +64,16 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       startValue: state.start,
       endValue: state.end,
       onSave: (String? trimmedFile) {
+        print("trimmed file =======> $trimmedFile");
         if(trimmedFile==null)return;
         final duration = (state.end - state.start) / 1000;
-        emit(state.copyWith(duration: duration));
+        emit(state.copyWith(duration: duration, file: XFile(trimmedFile)));
       }
     );
   }
   String? trimFile(){
     if(trimmer.currentAudioFile==null) return null;
+    print("current file =====> ${trimmer.currentAudioFile}");
     return trimmer.currentAudioFile!.path;
   }
 
@@ -85,7 +87,8 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final String externalUrl = urlController.text;
     final String title = songTitleController.text;
     final String bandName = bandNameController.text;
-    final String songPath = trimFile()!;
+    // final String songPath = trimFile()!;
+    final String songPath = state.file.path;
     final double duration = state.duration;
 
     final body = {

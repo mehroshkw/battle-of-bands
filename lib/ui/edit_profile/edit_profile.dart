@@ -5,6 +5,7 @@ import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/edit_profile/edit_profile_bloc.dart';
 import 'package:battle_of_bands/ui/edit_profile/edit_profile_state.dart';
 import 'package:battle_of_bands/util/app_strings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -138,14 +139,62 @@ class EditProfile extends StatelessWidget {
                           fontFamily: Constants.montserratRegular,
                           fontSize: 16,
                           color: Constants.colorOnPrimary))),
-              SizedBox(
-                  width: size.width,
-                  height: 70,
-                  child: AppTextField(
-                      hint: '25 July 1996',
-                      textInputType: TextInputType.datetime,
-                      controller: bloc.dobController,
-                      isError: false)),
+              BlocBuilder<EditProfileBloc, EditProfileState>(
+                  buildWhen: (previous, current) =>
+                      previous.dobError != current.dobError,
+                  builder: (_, state) => SizedBox(
+                      width: size.width,
+                      height: 70,
+                      child: AppTextField(
+                          hint: AppText.Enter_DOB,
+                          readOnly: true,
+                          enabled: false,
+                          controller: bloc.dobController,
+                          textInputType: TextInputType.datetime,
+                          onChanged: (String? value) {
+                            if (value == null) return;
+                            if (value.isNotEmpty && state.dobError) {
+                              bloc.updateDOBError(false, '');
+                            }
+                          },
+                          isError: state.dobError,
+                          // isError: false,
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Image.asset('assets/3x/calendar.png',
+                                height: 20, width: 20),
+                          ),
+                          onSuffixClick: () async {
+                            context.unfocus();
+                            final currentDatetime = DateTime.now();
+                            if (Platform.isAndroid) {
+                              final dateTime = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime(1980),
+                                  firstDate: DateTime(1980),
+                                  lastDate: DateTime.now(),
+                                  builder: (context, child) => Theme(
+                                      data: Theme.of(context), child: child!));
+                              if (dateTime == null) return;
+                              bloc.handleDateFromDate(dateTime);
+                            } else {
+                              showModalBottomSheet(
+                                  enableDrag: false,
+                                  context: context,
+                                  builder: (_) => CupertinoDatePicker(
+                                      backgroundColor: Constants.scaffoldColor,
+                                      onDateTimeChanged:
+                                          bloc.handleDateFromDate,
+                                      maximumDate: DateTime(
+                                          currentDatetime.year,
+                                          currentDatetime.month,
+                                          currentDatetime.day - 1),
+                                      mode: CupertinoDatePickerMode.date,
+                                      initialDateTime:
+                                          DateTime(currentDatetime.year - 2)));
+                            }
+                          },
+                          textInputAction: TextInputAction.done))),
               Container(
                   alignment: Alignment.centerLeft,
                   child: const Text(AppText.EMAIL_ADDRESS,
@@ -162,8 +211,36 @@ class EditProfile extends StatelessWidget {
                     textInputType: TextInputType.emailAddress,
                     controller: bloc.emailController,
                     isError: false,
+                    readOnly: true,
+                    enabled: false,
                   )),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
+              BlocBuilder<EditProfileBloc, EditProfileState>(
+                  buildWhen: (previous, current) =>
+                  previous.errorText != current.errorText,
+                  builder: (_, state) {
+                    if (state.errorText.isEmpty) return const SizedBox();
+                    return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 7),
+                        margin: const EdgeInsets.only(bottom: 20, top: 15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Constants.colorError)),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.warning_amber_rounded,
+                                  color: Constants.colorError),
+                              const SizedBox(width: 5),
+                              Text(state.errorText,
+                                  style: const TextStyle(
+                                      color: Constants.colorError,
+                                      fontFamily: Constants.montserratRegular,
+                                      fontSize: 12))
+                            ]));
+                  }),
+              const SizedBox(height: 20),
               SizedBox(
                   height: 50,
                   width: size.width,
@@ -171,6 +248,17 @@ class EditProfile extends StatelessWidget {
                       text: AppText.SAVE,
                       onClick: () {
                         context.unfocus();
+                        final name = bloc.nameController.text;
+                        if (name.isEmpty) {
+                          bloc.updateEmailError(
+                              true, AppText.EMAIL_FIELD_CANNOT_BE_EMPTY);
+                          return;
+                        }
+                        if (bloc.dobController.text.isEmpty) {
+                          bloc.updateDOBError(true, AppText.DOB_EMPTY);
+                          return;
+                        }
+
                         _updatedProfile(context, bloc);
                       },
                       color: Constants.colorPrimary))

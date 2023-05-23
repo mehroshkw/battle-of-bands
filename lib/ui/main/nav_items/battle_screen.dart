@@ -4,6 +4,7 @@ import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/helper/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../backend/server_response.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
@@ -179,14 +180,17 @@ class BattleScreen extends StatelessWidget {
                                                     });
                                             },
                                             setUrl: () {
-
-                                              bloc.setSongUrl("$BASE_URL_DATA/${song1.fileUrl}",
-                                                items.indexOf(song1));
-                                            bloc.togglePlayPause(items.indexOf(song1));
+                                              bloc.setSongUrl(
+                                                  "$BASE_URL_DATA/${song1.fileUrl}",
+                                                  items.indexOf(song1));
+                                              bloc.togglePlayPause(
+                                                  items.indexOf(song1));
                                             },
                                             // onNextSong: () => bloc.playNextSong(),
                                             // onPreviousSong: () => bloc.playPreviousSong(),
                                             index: items.indexOf(song1),
+                                            songUrl:
+                                                "$BASE_URL_DATA/${song1.fileUrl}",
                                           ),
                                           Image.asset('assets/vs_icon.png',
                                               height: 70, width: 70),
@@ -203,12 +207,17 @@ class BattleScreen extends StatelessWidget {
                                                     });
                                             },
                                             setUrl: () {
-                                              bloc.setSongUrl("$BASE_URL_DATA/${song2.fileUrl}", items.indexOf(song2));
-                                              bloc.togglePlayPause(items.indexOf(song2));
+                                              bloc.setSongUrl(
+                                                  "$BASE_URL_DATA/${song2.fileUrl}",
+                                                  items.indexOf(song2));
+                                              bloc.togglePlayPause(
+                                                  items.indexOf(song2));
                                             },
                                             // onNextSong: () => bloc.playNextSong(),
                                             // onPreviousSong: () => bloc.playPreviousSong(),
                                             index: items.indexOf(song2),
+                                            songUrl:
+                                                "$BASE_URL_DATA/${song2.fileUrl}",
                                           )
                                         ],
                                       );
@@ -242,6 +251,8 @@ class BattleScreen extends StatelessWidget {
 class SongWidget extends StatelessWidget {
   final Function onClickCalled;
   final Function setUrl;
+  final String songUrl;
+
   // final Function onNextSong;
   // final Function onPreviousSong;
   final Song song;
@@ -252,9 +263,10 @@ class SongWidget extends StatelessWidget {
       required this.onClickCalled,
       required this.song,
       required this.setUrl,
+      required this.songUrl,
       // required this.onNextSong,
       // required this.onPreviousSong,
-        required this.index})
+      required this.index})
       : super(key: key);
 
   @override
@@ -266,7 +278,7 @@ class SongWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         width: size.width - 30,
         decoration: BoxDecoration(
-            color: Constants.colorPrimaryVariant.withOpacity(0.95),
+            color: Constants.colorTextLight,
             borderRadius: BorderRadius.circular(20)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Row(
@@ -291,8 +303,13 @@ class SongWidget extends StatelessWidget {
                         children: [
                       Align(
                           alignment: Alignment.topRight,
-                          child: Image.asset('assets/share.png',
-                              height: 30, width: 30)),
+                          child: InkWell(
+                            onTap: () => Share.share(
+                                'Listen to this amazing song!\n$songUrl',
+                                subject: 'Check out this song!'),
+                            child: Image.asset('assets/share.png',
+                                height: 30, width: 30),
+                          )),
                       const SizedBox(height: 10),
                       Padding(
                           padding: const EdgeInsets.only(bottom: 10, left: 10),
@@ -321,7 +338,6 @@ class SongWidget extends StatelessWidget {
               value: bloc.sliderValue(index),
               onChanged: (value) {},
               onChangeStart: (value) {
-
                 bloc.audioPlayer.pause();
                 bloc.togglePlayPause(index);
               },
@@ -341,7 +357,10 @@ class SongWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     BlocBuilder<MainScreenBloc, MainScreenState>(
-                        buildWhen: (previous, current) => previous.currentDuration.inSeconds != current.currentDuration.inSeconds && previous.songIndex == index,
+                        buildWhen: (previous, current) =>
+                            previous.currentDuration.inSeconds !=
+                                current.currentDuration.inSeconds &&
+                            previous.songIndex == index,
                         builder: (_, state) => Text(
                             bloc.formatDuration(
                                 state.currentDuration.inSeconds),
@@ -359,12 +378,12 @@ class SongWidget extends StatelessWidget {
             //     onTap: () => onPreviousSong.call(),
             //     child: Image.asset('assets/3x/previous.png',
             //         height: 20, width: 20)),
-            GestureDetector(
-                onTap: () {
-                  bloc.backwardTenSeconds(index);
-                },
-                child:
-                    Image.asset('assets/3x/back.png', height: 20, width: 20)),
+            IconButton(
+              padding: const EdgeInsets.all(10.0),
+                splashRadius: 30.0,
+                splashColor: Constants.colorPrimary,
+                onPressed: () => bloc.backwardTenSeconds(index),
+                icon: Image.asset('assets/3x/back.png', height: 20, width: 20)),
             BlocBuilder<MainScreenBloc, MainScreenState>(
                 // buildWhen: (previous, current) => previous.isPlaying != current.isPlaying,
                 builder: (_, state) => GestureDetector(
@@ -386,9 +405,11 @@ class SongWidget extends StatelessWidget {
                                 color: Constants.colorPrimary),
                             child: const Icon(Icons.play_arrow_rounded,
                                 size: 40, color: Constants.colorOnSurface)))),
-            GestureDetector(
-                onTap: () => bloc.forwardTenSeconds(index),
-                child: Image.asset('assets/3x/forward.png',
+            IconButton(
+                splashRadius: 30.0,
+                splashColor: Constants.colorPrimary,
+                onPressed: () => bloc.forwardTenSeconds(index),
+                icon: Image.asset('assets/3x/forward.png',
                     height: 20, width: 20)),
             // GestureDetector(
             //     onTap: () => onNextSong.call(),

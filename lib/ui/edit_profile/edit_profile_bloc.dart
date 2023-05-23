@@ -32,6 +32,16 @@ class EditProfileBloc extends Cubit<EditProfileState> {
     }
   }
 
+  void handleDateFromDate(DateTime dateTime) {
+    final formattedDatetime =
+        '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    dobController.text = formattedDatetime;
+  }
+
+  void updateDOBError(bool value, String errorText) =>
+      emit(state.copyWith(dobError: value, errorText: errorText));
+
+
   void handleImageSelection(XFile file) =>
       emit(state.copyWith(fileDataEvent: Data(data: file)));
 

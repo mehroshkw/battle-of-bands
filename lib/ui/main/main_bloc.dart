@@ -166,16 +166,31 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   void backwardTenSeconds(int index) {
     if (!state.isPlayerReady && state.songIndex!=index) return;
+    if (!state.isPlayerReady) return;
+
     final currentDuration = state.currentDuration;
-    currentDuration.inSeconds - 10 < 0
-        ? audioPlayer.seek(const Duration(seconds: 0))
-        : audioPlayer.seek(Duration(seconds: currentDuration.inSeconds - 10));
+    final seekDuration = Duration(seconds: currentDuration.inSeconds - 10);
+
+    if (seekDuration.inSeconds < 0) {
+      audioPlayer.seek(const Duration(seconds: 0));
+    } else {
+      audioPlayer.seek(seekDuration);
+    }
   }
 
   void forwardTenSeconds(int index) {
     if (!state.isPlayerReady && state.songIndex!=index) return;
+    if (!state.isPlayerReady) return;
+
     final currentDuration = state.currentDuration;
-    audioPlayer.seek(Duration(seconds: currentDuration.inSeconds + 10));
+    final seekDuration = Duration(seconds: currentDuration.inSeconds + 10);
+
+    if (audioPlayer.duration != null && seekDuration >= audioPlayer.duration!) {
+      // Song has ended, do not perform seek forward
+      return;
+    }
+
+    audioPlayer.seek(seekDuration);
   }
 
   double sliderValue(int index) {

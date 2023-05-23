@@ -30,7 +30,6 @@ class MySongDetailScreen extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: BlocBuilder<MySongDetailsBloc, MySongDetailsState>(
-                  buildWhen: (p, c) => p.index != c.index,
                   builder: (_, state) {
                     final index = state.index;
                     return Column(children: [
@@ -144,13 +143,17 @@ class MySongDetailScreen extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            GestureDetector(
-                                onTap: () => bloc.playPreviousSong(),
-                                child: Image.asset('assets/3x/previous.png',
+                            IconButton(
+                                splashRadius: 30.0,
+                                splashColor: Constants.colorPrimary,
+                                onPressed: () => bloc.playPreviousSong(),
+                                icon: Image.asset('assets/3x/previous.png',
                                     height: 20, width: 20)),
-                            GestureDetector(
-                                onTap: () => bloc.backwardTenSeconds(),
-                                child: Image.asset('assets/3x/back.png',
+                            IconButton(
+                              splashRadius: 30.0,
+                                splashColor: Constants.colorPrimary,
+                                onPressed: () => bloc.backwardTenSeconds(),
+                                icon: Image.asset('assets/3x/back.png',
                                     height: 20, width: 20)),
                             BlocBuilder<MySongDetailsBloc, MySongDetailsState>(
                                 buildWhen: (p, c) => p.isPlaying != c.isPlaying,
@@ -180,13 +183,17 @@ class MySongDetailScreen extends StatelessWidget {
                                                 size: 50,
                                                 color: Constants
                                                     .colorOnSurface)))),
-                            GestureDetector(
-                                onTap: () => bloc.forwardTenSeconds(),
-                                child: Image.asset('assets/3x/forward.png',
+                            IconButton(
+                                splashRadius: 30.0,
+                                splashColor: Constants.colorPrimary,
+                                onPressed: () => bloc.forwardTenSeconds(),
+                                icon: Image.asset('assets/3x/forward.png',
                                     height: 20, width: 20)),
-                            GestureDetector(
-                                onTap: () => bloc.playNextSong(),
-                                child: Image.asset('assets/3x/next.png',
+                            IconButton(
+                                splashRadius: 30.0,
+                                splashColor: Constants.colorPrimary,
+                                onPressed: () => bloc.playNextSong(),
+                                icon: Image.asset('assets/3x/next.png',
                                     height: 20, width: 20))
                           ])
                     ]);
