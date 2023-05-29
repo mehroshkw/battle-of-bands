@@ -100,8 +100,9 @@ class LoginScreen extends StatelessWidget {
                           isError: state.emailError,
                           onChanged: (String? value) {
                             if (value == null) return;
-                            if (value.isNotEmpty && state.emailError)
+                            if (value.isNotEmpty && state.emailError) {
                               bloc.updateEmailError(false, '');
+                            }
                           }))),
               Container(
                   alignment: Alignment.centerLeft,
@@ -124,8 +125,9 @@ class LoginScreen extends StatelessWidget {
                         controller: bloc.passwordController,
                         onChanged: (String? value) {
                           if (value == null) return;
-                          if (value.isNotEmpty && state.passwordError)
+                          if (value.isNotEmpty && state.passwordError) {
                             bloc.updatePasswordError(false, '');
+                          }
                         },
                         isError: state.passwordError,
                       ))),

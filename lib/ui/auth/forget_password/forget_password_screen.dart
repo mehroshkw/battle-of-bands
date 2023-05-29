@@ -95,8 +95,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                           isError: state.emailError,
                           onChanged: (String? value) {
                             if (value == null) return;
-                            if (value.isNotEmpty && state.emailError)
+                            if (value.isNotEmpty && state.emailError) {
                               bloc.updateEmailError(false, '');
+                            }
                           }))),
               BlocBuilder<ForgetPasswordBloc, ForgetPasswordState>(
                   buildWhen: (previous, current) =>

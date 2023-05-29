@@ -187,7 +187,7 @@ class MaterialDialogHelper {
                               )),
                           const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: Text("Are You Sure you want to",
+                              child: Text('Are You Sure you want to',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: Constants.montserratMedium,
@@ -199,14 +199,14 @@ class MaterialDialogHelper {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text("Vote for ",
+                                    const Text('Vote for ',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontFamily:
                                                 Constants.montserratMedium,
                                             fontSize: 20,
                                             color: Constants.colorOnSurface)),
-                                    Text("$title ",
+                                    Text('$title ',
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                             fontFamily:
@@ -302,7 +302,7 @@ class MaterialDialogHelper {
                           ),
                           const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: Text("Are You Sure you want to\nLog Out",
+                              child: Text('Are You Sure you want to\nLog Out',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: Constants.montserratMedium,
@@ -331,7 +331,7 @@ class MaterialDialogHelper {
                                         fontSize: 16,
                                         color: Constants.colorPrimaryVariant)),
                                 const SizedBox(width: 20),
-                                Container(
+                                SizedBox(
                                     height: 35,
                                     width: 120,
                                     child: AppButton(

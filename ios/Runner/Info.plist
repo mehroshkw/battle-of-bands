@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -48,26 +48,26 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Battle of bands app requires the access of photo library in order to access the picture.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>Battle of bands app requires the access of camera in order to take the profile picture.</string>
-    <key>NSAppleMusicUsageDescription</key>
-    <string>Battle of bands app requires the access music library in order to access the audio files.</string>
-    <key>LSSupportsOpeningDocumentsInPlace</key>
-    <true/>
-    <key>UISupportsDocumentBrowser</key>
-    <true/>
-    <key>UIBackgroundModes</key>
-    <array>
-       <string>fetch</string>
-       <string>remote-notification</string>
-    </array>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Battle of bands app requires the access music library in order to access the audio files.</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
+	<string>Battle of bands app requires the access of photo library in order to access the picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Battle of bands app requires the access of camera in order to take the profile picture.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Battle of bands app requires the access music library in order to access the audio files.</string>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Battle of bands app requires the access music library in order to access the audio files.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

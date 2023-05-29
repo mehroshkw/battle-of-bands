@@ -12,7 +12,7 @@ class LoginBloc extends Cubit<LoginBlocState> {
   final TextEditingController passwordController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
 
-  LoginBloc() : super(LoginBlocState.initial());
+  LoginBloc() : super(const LoginBlocState.initial());
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 

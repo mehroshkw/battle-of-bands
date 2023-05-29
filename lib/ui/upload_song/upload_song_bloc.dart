@@ -31,8 +31,9 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 
-  getAllGenre() async {
+  Future<void> getAllGenre() async {
     final allGenre = await _sharedWebService.getAllGenre();
+    if (isClosed) return;
     emit(state.copyWith(allGenre: allGenre));
   }
 
@@ -43,8 +44,9 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   Future<void> updateFilePath(String? filePath) async {
     if (filePath == null) return;
-    emit(state.copyWith(isLoading: true, file: File(filePath)));
-    await trimmer.loadAudio(audioFile: File(filePath));
+    final file = File(filePath);
+    emit(state.copyWith(isLoading: true, file: file));
+    await trimmer.loadAudio(audioFile: file);
     emit(state.copyWith(isLoading: false));
   }
 
@@ -53,6 +55,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       endValue: end,
       audioFileName: DateTime.now().millisecondsSinceEpoch.toString(),
       onSave: (String? trimmedFile) {
+        print('Trimmed File --> $trimmedFile');
         if (trimmedFile == null) return;
         final duration = (end - start) / 1000;
         emit(state.copyWith(duration: duration, file: File(trimmedFile)));
@@ -71,24 +74,31 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
     final String songPath = state.file.path;
     final double duration = state.duration;
-    final body = {'AppUserId': userId, 'title': title, 'GenreIds': genreId, 'bandName': bandName, 'ExternalUrl': 'https://www.google.com/', 'duration': duration.toString()};
+    final body = {
+      'AppUserId': userId,
+      'title': title,
+      'GenreIds': genreId,
+      'bandName': bandName,
+      'ExternalUrl': 'https://www.google.com/',
+      'duration': duration.toString()
+    };
     return await _sharedWebService.addSong(body, songPath);
   }
 
-  playTrimmedSong() async {
-    final isPlayingBack = await trimmer.audioPlaybackControl(
-      startValue: state.start,
-      endValue: state.end,
-    );
+  Future<void> playTrimmedSong() async {
+    final isPlayingBack = await trimmer.audioPlaybackControl(startValue: state.start, endValue: state.end);
     emit(state.copyWith(isPlaying: isPlayingBack));
   }
 
-  isPlayingUpdate(bool value) {
+  void isPlayingUpdate(bool value) {
+    if (isClosed) return;
     emit(state.copyWith(isPlaying: value));
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
+    print('Close....');
+    await trimmer.audioPlayer?.dispose();
     trimmer.dispose();
     return super.close();
   }

@@ -44,7 +44,7 @@ class MySongDetailScreen extends StatelessWidget {
                         )),
                     GestureDetector(
                         onTap: () {
-                          String url = "$BASE_URL_DATA/${bloc.song[index].fileUrl}";
+                          String url = '$BASE_URL_DATA/${bloc.song[index].fileUrl}';
                           Share.share('Listen to this amazing song!\n$url', subject: 'Check out this song!');
                         },
                         child: Image.asset('assets/share.png'))

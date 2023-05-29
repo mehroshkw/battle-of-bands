@@ -1,4 +1,3 @@
-import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'main_bloc.dart';
@@ -66,7 +65,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sized = context.screenSize;
     final bloc = context.read<MainScreenBloc>();
 
     return Scaffold(
@@ -75,34 +73,32 @@ class _MainScreenState extends State<MainScreen> {
             buildWhen: (previous, current) => previous.index != current.index,
             builder: (_, state) => ClipRRect(
                 borderRadius: const BorderRadius.only(topRight: Radius.circular(24), topLeft: Radius.circular(24)),
-                child: SizedBox(
-                    height: 70,
-                    child: BottomNavigationBar(
-                        key: bloc.globalKey,
-                        onTap: (int newIndex) {
-                          if (state.index == newIndex && newIndex != 3) return;
-                          final pageStorageKey = _bottomMap.keys.elementAt(newIndex);
-                          final bottomItem = _bottomMap[pageStorageKey];
-                          if (bottomItem == null || bottomItem is SizedBox) {
-                            final newBottomWidget = _getNavigationWidget(newIndex);
-                            _bottomMap[pageStorageKey] = newBottomWidget;
-                          }
-                          bloc.updateIndex(newIndex);
-                        },
-                        items: _bottomNavItems,
-                        currentIndex: state.index,
-                        elevation: 10,
-                        type: BottomNavigationBarType.fixed,
-                        backgroundColor: Constants.onScaffoldColor,
-                        iconSize: 28,
-                        selectedFontSize: 11,
-                        unselectedLabelStyle: const TextStyle(color: Constants.colorSecondary),
-                        selectedLabelStyle: const TextStyle(color: Constants.colorPrimary),
-                        unselectedFontSize: 11,
-                        selectedItemColor: Constants.colorPrimary,
-                        unselectedItemColor: Constants.colorSecondary,
-                        showSelectedLabels: true,
-                        showUnselectedLabels: true)))),
+                child: BottomNavigationBar(
+                    key: bloc.globalKey,
+                    onTap: (int newIndex) {
+                      if (state.index == newIndex && newIndex != 3) return;
+                      final pageStorageKey = _bottomMap.keys.elementAt(newIndex);
+                      final bottomItem = _bottomMap[pageStorageKey];
+                      if (bottomItem == null || bottomItem is SizedBox) {
+                        final newBottomWidget = _getNavigationWidget(newIndex);
+                        _bottomMap[pageStorageKey] = newBottomWidget;
+                      }
+                      bloc.updateIndex(newIndex);
+                    },
+                    items: _bottomNavItems,
+                    currentIndex: state.index,
+                    elevation: 10,
+                    type: BottomNavigationBarType.fixed,
+                    backgroundColor: Constants.onScaffoldColor,
+                    iconSize: 28,
+                    selectedFontSize: 11,
+                    unselectedLabelStyle: const TextStyle(color: Constants.colorSecondary),
+                    selectedLabelStyle: const TextStyle(color: Constants.colorPrimary),
+                    unselectedFontSize: 11,
+                    selectedItemColor: Constants.colorPrimary,
+                    unselectedItemColor: Constants.colorSecondary,
+                    showSelectedLabels: true,
+                    showUnselectedLabels: true))),
         body: BlocBuilder<MainScreenBloc, MainScreenState>(
             buildWhen: (previous, current) => previous.index != current.index, builder: (_, state) => IndexedStack(index: state.index, children: _bottomMap.values.toList())));
   }

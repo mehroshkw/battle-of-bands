@@ -127,7 +127,7 @@ class EditProfile extends StatelessWidget {
                   width: size.width,
                   height: 70,
                   child: AppTextField(
-                      hint: "Diana Agron",
+                      hint: 'Diana Agron',
                       controller: bloc.nameController,
                       textInputType: TextInputType.text,
                       isError: false)),

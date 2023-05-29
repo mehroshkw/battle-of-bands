@@ -9,7 +9,7 @@ class ForgetPasswordBloc extends Cubit<ForgetPasswordState> {
   final TextEditingController emailController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
 
-  ForgetPasswordBloc() : super(ForgetPasswordState.initial());
+  ForgetPasswordBloc() : super(const ForgetPasswordState.initial());
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 

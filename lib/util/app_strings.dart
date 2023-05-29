@@ -41,13 +41,13 @@ abstract class AppText {
   static const String BATTLES = 'Battles';
   static const String GENRE = 'Genre';
   static const String SONG_NAME = "Designer's Life eps.5";
-  static const String PERFORMER_BAND = "Performer/";
-  static const String PERFORMER_BAND_ = "Performer/Band Name";
-  static const String SONG_START_TIME = "00:00";
-  static const String SONG_START = "00:10 - 00:20";
-  static const String SONG_END_TIME = "00:30";
-  static const String VOTE = "Vote";
-  static const String CAST_VOTE = "Click to Vote";
+  static const String PERFORMER_BAND = 'Performer/';
+  static const String PERFORMER_BAND_ = 'Performer/Band Name';
+  static const String SONG_START_TIME = '00:00';
+  static const String SONG_START = '00:10 - 00:20';
+  static const String SONG_END_TIME = '00:30';
+  static const String VOTE = 'Vote';
+  static const String CAST_VOTE = 'Click to Vote';
 
   /// All songs
   static const String MY_SONG = 'My Song';
@@ -70,13 +70,13 @@ abstract class AppText {
   static const String EDIT_PROFILE = 'Edit Profile';
 
   /// my profile screen
-  static const String DIANA_AGRON = "Diana Agron";
+  static const String DIANA_AGRON = 'Diana Agron';
   static const String USER_EMAIL = 'Diana1@gmail.com';
   static const String DoB = '26 July 1996';
   static const String CHANGE_PASSORD = 'Change Password';
 
   /// change password screen
-  static const String ENTER_OLD_PASSWORD = "Enter Old Password";
+  static const String ENTER_OLD_PASSWORD = 'Enter Old Password';
   static const String ENTER_NEW_PASSWORD = 'Enter New Password';
   static const String CONFIRM_NEW_PASSWORD = 'Confirm New Password';
   static const String STARS = '*************';
@@ -97,9 +97,9 @@ abstract class AppText {
   static const String UPLOAD_DESCRIPTION = 'Trim your file minimum duration of 10 seconds\n and a maximum duration of 30 seconds.';
 
   /// errors
-  static const String TITLE_EMPTY = "Title cannot be empty";
-  static const String BANDNAME_EMPTY = "Bandname cannot be empty";
-  static const String GENRE_EMPTY = "Genre cannot be empty";
+  static const String TITLE_EMPTY = 'Title cannot be empty';
+  static const String BANDNAME_EMPTY = 'Bandname cannot be empty';
+  static const String GENRE_EMPTY = 'Genre cannot be empty';
   static const String INVALID_EMAIL = 'Invalid Email Address';
   static const String TRY_AGAIN = 'Try Again';
   static const String CANCEL = 'Cancel';
@@ -124,23 +124,23 @@ abstract class AppText {
   static const String ARE_YOU_SURE_VOTE = "Are You Sure you want to \nVote for Designer's";
 
   ///Home Screen
-  static const String PERFORMER_BANDNAME = "Performer/";
+  static const String PERFORMER_BANDNAME = 'Performer/';
 
   /// snackbar messages
-  static const String SUCCESSFULLY_LOGGED_IN = "Logged In Successfully";
-  static const String CREATING_ACCOUNT = "Creating Account";
-  static const String ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully";
-  static const String NAME_EMPTY = "Name cannot be empty";
-  static const String DOB_EMPTY = "DOB cannot be empty";
-  static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "Password and Confirm password not same";
-  static const String BATTLE_CONTENT = "Battles song not showing right now. if someone upload songs then battles show here ...";
-  static const String LEADERBOARD_RANKING_CONTENT = "Leaderboards will be displayed here";
-  static const String SENDING = "Sending...";
-  static const String EMAIL_SENT = "Email Sent Successfully";
-  static const String UPDATING_PASSWORD = "Updating Password...";
-  static const String PASSWORD_CHANGED = "Password Changed Successfully";
-  static const String UPDATING_PROFILE = "Updating Profile...";
-  static const String PROFILE_UPDATED = "Profile Updated Successfully";
-  static const String UPLOADING_SONG = "Uploading Song";
-  static const String SONG_UPLOADED = "Song Uploaded Successfully";
+  static const String SUCCESSFULLY_LOGGED_IN = 'Logged In Successfully';
+  static const String CREATING_ACCOUNT = 'Creating Account';
+  static const String ACCOUNT_CREATED_SUCCESSFULLY = 'Account created successfully';
+  static const String NAME_EMPTY = 'Name cannot be empty';
+  static const String DOB_EMPTY = 'DOB cannot be empty';
+  static const String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = 'Password and Confirm password not same';
+  static const String BATTLE_CONTENT = 'Battles song not showing right now. if someone upload songs then battles show here ...';
+  static const String LEADERBOARD_RANKING_CONTENT = 'Leaderboards will be displayed here';
+  static const String SENDING = 'Sending...';
+  static const String EMAIL_SENT = 'Email Sent Successfully';
+  static const String UPDATING_PASSWORD = 'Updating Password...';
+  static const String PASSWORD_CHANGED = 'Password Changed Successfully';
+  static const String UPDATING_PROFILE = 'Updating Profile...';
+  static const String PROFILE_UPDATED = 'Profile Updated Successfully';
+  static const String UPLOADING_SONG = 'Uploading Song';
+  static const String SONG_UPLOADED = 'Song Uploaded Successfully';
 }
