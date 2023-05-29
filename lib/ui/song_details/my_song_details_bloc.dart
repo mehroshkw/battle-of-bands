@@ -17,9 +17,9 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
     songPlayer(index);
   }
 
-  void songPlayer(int index) {
-    emit(state.copyWith(isPlayerReady: true, index: index));
-    audioPlayer.setUrl('$BASE_URL_DATA/${song[index].fileUrl}');
+  Future<void> songPlayer(int index) async {
+    final duration = await audioPlayer.setUrl('$BASE_URL_DATA/${song[index].fileUrl}');
+    emit(state.copyWith(totalDuration: duration, isPlayerReady: true, index: index));
     processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
       if (event == ProcessingState.completed) {
         emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));
@@ -102,6 +102,7 @@ class MySongDetailsBloc extends Cubit<MySongDetailsState> {
   }
 
   void playNextSong() {
+
     if (index < song.length - 1) {
       index++;
       songPlayer(index);

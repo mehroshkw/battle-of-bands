@@ -5,6 +5,7 @@ import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_audio/just_audio.dart';
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
@@ -92,15 +93,6 @@ class AllSongsScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface),
                       textAlign: TextAlign.center,
                     )),
-                // Text(
-                //   AppText.MY_SONGS_SHOW_HERE,
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontFamily: Constants.montserratLight,
-                //     color: Constants.colorOnSurface.withOpacity(0.8),
-                //   ),
-                //   textAlign: TextAlign.center
-                // ),
                 const SizedBox(height: 50)
               ]);
             } else if (mySongDataEvent is Data) {
@@ -142,6 +134,7 @@ class AllSongsScreen extends StatelessWidget {
 class _SingeSongItemWidget extends StatelessWidget {
   final Song song;
 
+
   const _SingeSongItemWidget({Key? key, required this.song}) : super(key: key);
 
   @override
@@ -178,7 +171,7 @@ class _SingeSongItemWidget extends StatelessWidget {
                       style: const TextStyle(fontFamily: Constants.montserratSemibold, fontSize: 16, color: Constants.colorOnPrimary),
                     ),
                     Text(
-                      '${AppText.PERFORMER_BAND}${song.bandName}',
+                      song.bandName,
                       textAlign: TextAlign.left,
                       style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 14, color: Constants.colorPrimary),
                     ),

@@ -26,11 +26,12 @@ class MySongDetailScreen extends StatelessWidget {
     return Scaffold(
         appBar: CustomAppbar(screenName: isMySong ? AppText.MY_SONG : AppText.SONG),
         body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: BlocBuilder<MySongDetailsBloc, MySongDetailsState>(builder: (_, state) {
-                final index = state.index;
-                return Column(children: [
+          padding: const EdgeInsets.all(15.0),
+          child: BlocBuilder<MySongDetailsBloc, MySongDetailsState>(builder: (_, state) {
+            final index = state.index;
+            return Stack(
+              children: [
+                Column(children: [
                   Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10.0),
@@ -64,7 +65,7 @@ class MySongDetailScreen extends StatelessWidget {
                       textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratSemibold, fontSize: 28, color: Constants.colorOnPrimary)),
                   Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('${AppText.PERFORMER_BAND}${bloc.song[index].bandName}',
+                      child: Text(bloc.song[index].bandName,
                           textAlign: TextAlign.left, style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 20, color: Constants.colorText))),
                   Padding(
                       padding: const EdgeInsets.only(bottom: 15.0),
@@ -95,7 +96,7 @@ class MySongDetailScreen extends StatelessWidget {
                                   fontFamily: Constants.montserratLight,
                                   color: Constants.colorOnSurface.withOpacity(0.7),
                                 ))),
-                        Text(bloc.formatDuration(bloc.song[index].duration.toInt()),
+                        Text( bloc.formatDuration(state.totalDuration.inSeconds),
                             style: TextStyle(fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.7)))
                       ])),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -135,8 +136,21 @@ class MySongDetailScreen extends StatelessWidget {
                         onPressed: () => bloc.playNextSong(),
                         icon: Image.asset('assets/3x/next.png', height: 20, width: 20))
                   ])
-                ]);
-              })),
+                ]),
+                if (state.isPlayerReady == false)
+                  Container(
+                    alignment: Alignment.center,
+                    height: size.height,
+                    color: Colors.black.withOpacity(0.6),
+                    child: const Center(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator()),
+                    ),
+                  ),
+              ],
+            );
+          }),
         ));
   }
 }

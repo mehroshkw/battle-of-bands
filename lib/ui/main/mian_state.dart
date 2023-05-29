@@ -24,6 +24,7 @@ class MainScreenState extends Equatable {
   final bool isPlaying;
   final bool isPlayerReady;
   final Duration currentDuration;
+  final Duration totalDuration;
   final int songIndex;
 
   const MainScreenState(
@@ -46,7 +47,10 @@ class MainScreenState extends Equatable {
       this.isPlaying = false,
       this.isPlayerReady = false,
       this.songIndex = -1,
-      this.currentDuration = Duration.zero});
+      this.currentDuration = Duration.zero,
+      this.totalDuration = Duration.zero
+
+      });
 
   MainScreenState.initial()
       : this(
@@ -70,7 +74,9 @@ class MainScreenState extends Equatable {
             isPlaying: false,
             isPlayerReady: false,
             songIndex: -1,
-            currentDuration: Duration.zero);
+            currentDuration: Duration.zero,
+    totalDuration: Duration.zero
+  );
 
   MainScreenState copyWith(
           {int? index,
@@ -92,7 +98,8 @@ class MainScreenState extends Equatable {
           bool? isPlaying,
           bool? isPlayerReady,
           int? songIndex,
-          Duration? currentDuration}) =>
+          Duration? currentDuration,
+          Duration? totalDuration}) =>
       MainScreenState(
           index: index ?? this.index,
           isVote: isVote ?? this.isVote,
@@ -114,6 +121,7 @@ class MainScreenState extends Equatable {
           isPlaying: isPlaying ?? this.isPlaying,
           isPlayerReady: isPlayerReady ?? this.isPlayerReady,
           songIndex: songIndex ?? this.songIndex,
+          totalDuration: totalDuration ?? this.totalDuration,
           currentDuration: currentDuration ?? this.currentDuration);
 
   @override
@@ -138,6 +146,7 @@ class MainScreenState extends Equatable {
         isBeginBattle,
         isPlayerReady,
         songIndex,
-        currentDuration
+        currentDuration,
+    totalDuration
       ];
 }

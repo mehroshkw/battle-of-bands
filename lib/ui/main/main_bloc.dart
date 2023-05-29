@@ -199,10 +199,10 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     }
   }
 
-  void setSongUrl(String songUrl, int songIndex) {
-    emit(state.copyWith(isPlayerReady: true));
-    audioPlayer.setUrl(songUrl);
-    emit(state.copyWith(songIndex: songIndex, fileUrl: songUrl));
+  Future<void> setSongUrl(String songUrl, int songIndex) async {
+
+    final duration = await audioPlayer.setUrl(songUrl);
+    emit(state.copyWith(isPlayerReady: true, songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
     processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
       if (event == ProcessingState.completed && state.songIndex == songIndex) {
         emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));

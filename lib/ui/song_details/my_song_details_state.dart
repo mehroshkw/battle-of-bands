@@ -7,6 +7,7 @@ class MySongDetailsState extends Equatable {
   final bool isPlaying;
   final bool isPlayerReady;
   final Duration currentDuration;
+  final Duration totalDuration;
   final int index;
 
   const MySongDetailsState({
@@ -14,6 +15,7 @@ class MySongDetailsState extends Equatable {
     this.isPlaying = false,
     this.isPlayerReady = false,
     this.currentDuration = Duration.zero,
+    this.totalDuration = Duration.zero,
     this.index = 0,
   });
 
@@ -23,6 +25,7 @@ class MySongDetailsState extends Equatable {
           isPlaying: false,
           isPlayerReady: false,
           currentDuration: Duration.zero,
+    totalDuration: Duration.zero,
           index: -1,
         );
 
@@ -31,6 +34,7 @@ class MySongDetailsState extends Equatable {
     bool? isPlaying,
     bool? isPlayerReady,
     Duration? currentDuration,
+    Duration? totalDuration,
     int? index,
     Song? currentSong,
   }) =>
@@ -39,10 +43,11 @@ class MySongDetailsState extends Equatable {
         isPlaying: isPlaying ?? this.isPlaying,
         isPlayerReady: isPlayerReady ?? this.isPlayerReady,
         currentDuration: currentDuration ?? this.currentDuration,
+        totalDuration: totalDuration ?? this.totalDuration,
         index: index ?? this.index,
       );
 
   @override
   // TODO: implement props
-  List<Object?> get props => [snackbarMessage, isPlaying, isPlayerReady, currentDuration, index];
+  List<Object?> get props => [snackbarMessage, isPlaying, isPlayerReady, currentDuration, totalDuration, index];
 }
