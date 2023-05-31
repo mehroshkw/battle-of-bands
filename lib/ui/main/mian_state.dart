@@ -7,6 +7,7 @@ import '../../data/snackbar_message.dart';
 class MainScreenState extends Equatable {
   final int index;
   final bool isVote;
+  final List<bool> isBuffering;
   final bool isBeginBattle;
   final bool isNoMusic;
   final Statistics statistics;
@@ -46,11 +47,10 @@ class MainScreenState extends Equatable {
       required this.snackbarMessage,
       this.isPlaying = false,
       this.isPlayerReady = false,
+      this.isBuffering = const [false,false],
       this.songIndex = -1,
       this.currentDuration = Duration.zero,
-      this.totalDuration = Duration.zero
-
-      });
+      this.totalDuration = Duration.zero});
 
   MainScreenState.initial()
       : this(
@@ -73,10 +73,10 @@ class MainScreenState extends Equatable {
             snackbarMessage: SnackbarMessage.empty(),
             isPlaying: false,
             isPlayerReady: false,
+            isBuffering: [false,false],
             songIndex: -1,
             currentDuration: Duration.zero,
-    totalDuration: Duration.zero
-  );
+            totalDuration: Duration.zero);
 
   MainScreenState copyWith(
           {int? index,
@@ -97,6 +97,7 @@ class MainScreenState extends Equatable {
           SnackbarMessage? snackbarMessage,
           bool? isPlaying,
           bool? isPlayerReady,
+          List<bool>? isBuffering,
           int? songIndex,
           Duration? currentDuration,
           Duration? totalDuration}) =>
@@ -120,6 +121,7 @@ class MainScreenState extends Equatable {
           snackbarMessage: snackbarMessage ?? this.snackbarMessage,
           isPlaying: isPlaying ?? this.isPlaying,
           isPlayerReady: isPlayerReady ?? this.isPlayerReady,
+          isBuffering: isBuffering ?? this.isBuffering,
           songIndex: songIndex ?? this.songIndex,
           totalDuration: totalDuration ?? this.totalDuration,
           currentDuration: currentDuration ?? this.currentDuration);
@@ -145,8 +147,9 @@ class MainScreenState extends Equatable {
         isPlaying,
         isBeginBattle,
         isPlayerReady,
+        isBuffering,
         songIndex,
         currentDuration,
-    totalDuration
+        totalDuration
       ];
 }

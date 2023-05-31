@@ -157,6 +157,7 @@ class Song {
   final int votesCount;
   final String bandName;
   final num duration;
+  final Duration seekbar;
   final LoginResponse user;
   final bool isVoted;
 
@@ -170,6 +171,7 @@ class Song {
       required this.bandName,
       required this.fileUrl,
       required this.duration,
+        this.seekbar =const Duration(seconds: 0),
       required this.isVoted});
 
   factory Song.fromJson(Map<String, dynamic> json) {
@@ -203,7 +205,7 @@ class Song {
         isVoted: isVoted);
   }
 
-  Song copyWith({int? votesCount, bool? isVoted}) => Song(
+  Song copyWith({int? votesCount, bool? isVoted, Duration? seekbar}) => Song(
       id: id,
       fileUrl: fileUrl,
       user: user,
@@ -213,7 +215,8 @@ class Song {
       votesCount: votesCount ?? this.votesCount,
       bandName: bandName,
       duration: duration,
-      isVoted: isVoted ?? this.isVoted);
+      isVoted: isVoted ?? this.isVoted,
+      seekbar: seekbar ?? this.seekbar);
 
   Map<String, dynamic> toJson() => {
         'id': id,

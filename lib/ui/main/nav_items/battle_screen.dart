@@ -122,7 +122,7 @@ class BattleScreen extends StatelessWidget {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Image.asset(
-                                                    "assets/no_music.png",
+                                                    'assets/no_music.png',
                                                     height: 70,
                                                     width: 70),
                                                 const Padding(
@@ -169,6 +169,7 @@ class BattleScreen extends StatelessWidget {
                                         children: [
                                           SongWidget(
                                             song: song1,
+                                            sliderValue: bloc.sliderValue(0),
                                             onClickCalled: () {
                                               MaterialDialogHelper.instance()
                                                 ..injectContext(context)
@@ -180,45 +181,41 @@ class BattleScreen extends StatelessWidget {
                                                     });
                                             },
                                             setUrl: () {
-                                              bloc.setSongUrl(
-                                                  "$BASE_URL_DATA/${song1.fileUrl}",
-                                                  items.indexOf(song1));
+                                              // bloc.setSongUrl('$BASE_URL_DATA/${song1.fileUrl}', items.indexOf(song1));
                                               bloc.togglePlayPause(
-                                                  items.indexOf(song1));
+                                                  items.indexOf(song1),
+                                                  '$BASE_URL_DATA/${song1.fileUrl}');
                                             },
                                             // onNextSong: () => bloc.playNextSong(),
                                             // onPreviousSong: () => bloc.playPreviousSong(),
                                             index: items.indexOf(song1),
                                             songUrl:
-                                                "$BASE_URL_DATA/${song1.fileUrl}",
+                                                '$BASE_URL_DATA/${song1.fileUrl}',
                                           ),
                                           Image.asset('assets/vs_icon.png',
                                               height: 70, width: 70),
                                           SongWidget(
-                                            song: song2,
-                                            onClickCalled: () {
-                                              MaterialDialogHelper.instance()
-                                                ..injectContext(context)
-                                                ..showVoteDialogue(
-                                                    title: song2.title,
-                                                    positiveClickListener: () {
-                                                      bloc.voteBattleSong(
-                                                          song2, song1.id);
-                                                    });
-                                            },
-                                            setUrl: () {
-                                              bloc.setSongUrl(
-                                                  "$BASE_URL_DATA/${song2.fileUrl}",
-                                                  items.indexOf(song2));
-                                              bloc.togglePlayPause(
-                                                  items.indexOf(song2));
-                                            },
-                                            // onNextSong: () => bloc.playNextSong(),
-                                            // onPreviousSong: () => bloc.playPreviousSong(),
-                                            index: items.indexOf(song2),
-                                            songUrl:
-                                                "$BASE_URL_DATA/${song2.fileUrl}",
-                                          )
+                                              song: song2,
+                                              sliderValue: bloc.sliderValue(1),
+                                              onClickCalled: () {
+                                                MaterialDialogHelper.instance()
+                                                  ..injectContext(context)
+                                                  ..showVoteDialogue(
+                                                      title: song2.title,
+                                                      positiveClickListener:
+                                                          () {
+                                                        bloc.voteBattleSong(
+                                                            song2, song1.id);
+                                                      });
+                                              },
+                                              index: items.indexOf(song2),
+                                              setUrl: () {
+                                                bloc.togglePlayPause(
+                                                    items.indexOf(song2),
+                                                    '$BASE_URL_DATA/${song2.fileUrl}');
+                                              },
+                                              songUrl:
+                                                  '$BASE_URL_DATA/${song2.fileUrl}')
                                         ],
                                       );
                                     } else {
@@ -239,8 +236,8 @@ class BattleScreen extends StatelessWidget {
                                           child: Image.asset(
                                               bloc.battlesGenreController.text
                                                       .isEmpty
-                                                  ? "assets/begin_battle_dim.png"
-                                                  : "assets/begin_battle.png",
+                                                  ? 'assets/begin_battle_dim.png'
+                                                  : 'assets/begin_battle.png',
                                               height: 250,
                                               width: 250,
                                               fit: BoxFit.contain)))))))))
@@ -253,12 +250,14 @@ class SongWidget extends StatelessWidget {
   final Function setUrl;
   final String songUrl;
   final Song song;
+  final double sliderValue;
   final int index;
 
   const SongWidget(
       {Key? key,
       required this.onClickCalled,
       required this.song,
+      required this.sliderValue,
       required this.setUrl,
       required this.songUrl,
       required this.index})
@@ -286,11 +285,6 @@ class SongWidget extends StatelessWidget {
                       height: 90,
                       width: 90,
                       child: Image.asset('assets/song_icon.png'),
-                      // song.user.imagePath.isEmpty
-                      //     ? Image.asset('assets/song_icon.png')
-                      //     : Image.network(
-                      //         '$BASE_URL_DATA/${song.user.imagePath}',
-                      //         fit: BoxFit.cover)
                     )),
                 Expanded(
                     child: Column(
@@ -330,20 +324,23 @@ class SongWidget extends StatelessWidget {
                     ]))
               ]),
           Slider(
-              value: bloc.sliderValue(index),
-              onChanged: (value) {},
+              value: sliderValue,
+              onChanged: (value) {
+                print('valueee of seekBar   $value');
+              },
               onChangeStart: (value) {
-                bloc.audioPlayer.pause();
-                bloc.togglePlayPause(index);
+                bloc.audioPlayers[index].pause();
+                bloc.togglePlayPause(index, songUrl);
               },
               onChangeEnd: (value) {
-                final duration = bloc.audioPlayer.duration;
+                final duration = bloc.audioPlayers[index].duration;
                 if (duration != null) {
                   final seekPosition =
                       (value * duration.inMilliseconds.toDouble()).round();
-                  bloc.audioPlayer.seek(Duration(milliseconds: seekPosition));
-                  bloc.audioPlayer.play(); // Resume playing after seeking
-                  bloc.togglePlayPause(index);
+                  bloc.audioPlayers[index]
+                      .seek(Duration(milliseconds: seekPosition));
+                  // bloc.audioPlayer.play(); // Resume playing after seeking
+                  bloc.togglePlayPause(index, songUrl);
                 }
               }),
           Padding(
@@ -369,18 +366,13 @@ class SongWidget extends StatelessWidget {
                             color: Constants.colorText))
                   ])),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            // GestureDetector(
-            //     onTap: () => onPreviousSong.call(),
-            //     child: Image.asset('assets/3x/previous.png',
-            //         height: 20, width: 20)),
             IconButton(
-              padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 splashRadius: 30.0,
                 splashColor: Constants.colorPrimary,
                 onPressed: () => bloc.backwardTenSeconds(index),
                 icon: Image.asset('assets/3x/back.png', height: 20, width: 20)),
             BlocBuilder<MainScreenBloc, MainScreenState>(
-                // buildWhen: (previous, current) => previous.isPlaying != current.isPlaying,
                 builder: (_, state) => GestureDetector(
                     onTap: () => setUrl.call(),
                     child: state.isPlaying && state.songIndex == index
@@ -390,26 +382,27 @@ class SongWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
                                 color: Constants.colorPrimary),
-                            child: const Icon(Icons.pause,
-                                size: 40, color: Constants.colorOnSurface))
+                            child: state.isBuffering[index]
+                                ? const CircularProgressIndicator()
+                                : const Icon(Icons.pause,
+                                    size: 40, color: Constants.colorOnSurface))
                         : Container(
                             height: 50,
                             width: 50,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
                                 color: Constants.colorPrimary),
-                            child: const Icon(Icons.play_arrow_rounded,
-                                size: 40, color: Constants.colorOnSurface)))),
+                            child: state.isBuffering[index]
+                                ? const CircularProgressIndicator()
+                                : const Icon(Icons.play_arrow_rounded,
+                                    size: 40,
+                                    color: Constants.colorOnSurface)))),
             IconButton(
                 splashRadius: 30.0,
                 splashColor: Constants.colorPrimary,
                 onPressed: () => bloc.forwardTenSeconds(index),
-                icon: Image.asset('assets/3x/forward.png',
-                    height: 20, width: 20)),
-            // GestureDetector(
-            //     onTap: () => onNextSong.call(),
-            //     child:
-            //         Image.asset('assets/3x/next.png', height: 20, width: 20)),
+                icon:
+                    Image.asset('assets/3x/forward.png', height: 20, width: 20))
           ]),
           const SizedBox(height: 10),
           Container(
@@ -428,54 +421,6 @@ class SongWidget extends StatelessWidget {
                   onClickCalled.call();
                 },
               ))
-        ]));
-  }
-}
-
-class CustomCheckbox extends StatelessWidget {
-  final bool isChecked;
-  final Function(bool) onChanged;
-
-  const CustomCheckbox({
-    Key? key,
-    required this.isChecked,
-    required this.onChanged,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = context.read<MainScreenBloc>();
-    return InkWell(
-        onTap: () {
-          onChanged.call(isChecked);
-        },
-        child: Row(children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 8),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-                color: Colors.transparent,
-              ),
-              width: 18.0,
-              height: 18.0,
-              child: isChecked
-                  ? const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 14.0,
-                    )
-                  : null,
-            ),
-          ),
-          const Text(AppText.VOTE,
-              style: TextStyle(
-                  fontFamily: Constants.montserratLight,
-                  color: Constants.colorOnSurface))
         ]));
   }
 }

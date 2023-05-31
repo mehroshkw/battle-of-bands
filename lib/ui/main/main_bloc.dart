@@ -20,14 +20,17 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   TextEditingController battlesGenreController = TextEditingController();
   TextEditingController genreController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
-  final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
+  final SharedPreferenceHelper sharedPreferenceHelper =
+      SharedPreferenceHelper.instance();
 
   NetworkHelper get _networkHelper => NetworkHelper.instance();
 
-  final AudioPlayer audioPlayer = AudioPlayer();
+  List<AudioPlayer> audioPlayers = [];
+
+  // final AudioPlayer audioPlayer = AudioPlayer();
 
   late StreamSubscription<Duration> durationStreamSubscription;
-  late StreamSubscription<ProcessingState> processingStreamSubscription;
+  late StreamSubscription<PlayerState> processingStreamSubscription;
 
   MainScreenBloc() : super(MainScreenState.initial()) {
     getAllGenre();
@@ -54,7 +57,12 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   Future<void> getUser() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id, userDb: user.dateOfBirth, userImage: user.imagePath));
+    emit(state.copyWith(
+        userEmail: user.emailAddress,
+        userName: user.name,
+        userId: user.id,
+        userDb: user.dateOfBirth,
+        userImage: user.imagePath));
   }
 
   void updateIndex(int index) {
@@ -66,7 +74,8 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     emit(state.copyWith(leaderBoardDataEvent: const Loading()));
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    final leaderBoard = await _sharedWebService.getLeaderboard(genre.id, user.id);
+    final leaderBoard =
+        await _sharedWebService.getLeaderboard(genre.id, user.id);
     if (leaderBoard.isEmpty) {
       emit(state.copyWith(leaderBoardDataEvent: const Empty(message: '')));
       return;
@@ -94,6 +103,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
     final battleSongs = await _sharedWebService.getAllSongs(genre.id, user.id);
+    audioPlayers = List.generate(battleSongs.length, (_) => AudioPlayer());
 
     if (battleSongs.isEmpty || battleSongs.length == 1) {
       emit(state.copyWith(battleDataEvent: const Empty(message: '')));
@@ -104,14 +114,18 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   Future<void> voteBattleSong(Song song, int losserSongId) async {
     if (!(await _networkHelper.isNetworkConnected)) {
-      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(
+          snackbarMessage: SnackbarMessage.error(
+              message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
     }
     final user = await sharedPreferenceHelper.user;
     if (user == null) {
-      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(
+          snackbarMessage: SnackbarMessage.error(
+              message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
@@ -148,14 +162,37 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     sharedPreferenceHelper.clear();
   }
 
-  void togglePlayPause(int index) {
-    if (state.songIndex != index) return;
-    final isPlaying = state.isPlaying;
-    isPlaying ? audioPlayer.pause() : audioPlayer.play();
-    emit(state.copyWith(isPlaying: !isPlaying));
-  }
+  // void togglePlayPause(int index, String songUrl) {
+  //   print("here");
+  //   emit(state.copyWith(songIndex:index));
+  //   final isPlaying = state.isPlaying;
+  //   final currentSongUrl = state.fileUrl;
+  //   print('here 2,,,, index ===== $index');
+  //
+  //   if (isPlaying) {
+  //     audioPlayer.pause();
+  //     print("here 3");
+  //   } else if (currentSongUrl.isNotEmpty && currentSongUrl == songUrl) {
+  //     audioPlayer.play();
+  //     print('currentUrl ======= $currentSongUrl here 4');
+  //   } else {
+  //     // final fileUrl = songUrl;
+  //     setSongUrl(songUrl, index);
+  //     audioPlayer.play();
+  //     print('here 5, song url ==== $songUrl and index === $index');
+  //   }
+  //   emit(state.copyWith(isPlaying: !isPlaying));
+  // }
+
+  // void togglePlayPause(int index) {
+  //   if (state.songIndex != index) return;
+  //   final isPlaying = state.isPlaying;
+  //   isPlaying ? audioPlayer.pause() : audioPlayer.play();
+  //   emit(state.copyWith(isPlaying: !isPlaying));
+  // }
 
   void backwardTenSeconds(int index) {
+    final player = audioPlayers[index];
     if (!state.isPlayerReady && state.songIndex != index) return;
     if (!state.isPlayerReady) return;
 
@@ -163,55 +200,229 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     final seekDuration = Duration(seconds: currentDuration.inSeconds - 10);
 
     if (seekDuration.inSeconds < 0) {
-      audioPlayer.seek(const Duration(seconds: 0));
+      player.seek(const Duration(seconds: 0));
     } else {
-      audioPlayer.seek(seekDuration);
+      player.seek(seekDuration);
     }
   }
 
   void forwardTenSeconds(int index) {
+    final player = audioPlayers[index];
     if (!state.isPlayerReady && state.songIndex != index) return;
     if (!state.isPlayerReady) return;
 
     final currentDuration = state.currentDuration;
     final seekDuration = Duration(seconds: currentDuration.inSeconds + 10);
 
-    if (audioPlayer.duration != null && seekDuration >= audioPlayer.duration!) {
+    if (player.duration != null && seekDuration >= player.duration!) {
       return;
     }
 
-    audioPlayer.seek(seekDuration);
+    player.seek(seekDuration);
   }
 
   double sliderValue(int index) {
-    if (state.songIndex != index) return 0;
-    final position = audioPlayer.position;
-    final duration = audioPlayer.duration;
+    final player = audioPlayers[index];
+    final tempState = state.battleDataEvent as Data;
+    final songs = List<Song>.of(tempState.data as List<Song>);
+    if (state.songIndex != index) {
+      final player = audioPlayers[index];
+      final position = songs[index].seekbar;
+      final duration = player.duration;
+
+      if (duration != null && duration.inMilliseconds > 0) {
+        final currentPosition = position.inMilliseconds.toDouble();
+        final totalDuration = duration.inMilliseconds.toDouble();
+        final finalDuration = (currentPosition / totalDuration).isNaN
+            ? 1.0
+            : currentPosition / totalDuration;
+
+        return finalDuration;
+      }
+    }
+    final position = player.position;
+    final duration = player.duration;
 
     if (duration != null && duration.inMilliseconds > 0) {
       final currentPosition = position.inMilliseconds.toDouble();
       final totalDuration = duration.inMilliseconds.toDouble();
-      final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
+      final finalDuration = (currentPosition / totalDuration).isNaN
+          ? 1.0
+          : currentPosition / totalDuration;
 
       return finalDuration;
     } else {
-      return 0.0;
+      final player = audioPlayers[index];
+      final position = songs[index].seekbar;
+      final duration = Duration(seconds: songs[index].duration.toInt());
+
+      final currentPosition = position.inMilliseconds.toDouble();
+      final totalDuration = duration.inMilliseconds.toDouble();
+      final finalDuration = (currentPosition / totalDuration).isNaN
+          ? 1.0
+          : currentPosition / totalDuration;
+
+      return finalDuration;
     }
   }
 
-  Future<void> setSongUrl(String songUrl, int songIndex) async {
+  // double sliderValue(int index) {
+  //   final tempState = state.battleDataEvent as Data;
+  //
+  //   final songs = List<Song>.of(tempState.data as List<Song>);
+  //   if (state.songIndex != index) {
+  //     final player = audioPlayers[index];
+  //     final position = songs[index].seekbar;
+  //     final duration = player.duration;
+  //
+  //     if (duration != null && duration.inMilliseconds > 0) {
+  //       final currentPosition = position.inMilliseconds.toDouble();
+  //       final totalDuration = duration.inMilliseconds.toDouble();
+  //       final finalDuration = (currentPosition / totalDuration).isNaN
+  //           ? 1.0
+  //           : currentPosition / totalDuration;
+  //
+  //       return finalDuration;
+  //     }
+  //   }
+  //   final player = audioPlayers[index];
+  //   final position = player.position;
+  //   final duration = player.duration;
+  //
+  //   if (state.isPlaying) {
+  //     if (duration != null && duration.inMilliseconds > 0) {
+  //       final currentPosition = position.inMilliseconds.toDouble();
+  //       final totalDuration = duration.inMilliseconds.toDouble();
+  //       final finalDuration = (currentPosition / totalDuration).isNaN
+  //           ? 1.0
+  //           : currentPosition / totalDuration;
+  //
+  //       return finalDuration;
+  //     } else {
+  //       return 0.0;
+  //     }
+  //   } else {
+  //     final player = audioPlayers[index];
+  //     final position = songs[index].seekbar;
+  //     final duration = player.duration;
+  //
+  //     if (duration != null && duration.inMilliseconds > 0) {
+  //       final currentPosition = position.inMilliseconds.toDouble();
+  //       final totalDuration = duration.inMilliseconds.toDouble();
+  //       final finalDuration = (currentPosition / totalDuration).isNaN
+  //           ? 1.0
+  //           : currentPosition / totalDuration;
+  //
+  //       return finalDuration;
+  //     } else {
+  //       return 0.0;
+  //     }
+  //   }
+  //
+  //   // if (duration != null && duration.inMilliseconds > 0) {
+  //   //   final currentPosition = position.inMilliseconds.toDouble();
+  //   //   final totalDuration = duration.inMilliseconds.toDouble();
+  //   //   final finalDuration = (currentPosition / totalDuration).isNaN
+  //   //       ? 1.0
+  //   //       : currentPosition / totalDuration;
+  //   //
+  //   //   return finalDuration;
+  //   // } else {
+  //   //   print("else of sliderValue method");
+  //   //   return 0.0;
+  //   // }
+  // }
 
-    final duration = await audioPlayer.setUrl(songUrl);
-    emit(state.copyWith(isPlayerReady: true, songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
-    processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
-      if (event == ProcessingState.completed && state.songIndex == songIndex) {
-        emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));
-        audioPlayer.pause();
-        audioPlayer.seek(const Duration(seconds: 0));
+  // Future<void> setSongUrl(String songUrl, int songIndex) async {
+  //   final duration = await audioPlayer.setUrl(songUrl);
+  //   emit(state.copyWith(isPlayerReady: true, songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
+  //   processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
+  //     if (event == ProcessingState.completed && state.songIndex == songIndex) {
+  //       emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));
+  //       audioPlayer.pause();
+  //       audioPlayer.seek(const Duration(seconds: 0));
+  //     }
+  //   });
+  //
+  //   durationStreamSubscription = audioPlayer.positionStream.listen((event) {
+  //     if (state.currentDuration.inSeconds == event.inSeconds) {
+  //       return;
+  //     }
+  //     if (state.songIndex != songIndex) return;
+  //     emit(state.copyWith(currentDuration: event));
+  //   });
+  // }
+
+  void togglePlayPause(int index, String songUrl) async {
+    emit(state.copyWith(songIndex: index));
+    final isPlaying = state.isPlaying;
+    final currentSongUrl = state.fileUrl;
+    final player = audioPlayers[index];
+    final tempState = state.battleDataEvent as Data;
+
+    final songs = List<Song>.of(tempState.data as List<Song>);
+
+    if (isPlaying) {
+      songs[index] = songs[index].copyWith(seekbar: player.position);
+
+      emit(state.copyWith(battleDataEvent: Data(data: songs)));
+
+      player.pause();
+      emit(state.copyWith(isPlaying: !isPlaying));
+    } else if (currentSongUrl.isNotEmpty && currentSongUrl == songUrl) {
+      player.play();
+      emit(state.copyWith(isPlaying: !isPlaying));
+    } else {
+      await setSongUrl(songUrl, index, player);
+      // await player.setClip(start: songs[index].seekbar);
+      await player.play();
+      // player.play();
+    }
+  }
+
+  Future<void> setSongUrl(
+      String songUrl, int songIndex, AudioPlayer player) async {
+    final tempState = state.battleDataEvent as Data;
+
+    final songs = List<Song>.of(tempState.data as List<Song>);
+    final currentSong = songs[songIndex];
+    final duration =
+        await player.setUrl(songUrl, initialPosition: currentSong.seekbar);
+
+    final bufferingList = state.isBuffering;
+    bufferingList[songIndex] = true;
+    print(bufferingList);
+    emit(state.copyWith(
+        songIndex: songIndex,
+        fileUrl: songUrl,
+        isBuffering: bufferingList,
+        totalDuration: duration));
+    processingStreamSubscription = player.playerStateStream.listen((event) {
+      if (event.playing) {
+        emit(state.copyWith(isPlaying: true));
+      }
+      if (event.processingState == ProcessingState.loading ||
+          event.processingState == ProcessingState.buffering) {
+        final bufferingList = state.isBuffering;
+        bufferingList[songIndex] = true;
+        emit(state.copyWith(isBuffering: bufferingList, isPlaying: false));
+      }
+      if (event.processingState == ProcessingState.ready) {
+        final bufferingList = state.isBuffering;
+        bufferingList[songIndex] = false;
+        emit(state.copyWith(isPlayerReady: true, isBuffering: bufferingList));
+      }
+
+      if (event.processingState == ProcessingState.completed &&
+          state.songIndex == songIndex) {
+        emit(state.copyWith(
+            isPlaying: false, currentDuration: const Duration(seconds: 0)));
+        player.pause();
+        player.seek(const Duration(seconds: 0));
       }
     });
 
-    durationStreamSubscription = audioPlayer.positionStream.listen((event) {
+    durationStreamSubscription = player.positionStream.listen((event) {
       if (state.currentDuration.inSeconds == event.inSeconds) {
         return;
       }
@@ -222,8 +433,8 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   @override
   Future<void> close() {
-    audioPlayer.stop();
-    audioPlayer.dispose();
+    // audioPlayers.stop();
+    // audioPlayers.dispose();
     durationStreamSubscription.cancel();
     processingStreamSubscription.cancel();
     return super.close();

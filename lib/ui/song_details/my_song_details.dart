@@ -76,7 +76,7 @@ class MySongDetailScreen extends StatelessWidget {
                       onChanged: (value) {},
                       onChangeStart: (value) {
                         // bloc.audioPlayer.pause();
-                        bloc.togglePlayPause();
+                        // bloc.togglePlayPause();
                       },
                       onChangeEnd: (value) {
                         final duration = bloc.audioPlayer.duration;
