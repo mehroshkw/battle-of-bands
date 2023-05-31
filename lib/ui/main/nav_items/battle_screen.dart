@@ -203,6 +203,7 @@ class SongWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<MainScreenBloc>();
     final Size size = MediaQuery.of(context).size;
+
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -258,8 +259,10 @@ class SongWidget extends StatelessWidget {
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 BlocBuilder<MainScreenBloc, MainScreenState>(
                     buildWhen: (previous, current) => previous.currentDuration.inSeconds != current.currentDuration.inSeconds && previous.songIndex == index,
-                    builder: (_, state) => Text(bloc.formatDuration(state.currentDuration.inSeconds),
-                        style: TextStyle(fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.7)))),
+                    builder: (_, state) {
+                      return Text(bloc.formatDuration(state.currentDuration.inSeconds),
+                          style: TextStyle(fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.7)));
+                    }),
                 Text(bloc.formatDuration(song.duration.toInt()), style: const TextStyle(fontFamily: Constants.montserratLight, color: Constants.colorText))
               ])),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

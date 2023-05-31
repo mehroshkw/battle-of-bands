@@ -28,7 +28,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   // final AudioPlayer audioPlayer = AudioPlayer();
 
-  late StreamSubscription<Duration> durationStreamSubscription;
+  StreamSubscription<Duration>? durationStreamSubscription;
   late StreamSubscription<PlayerState> processingStreamSubscription;
 
   MainScreenBloc() : super(MainScreenState.initial()) {
@@ -223,7 +223,6 @@ class MainScreenBloc extends Cubit<MainScreenState> {
         final currentPosition = position.inMilliseconds.toDouble();
         final totalDuration = duration.inMilliseconds.toDouble();
         final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
-
         return finalDuration;
       }
     }
@@ -371,11 +370,15 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   Future<void> setSongUrl(String songUrl, int songIndex, AudioPlayer player) async {
-    emit(state.copyWith(isBuffering: [songIndex == 0 ? true : false, songIndex == 1 ? true : false]));
+    if (durationStreamSubscription != null) {
+      durationStreamSubscription?.cancel();
+    }
     final tempState = state.battleDataEvent as Data;
 
     final songs = List<Song>.of(tempState.data as List<Song>);
     final currentSong = songs[songIndex];
+    emit(state.copyWith(isBuffering: [songIndex == 0 ? true : false, songIndex == 1 ? true : false], currentDuration: currentSong.seekbar));
+
     final duration = await player.setUrl(songUrl, initialPosition: currentSong.seekbar);
 
     emit(state.copyWith(songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
@@ -399,12 +402,11 @@ class MainScreenBloc extends Cubit<MainScreenState> {
         player.seek(const Duration(seconds: 0));
       }
     });
-
     durationStreamSubscription = player.positionStream.listen((event) {
       if (state.currentDuration.inSeconds == event.inSeconds) {
         return;
       }
-      if (state.songIndex != songIndex) return;
+
       emit(state.copyWith(currentDuration: event));
     });
   }
@@ -413,7 +415,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   Future<void> close() {
     // audioPlayers.stop();
     // audioPlayers.dispose();
-    durationStreamSubscription.cancel();
+    durationStreamSubscription?.cancel();
     processingStreamSubscription.cancel();
     return super.close();
   }
