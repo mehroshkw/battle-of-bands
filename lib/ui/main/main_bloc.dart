@@ -20,8 +20,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   TextEditingController battlesGenreController = TextEditingController();
   TextEditingController genreController = TextEditingController();
   final SharedWebService _sharedWebService = SharedWebService.instance();
-  final SharedPreferenceHelper sharedPreferenceHelper =
-      SharedPreferenceHelper.instance();
+  final SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper.instance();
 
   NetworkHelper get _networkHelper => NetworkHelper.instance();
 
@@ -57,12 +56,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   Future<void> getUser() async {
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    emit(state.copyWith(
-        userEmail: user.emailAddress,
-        userName: user.name,
-        userId: user.id,
-        userDb: user.dateOfBirth,
-        userImage: user.imagePath));
+    emit(state.copyWith(userEmail: user.emailAddress, userName: user.name, userId: user.id, userDb: user.dateOfBirth, userImage: user.imagePath));
   }
 
   void updateIndex(int index) {
@@ -74,8 +68,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     emit(state.copyWith(leaderBoardDataEvent: const Loading()));
     final user = await sharedPreferenceHelper.user;
     if (user == null) return;
-    final leaderBoard =
-        await _sharedWebService.getLeaderboard(genre.id, user.id);
+    final leaderBoard = await _sharedWebService.getLeaderboard(genre.id, user.id);
     if (leaderBoard.isEmpty) {
       emit(state.copyWith(leaderBoardDataEvent: const Empty(message: '')));
       return;
@@ -114,18 +107,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   Future<void> voteBattleSong(Song song, int losserSongId) async {
     if (!(await _networkHelper.isNetworkConnected)) {
-      emit(state.copyWith(
-          snackbarMessage: SnackbarMessage.error(
-              message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
     }
     final user = await sharedPreferenceHelper.user;
     if (user == null) {
-      emit(state.copyWith(
-          snackbarMessage: SnackbarMessage.error(
-              message: AppText.LIMITED_NETWORK_CONNECTION)));
+      emit(state.copyWith(snackbarMessage: SnackbarMessage.error(message: AppText.LIMITED_NETWORK_CONNECTION)));
       await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
@@ -233,9 +222,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       if (duration != null && duration.inMilliseconds > 0) {
         final currentPosition = position.inMilliseconds.toDouble();
         final totalDuration = duration.inMilliseconds.toDouble();
-        final finalDuration = (currentPosition / totalDuration).isNaN
-            ? 1.0
-            : currentPosition / totalDuration;
+        final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
 
         return finalDuration;
       }
@@ -246,9 +233,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     if (duration != null && duration.inMilliseconds > 0) {
       final currentPosition = position.inMilliseconds.toDouble();
       final totalDuration = duration.inMilliseconds.toDouble();
-      final finalDuration = (currentPosition / totalDuration).isNaN
-          ? 1.0
-          : currentPosition / totalDuration;
+      final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
 
       return finalDuration;
     } else {
@@ -258,9 +243,7 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
       final currentPosition = position.inMilliseconds.toDouble();
       final totalDuration = duration.inMilliseconds.toDouble();
-      final finalDuration = (currentPosition / totalDuration).isNaN
-          ? 1.0
-          : currentPosition / totalDuration;
+      final finalDuration = (currentPosition / totalDuration).isNaN ? 1.0 : currentPosition / totalDuration;
 
       return finalDuration;
     }
@@ -380,43 +363,31 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     }
   }
 
-  Future<void> setSongUrl(
-      String songUrl, int songIndex, AudioPlayer player) async {
+  Future<void> setSongUrl(String songUrl, int songIndex, AudioPlayer player) async {
+    emit(state.copyWith(isBuffering: [songIndex == 0 ? true : false, songIndex == 1 ? true : false]));
     final tempState = state.battleDataEvent as Data;
 
     final songs = List<Song>.of(tempState.data as List<Song>);
     final currentSong = songs[songIndex];
-    final duration =
-        await player.setUrl(songUrl, initialPosition: currentSong.seekbar);
+    final duration = await player.setUrl(songUrl, initialPosition: currentSong.seekbar);
 
-    final bufferingList = state.isBuffering;
-    bufferingList[songIndex] = true;
-    print(bufferingList);
-    emit(state.copyWith(
-        songIndex: songIndex,
-        fileUrl: songUrl,
-        isBuffering: bufferingList,
-        totalDuration: duration));
+    emit(state.copyWith(songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
+
     processingStreamSubscription = player.playerStateStream.listen((event) {
       if (event.playing) {
-        emit(state.copyWith(isPlaying: true));
+        emit(state.copyWith(isPlaying: true, isBuffering: [false, false]));
       }
-      if (event.processingState == ProcessingState.loading ||
-          event.processingState == ProcessingState.buffering) {
-        final bufferingList = state.isBuffering;
-        bufferingList[songIndex] = true;
-        emit(state.copyWith(isBuffering: bufferingList, isPlaying: false));
+      if (event.processingState == ProcessingState.loading || event.processingState == ProcessingState.buffering) {
+        emit(state.copyWith(isBuffering: [songIndex == 0 ? true : false, songIndex == 1 ? true : false], isPlaying: false));
       }
       if (event.processingState == ProcessingState.ready) {
-        final bufferingList = state.isBuffering;
-        bufferingList[songIndex] = false;
-        emit(state.copyWith(isPlayerReady: true, isBuffering: bufferingList));
+        emit(state.copyWith(isPlayerReady: true));
       }
 
-      if (event.processingState == ProcessingState.completed &&
-          state.songIndex == songIndex) {
-        emit(state.copyWith(
-            isPlaying: false, currentDuration: const Duration(seconds: 0)));
+      if (event.processingState == ProcessingState.completed && state.songIndex == songIndex) {
+        songs[songIndex] = songs[songIndex].copyWith(seekbar: const Duration(seconds: 0));
+        emit(state.copyWith(isPlaying: false, battleDataEvent: Data(data: songs), currentDuration: const Duration(seconds: 0)));
+
         player.pause();
         player.seek(const Duration(seconds: 0));
       }

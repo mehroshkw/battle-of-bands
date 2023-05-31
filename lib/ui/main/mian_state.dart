@@ -47,7 +47,7 @@ class MainScreenState extends Equatable {
       required this.snackbarMessage,
       this.isPlaying = false,
       this.isPlayerReady = false,
-      this.isBuffering = const [false,false],
+      required this.isBuffering ,
       this.songIndex = -1,
       this.currentDuration = Duration.zero,
       this.totalDuration = Duration.zero});

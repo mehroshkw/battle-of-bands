@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
 
 import '../util/constants.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
   final String userEmail;
   final Widget notificationIcon;
@@ -48,7 +49,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class AppBarWithGenre extends StatelessWidget with PreferredSizeWidget {
+class AppBarWithGenre extends StatelessWidget implements  PreferredSizeWidget {
   final String screenName;
   final Widget genreField;
 
@@ -81,7 +82,7 @@ class AppBarWithGenre extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class CustomAppbar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String screenName;
 
   const CustomAppbar({super.key, required this.screenName});
