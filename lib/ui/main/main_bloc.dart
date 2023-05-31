@@ -337,13 +337,20 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   // }
 
   void togglePlayPause(int index, String songUrl) async {
+    final tempState = state.battleDataEvent as Data;
+
+    final songs = List<Song>.of(tempState.data as List<Song>);
+    if (index != state.songIndex && state.isPlaying) {
+      final player = audioPlayers[state.songIndex];
+      player.pause();
+      songs[state.songIndex] = songs[state.songIndex].copyWith(seekbar: player.position);
+
+      emit(state.copyWith(isPlaying: false, battleDataEvent: Data(data: songs)));
+    }
     emit(state.copyWith(songIndex: index));
     final isPlaying = state.isPlaying;
     final currentSongUrl = state.fileUrl;
     final player = audioPlayers[index];
-    final tempState = state.battleDataEvent as Data;
-
-    final songs = List<Song>.of(tempState.data as List<Song>);
 
     if (isPlaying) {
       songs[index] = songs[index].copyWith(seekbar: player.position);
