@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:battle_of_bands/backend/shared_web_services.dart';
+import 'package:battle_of_bands/data/exception.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
 import 'package:battle_of_bands/ui/main/mian_state.dart';
 import 'package:flutter/material.dart';
@@ -25,32 +26,38 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   NetworkHelper get _networkHelper => NetworkHelper.instance();
 
   List<AudioPlayer> audioPlayers = [];
-
-  // final AudioPlayer audioPlayer = AudioPlayer();
-
   StreamSubscription<Duration>? durationStreamSubscription;
   late StreamSubscription<PlayerState> processingStreamSubscription;
 
   MainScreenBloc() : super(MainScreenState.initial()) {
+    getUser();
+    getHomeData();
     getAllGenre();
-    getUser();
     getStatistics();
-    getUser();
   }
 
-  getStatistics() async {
-    final user = await sharedPreferenceHelper.user;
-    if (user == null) return;
-    final statistics = await _sharedWebService.getStatistics(user.id);
-    emit(state.copyWith(statistics: statistics));
+  Future<void> getStatistics() async {
+    try {
+      final user = await sharedPreferenceHelper.user;
+      if (user == null) throw NoInternetConnectException;
+      final statistics = await _sharedWebService.getStatistics(user.id);
+      emit(state.copyWith(statistics: statistics));
+    } catch (_) {
+      throw const NoInternetConnectException();
+    }
   }
 
-  getAllGenre() async {
-    final allGenre = await _sharedWebService.getAllGenre();
-    if (allGenre.isEmpty) return;
-    updateLeaderBoardByChangeGenreId(allGenre.first);
-    updateMySongsByChangeGenreId(allGenre.first);
-    emit(state.copyWith(allGenre: allGenre));
+  Future<void> getAllGenre() async {
+    try {
+      final allGenre = await _sharedWebService.getAllGenre();
+      allGenre.insert(0, Genre(id: 0, title: 'All', isActive: true));
+      if (allGenre.isEmpty) return;
+      updateLeaderBoardByChangeGenreId(allGenre.first);
+      updateMySongsByChangeGenreId(allGenre.first);
+      emit(state.copyWith(allGenre: allGenre));
+    } catch (_) {
+      throw const NoInternetConnectException();
+    }
   }
 
   Future<void> getUser() async {
@@ -60,49 +67,82 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   void updateIndex(int index) {
+    if(state.index==index)return;
     emit(state.copyWith(index: index));
   }
 
-  Future<void> updateLeaderBoardByChangeGenreId(Genre genre) async {
-    leaderBoardGenreController.text = genre.title;
-    emit(state.copyWith(leaderBoardDataEvent: const Loading()));
-    final user = await sharedPreferenceHelper.user;
-    if (user == null) return;
-    final leaderBoard = await _sharedWebService.getLeaderboard(genre.id, user.id);
-    if (leaderBoard.isEmpty) {
-      emit(state.copyWith(leaderBoardDataEvent: const Empty(message: '')));
-      return;
+  Future<void> getHomeData() async {
+    emit(state.copyWith(homeDataEvent: const Loading()));
+    try {
+      final user = await sharedPreferenceHelper.user;
+      if (user == null) return;
+      final asyncRequests = <Future<void>>[];
+      asyncRequests.add(_sharedWebService.getLeaderboard(0, user.id));
+      asyncRequests.add(_sharedWebService.getAllMySongs(0, user.id));
+      final result = await Future.wait(asyncRequests);
+      final leaderBoard = result.first as List<Song>;
+      final mySongs = result.last as List<Song>;
+      emit(state.copyWith(homeDataEvent: Data(data: MapEntry(leaderBoard, mySongs))));
+    } catch (_) {
+      emit(state.copyWith(homeDataEvent: const Error(exception: NoInternetConnectException())));
     }
-    emit(state.copyWith(leaderBoardDataEvent: Data(data: leaderBoard)));
+  }
+
+  Future<void> updateLeaderBoardByChangeGenreId(Genre genre) async {
+    try {
+      final homeDataEventTemp = state.homeDataEvent;
+      leaderBoardGenreController.text = genre.title;
+      final user = await sharedPreferenceHelper.user;
+      if (user == null) return;
+      final updatedLeaderBoardValue = await _sharedWebService.getLeaderboard(genre.id, user.id);
+      if (homeDataEventTemp is Empty) {
+        emit(state.copyWith(homeDataEvent: Data(data: MapEntry(updatedLeaderBoardValue, []))));
+        return;
+      }
+      if (homeDataEventTemp is Data) {
+        final previousHomeDataEvent = homeDataEventTemp.data as MapEntry<List<Song>, List<Song>>;
+        emit(state.copyWith(homeDataEvent: Data(data: MapEntry(updatedLeaderBoardValue, previousHomeDataEvent.value))));
+        return;
+      }
+    } catch (_) {
+      emit(state.copyWith(homeDataEvent: const Error(exception: NoInternetConnectException())));
+    }
   }
 
   Future<void> updateMySongsByChangeGenreId(Genre genre) async {
     genreController.text = genre.title;
     emit(state.copyWith(mySongDataEvent: const Loading()));
-    final user = await sharedPreferenceHelper.user;
-    if (user == null) return;
-    final mySongs = await _sharedWebService.getAllMySongs(genre.id, user.id);
-
-    if (mySongs.isEmpty) {
-      emit(state.copyWith(mySongDataEvent: const Empty(message: '')));
-      return;
+    try {
+      final user = await sharedPreferenceHelper.user;
+      if (user == null) return;
+      final mySongs = await _sharedWebService.getAllMySongs(genre.id, user.id);
+      if (mySongs.isEmpty) {
+        emit(state.copyWith(mySongDataEvent: const Empty(message: '')));
+        return;
+      }
+      emit(state.copyWith(mySongDataEvent: Data(data: mySongs)));
+    } catch (_) {
+      emit(state.copyWith(mySongDataEvent: const Error(exception: NoInternetConnectException())));
     }
-    emit(state.copyWith(mySongDataEvent: Data(data: mySongs)));
   }
 
   Future<void> updateBattleByChangeGenreId(Genre genre) async {
     battlesGenreController.text = genre.title;
     emit(state.copyWith(battleDataEvent: const Loading()));
-    final user = await sharedPreferenceHelper.user;
-    if (user == null) return;
-    final battleSongs = await _sharedWebService.getAllSongs(genre.id, user.id);
-    audioPlayers = List.generate(battleSongs.length, (_) => AudioPlayer());
+    try {
+      final user = await sharedPreferenceHelper.user;
+      if (user == null) return;
+      final battleSongs = await _sharedWebService.getAllSongs(genre.id, user.id);
+      audioPlayers = List.generate(battleSongs.length, (_) => AudioPlayer());
 
-    if (battleSongs.isEmpty || battleSongs.length == 1) {
-      emit(state.copyWith(battleDataEvent: const Empty(message: '')));
-      return;
+      if (battleSongs.isEmpty || battleSongs.length == 1) {
+        emit(state.copyWith(battleDataEvent: const Empty(message: '')));
+        return;
+      }
+      emit(state.copyWith(battleDataEvent: Data(data: battleSongs)));
+    } catch (_) {
+      emit(state.copyWith(battleDataEvent: const Error(exception: NoInternetConnectException())));
     }
-    emit(state.copyWith(battleDataEvent: Data(data: battleSongs)));
   }
 
   Future<void> voteBattleSong(Song song, int losserSongId) async {
@@ -119,18 +159,39 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       emit(state.copyWith(snackbarMessage: SnackbarMessage.empty()));
       return;
     }
-    await _sharedWebService.voteSong(song.id, user.id, true, losserSongId);
-    emit(state.copyWith(isBeginBattle: !state.isBeginBattle));
-    battlesGenreController.clear();
+    try {
+      await _sharedWebService.voteSong(song.id, user.id, true, losserSongId);
+      final previousStatistics = state.statistics;
+      final updatedStatistics = previousStatistics.copyWith(judgedBattles: previousStatistics.judgedBattles + 1);
+      emit(state.copyWith(isBeginBattle: !state.isBeginBattle, statistics: updatedStatistics));
+      battlesGenreController.clear();
+    } catch (_) {
+      throw const NoInternetConnectException();
+    }
   }
 
   Future<void> updateMySongs(Song song) async {
     final mySongDataEvent = state.mySongDataEvent;
+    final homeDataEvent = state.homeDataEvent;
+    final previousStatistics = state.statistics;
+    final updatedStatistics = previousStatistics.copyWith(judgedBattles: previousStatistics.totalUploads + 1);
+    emit(state.copyWith(statistics: updatedStatistics));
     if (mySongDataEvent is Data) {
       final songData = mySongDataEvent.data as List<Song>;
       songData.insert(0, song);
       emit(state.copyWith(mySongDataEvent: Data(data: songData)));
+    } else {
+      emit(state.copyWith(mySongDataEvent: Data(data: <Song>[song])));
     }
+    if (homeDataEvent is Data) {
+      final mapEntry = homeDataEvent.data as MapEntry<List<Song>, List<Song>>;
+      final leaderBoardItem = mapEntry.key;
+      final updatedHomeSongItem = mapEntry.value;
+      updatedHomeSongItem.insert(0, song);
+      emit(state.copyWith(homeDataEvent: Data(data: MapEntry(leaderBoardItem, updatedHomeSongItem))));
+      return;
+    }
+    emit(state.copyWith(homeDataEvent: Data(data: MapEntry(<Song>[], <Song>[song]))));
   }
 
   String formatDuration(int duration) {
@@ -413,8 +474,12 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   @override
   Future<void> close() {
-    // audioPlayers.stop();
-    // audioPlayers.dispose();
+    for (var element in audioPlayers) {
+      element.stop();
+    }
+    for (var element in audioPlayers) {
+      element.dispose();
+    }
     durationStreamSubscription?.cancel();
     processingStreamSubscription.cancel();
     return super.close();

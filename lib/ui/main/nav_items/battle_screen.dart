@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../backend/server_response.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
+import '../../../common/error_try_again.dart';
 import '../../../helper/dilogue_helper.dart';
 import '../../../util/app_strings.dart';
 import '../../../util/constants.dart';
@@ -58,8 +59,7 @@ class BattleScreen extends StatelessWidget {
                               value: genre,
                               child: SizedBox(
                                 height: 20,
-                                child: Text(genre.title,
-                                    style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 15, color: Constants.colorOnPrimary)),
+                                child: Text(genre.title, style: const TextStyle(fontFamily: Constants.montserratMedium, fontSize: 15, color: Constants.colorOnPrimary)),
                               )))
                           .toList();
                     },
@@ -93,7 +93,7 @@ class BattleScreen extends StatelessWidget {
                                     if (battleDataEvent is Loading) {
                                       return SizedBox(
                                           height: size.height / 1.5,
-                                          child: const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary)));
+                                          child: const Center(child: CircularProgressIndicator(backgroundColor: Constants.colorPrimary, color: Constants.colorOnPrimary)));
                                     } else if (battleDataEvent is Empty || battleDataEvent is Initial) {
                                       return SizedBox(
                                           height: size.height / 2,
@@ -110,8 +110,7 @@ class BattleScreen extends StatelessWidget {
                                                     style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface))),
                                             Text(
                                               AppText.BATTLE_TO_SHOW,
-                                              style: TextStyle(
-                                                  fontSize: 14, fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.8)),
+                                              style: TextStyle(fontSize: 14, fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.8)),
                                               textAlign: TextAlign.center,
                                             ),
                                             const SizedBox(height: 50)
@@ -120,7 +119,6 @@ class BattleScreen extends StatelessWidget {
                                       final items = battleDataEvent.data as List<Song>;
                                       final song1 = items.first;
                                       final song2 = items.last;
-
                                       return Column(
                                         children: [
                                           SongWidget(
@@ -164,6 +162,16 @@ class BattleScreen extends StatelessWidget {
                                               songUrl: '$BASE_URL_DATA/${song2.fileUrl}')
                                         ],
                                       );
+                                    } else if (battleDataEvent is Error) {
+                                      return SizedBox(
+                                        height: size.height / 2,
+                                        child: Center(
+                                          child: ErrorTryAgain(
+                                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                                            positiveClickListener: () => bloc.updateBattleByChangeGenreId,
+                                          ),
+                                        ),
+                                      );
                                     } else {
                                       return const SizedBox();
                                     }
@@ -178,11 +186,8 @@ class BattleScreen extends StatelessWidget {
                                       },
                                       child: Padding(
                                           padding: const EdgeInsets.all(20.0),
-                                          child: Image.asset(
-                                              bloc.battlesGenreController.text.isEmpty ? 'assets/begin_battle_dim.png' : 'assets/begin_battle.png',
-                                              height: 250,
-                                              width: 250,
-                                              fit: BoxFit.contain)))))))))
+                                          child: Image.asset(bloc.battlesGenreController.text.isEmpty ? 'assets/begin_battle_dim.png' : 'assets/begin_battle.png',
+                                              height: 250, width: 250, fit: BoxFit.contain)))))))))
     ]);
   }
 }
@@ -195,8 +200,7 @@ class SongWidget extends StatelessWidget {
   final double sliderValue;
   final int index;
 
-  const SongWidget(
-      {Key? key, required this.onClickCalled, required this.song, required this.sliderValue, required this.setUrl, required this.songUrl, required this.index})
+  const SongWidget({Key? key, required this.onClickCalled, required this.song, required this.sliderValue, required this.setUrl, required this.songUrl, required this.index})
       : super(key: key);
 
   @override
@@ -231,8 +235,7 @@ class SongWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10, left: 10),
                   child: Text(song.title,
                       textAlign: TextAlign.left,
-                      style:
-                          const TextStyle(fontFamily: Constants.montserratBold, fontSize: 20, fontWeight: FontWeight.bold, color: Constants.colorOnPrimary))),
+                      style: const TextStyle(fontFamily: Constants.montserratBold, fontSize: 20, fontWeight: FontWeight.bold, color: Constants.colorOnPrimary))),
               Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
@@ -280,15 +283,14 @@ class SongWidget extends StatelessWidget {
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Constants.colorPrimary),
-                          child:
-                              state.isBuffering[index] ? const CircularProgressIndicator() : const Icon(Icons.pause, size: 40, color: Constants.colorOnSurface))
+                          child: state.isBuffering[index]
+                              ? const CircularProgressIndicator(backgroundColor: Constants.colorPrimary, color: Constants.colorOnPrimary)
+                              : const Icon(Icons.pause, size: 40, color: Constants.colorOnSurface))
                       : Container(
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Constants.colorPrimary),
-                          child: state.isBuffering[index]
-                              ? const CircularProgressIndicator()
-                              : const Icon(Icons.play_arrow_rounded, size: 40, color: Constants.colorOnSurface)));
+                          child: state.isBuffering[index] ? const CircularProgressIndicator() : const Icon(Icons.play_arrow_rounded, size: 40, color: Constants.colorOnSurface)));
             }),
             IconButton(
                 splashRadius: 30.0,
@@ -312,6 +314,7 @@ class SongWidget extends StatelessWidget {
                 onClick: () {
                   onClickCalled.call();
                 },
+                fontSize: 14,
               ))
         ]));
   }

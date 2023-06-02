@@ -35,6 +35,7 @@ abstract class AppText {
   static const String TOTAL_UPLOADS = 'Total Uploads';
   static const String TOTAL_BATTLES = 'Total Battles';
   static const String TOTAL_WINS = 'Total Wins';
+  static const String BATTLES_JUDGED = 'Battles Judged';
   static const String TOTAL_LOSES = 'Total Losses';
 
   /// battles
@@ -51,6 +52,7 @@ abstract class AppText {
 
   /// All songs
   static const String MY_SONG = 'My Song';
+  static const String SEE_ALL = 'See All';
   static const String SONG = 'Song';
   static const String VOTES = 'Votes';
   static const String TODAY = 'Today';

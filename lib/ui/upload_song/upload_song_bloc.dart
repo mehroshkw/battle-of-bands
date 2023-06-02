@@ -58,6 +58,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
         print('Trimmed File --> $trimmedFile');
         if (trimmedFile == null) return;
         final duration = (end - start) / 1000;
+        print('duration------------->$duration');
         emit(state.copyWith(duration: duration, file: File(trimmedFile)));
       });
 
