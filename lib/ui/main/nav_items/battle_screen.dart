@@ -167,7 +167,7 @@ class BattleScreen extends StatelessWidget {
                                         child: Center(
                                           child: ErrorTryAgain(
                                             margin: const EdgeInsets.symmetric(horizontal: 15),
-                                            positiveClickListener: ()=>bloc.updateBattleByChangeGenreId,
+                                            positiveClickListener: () => bloc.updateBattleByChangeGenreId,
                                           ),
                                         ),
                                       );

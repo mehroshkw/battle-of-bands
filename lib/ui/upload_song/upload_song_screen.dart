@@ -73,6 +73,7 @@ class UploadSongScreen extends StatelessWidget {
                       type: FileType.custom,
                       allowedExtensions: ['wav','mp3','opus'],
                       allowCompression: false
+
                     );
                     if (result == null) return;
                     bloc.updateFilePath(result.files.single.path);

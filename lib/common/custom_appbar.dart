@@ -49,8 +49,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class AppBarWithGenre extends StatelessWidget implements PreferredSizeWidget {
 
+class AppBarWithGenre extends StatelessWidget implements  PreferredSizeWidget {
   final String screenName;
   final Widget genreField;
 
