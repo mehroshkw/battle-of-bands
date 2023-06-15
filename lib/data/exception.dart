@@ -25,7 +25,9 @@ class UserAlreadyExistsWithDifferentCredential implements Exception {
   String toString() => _ERROR;
 }
 
-class EmailNotFoundException implements Exception {}
+class UserNotFoundException implements Exception {
+  const UserNotFoundException();
+}
 
 class IdNotFoundException implements Exception {
   const IdNotFoundException();

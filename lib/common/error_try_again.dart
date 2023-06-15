@@ -30,6 +30,7 @@ class ErrorTryAgain extends StatelessWidget {
           SizedBox(
               width: size.width - margin.left + margin.right,
               child: InkWell(
+                splashColor: Constants.colorPrimary,
                   onTap: positiveClickListener,
                   child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 13),

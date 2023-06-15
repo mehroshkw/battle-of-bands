@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common/app_button.dart';
 import '../../common/app_text_field.dart';
 import '../../common/custom_appbar.dart';
+import '../../common/waveSlider.dart';
 import '../../data/snackbar_message.dart';
 import '../../helper/dilogue_helper.dart';
 import '../../helper/material_dialogue_content.dart';
@@ -70,7 +71,7 @@ class UploadSongScreen extends StatelessWidget {
                     if (bloc.state.file.path.isNotEmpty) return;
                     FilePickerResult? result = await FilePicker.platform.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions:  ['mp3'],
+                      allowedExtensions: ['wav','mp3','opus'],
                       allowCompression: false
                     );
                     if (result == null) return;
@@ -146,6 +147,9 @@ class UploadSongScreen extends StatelessWidget {
                               ]);
                   }),
               const SizedBox(height: 20),
+
+              /// for checking if trimmer working
+              // IconButton(onPressed: ()=> bloc.checkNewTrimmer(), icon: Icon(Icons.my_library_music_rounded, color: Colors.white,)),
               Container(
                   alignment: Alignment.centerLeft,
                   child: const Text(AppText.SONG_TITLE,

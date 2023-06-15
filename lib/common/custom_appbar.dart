@@ -49,7 +49,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class AppBarWithGenre extends StatelessWidget implements  PreferredSizeWidget {
+
+
+class AppBarWithGenre extends StatelessWidget implements PreferredSizeWidget {
+
   final String screenName;
   final Widget genreField;
 
@@ -85,29 +88,34 @@ class AppBarWithGenre extends StatelessWidget implements  PreferredSizeWidget {
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String screenName;
 
-  const CustomAppbar({super.key, required this.screenName});
+  const CustomAppbar({Key? key, required this.screenName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Constants.scaffoldColor,
-        automaticallyImplyLeading: false,
-        title: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(screenName,
-                style: const TextStyle(
-                  color: Constants.colorOnSurface,
-                  fontFamily: Constants.montserratRegular,
-                  fontSize: 22,
-                ))),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Constants.colorOnSurface),
-            onPressed: () => Navigator.of(context).pop()));
+      elevation: 0,
+      centerTitle: true,
+      backgroundColor: Constants.scaffoldColor,
+      automaticallyImplyLeading: false,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Text(
+          screenName,
+          style: const TextStyle(
+            color: Constants.colorOnSurface,
+            fontFamily: Constants.montserratRegular,
+            fontSize: 22,
+          ),
+        ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new, color: Constants.colorOnSurface),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+

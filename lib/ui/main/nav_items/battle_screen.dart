@@ -137,8 +137,7 @@ class BattleScreen extends StatelessWidget {
                                               // bloc.setSongUrl('$BASE_URL_DATA/${song1.fileUrl}', items.indexOf(song1));
                                               bloc.togglePlayPause(items.indexOf(song1), '$BASE_URL_DATA/${song1.fileUrl}');
                                             },
-                                            // onNextSong: () => bloc.playNextSong(),
-                                            // onPreviousSong: () => bloc.playPreviousSong(),
+
                                             index: items.indexOf(song1),
                                             songUrl: '$BASE_URL_DATA/${song1.fileUrl}',
                                           ),
