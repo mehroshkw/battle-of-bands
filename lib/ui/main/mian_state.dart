@@ -18,7 +18,7 @@ class MainScreenState extends Equatable {
   final String userDb;
   final String userImage;
   final String fileUrl;
-  final DataEvent leaderBoardDataEvent;
+  final DataEvent homeDataEvent;
   final DataEvent mySongDataEvent;
   final DataEvent battleDataEvent;
   final SnackbarMessage snackbarMessage;
@@ -41,13 +41,13 @@ class MainScreenState extends Equatable {
       required this.userDb,
       required this.userImage,
       required this.fileUrl,
-      required this.leaderBoardDataEvent,
+      required this.homeDataEvent,
       required this.mySongDataEvent,
       required this.battleDataEvent,
       required this.snackbarMessage,
       this.isPlaying = false,
       this.isPlayerReady = false,
-      this.isBuffering = const [false,false],
+      required this.isBuffering,
       this.songIndex = -1,
       this.currentDuration = Duration.zero,
       this.totalDuration = Duration.zero});
@@ -58,8 +58,7 @@ class MainScreenState extends Equatable {
             isVote: false,
             isBeginBattle: false,
             isNoMusic: true,
-            statistics: Statistics(
-                totalUploads: 0, totalWins: 0, totalBattles: 0, totalLoses: 0),
+            statistics: Statistics(totalUploads: 0, totalWins: 0, totalBattles: 0, totalLoses: 0, judgedBattles: 0),
             allGenre: <Genre>[],
             userId: -1,
             userName: '',
@@ -67,13 +66,13 @@ class MainScreenState extends Equatable {
             userDb: '',
             userImage: '',
             fileUrl: '',
-            leaderBoardDataEvent: const Initial(),
+            homeDataEvent: const Initial(),
             mySongDataEvent: const Initial(),
             battleDataEvent: const Initial(),
             snackbarMessage: SnackbarMessage.empty(),
             isPlaying: false,
             isPlayerReady: false,
-            isBuffering: [false,false],
+            isBuffering: [false, false],
             songIndex: -1,
             currentDuration: Duration.zero,
             totalDuration: Duration.zero);
@@ -91,7 +90,7 @@ class MainScreenState extends Equatable {
           String? userDb,
           String? userImage,
           String? fileUrl,
-          DataEvent? leaderBoardDataEvent,
+          DataEvent? homeDataEvent,
           DataEvent? mySongDataEvent,
           DataEvent? battleDataEvent,
           SnackbarMessage? snackbarMessage,
@@ -114,8 +113,7 @@ class MainScreenState extends Equatable {
           userImage: userImage ?? this.userImage,
           fileUrl: fileUrl ?? this.fileUrl,
           userDb: userDb ?? this.userDb,
-          leaderBoardDataEvent:
-              leaderBoardDataEvent ?? this.leaderBoardDataEvent,
+          homeDataEvent: homeDataEvent ?? this.homeDataEvent,
           mySongDataEvent: mySongDataEvent ?? this.mySongDataEvent,
           battleDataEvent: battleDataEvent ?? this.battleDataEvent,
           snackbarMessage: snackbarMessage ?? this.snackbarMessage,
@@ -134,7 +132,7 @@ class MainScreenState extends Equatable {
         isNoMusic,
         statistics,
         allGenre,
-        leaderBoardDataEvent,
+        homeDataEvent,
         mySongDataEvent,
         userDb,
         userImage,

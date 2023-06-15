@@ -45,6 +45,8 @@ dependencies:
   just_audio: ^0.9.33
   share_plus: ^7.0.1
   easy_audio_trimmer: ^1.0.1+1
+  path_provider: ^2.0.15
+  ffmpeg_kit_flutter: 5.1.0-LTS
 
 dev_dependencies:
   flutter_test:

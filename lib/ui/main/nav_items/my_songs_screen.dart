@@ -5,10 +5,11 @@ import 'package:battle_of_bands/ui/song_details/my_song_details.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_audio/just_audio.dart';
 import '../../../common/app_button.dart';
 import '../../../common/app_text_field.dart';
 import '../../../common/custom_appbar.dart';
+import '../../../common/error_try_again.dart';
+import '../../../common/single_song_item_widget.dart';
 import '../../../util/app_strings.dart';
 import '../../../util/constants.dart';
 import '../main_bloc.dart';
@@ -76,15 +77,14 @@ class AllSongsScreen extends StatelessWidget {
             final mySongDataEvent = state.mySongDataEvent;
             if (mySongDataEvent is Loading) {
               return SizedBox(
-                  height: size.height / 2, child: const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary)));
+                  height: size.height / 2, child: const Center(child: CircularProgressIndicator(backgroundColor: Constants.colorPrimary, color: Constants.colorOnPrimary)));
             } else if (mySongDataEvent is Empty || mySongDataEvent is Initial) {
               return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                 const SizedBox(height: 60),
                 Image.asset('assets/no_music.png', height: 70, width: 70),
                 const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(AppText.NO_SONG,
-                        style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface))),
+                    child: Text(AppText.NO_SONG, style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface))),
                 const SizedBox(height: 10),
                 const Padding(
                     padding: EdgeInsets.all(6.0),
@@ -110,8 +110,18 @@ class AllSongsScreen extends StatelessWidget {
                                 final song = items;
                                 return GestureDetector(
                                     onTap: () => Navigator.pushNamed(context, MySongDetailScreen.route, arguments: [true, song, index]),
-                                    child: _SingeSongItemWidget(song: song[index]));
+                                    child: SingeSongItemWidget(song: song[index]));
                               }))));
+            } else if (mySongDataEvent is Error) {
+              return SizedBox(
+                height: size.height / 2,
+                child: Center(
+                  child: ErrorTryAgain(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    positiveClickListener:()=> bloc.updateMySongsByChangeGenreId,
+                  ),
+                ),
+              );
             } else {
               return const SizedBox();
             }
@@ -128,81 +138,5 @@ class AllSongsScreen extends StatelessWidget {
               },
               color: Constants.colorPrimary))
     ]);
-  }
-}
-
-class _SingeSongItemWidget extends StatelessWidget {
-  final Song song;
-
-
-  const _SingeSongItemWidget({Key? key, required this.song}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = context.read<MainScreenBloc>();
-    final Size size = MediaQuery.of(context).size;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(song.date,
-            style: TextStyle(
-              fontFamily: Constants.montserratLight,
-              color: Constants.colorOnSurface.withOpacity(0.7),
-            )),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          width: size.width - 30,
-          decoration: BoxDecoration(color: Constants.colorPrimaryVariant.withOpacity(0.95), borderRadius: BorderRadius.circular(20)),
-          child: Row(
-            children: [
-              Image.asset('assets/song_icon2.png', width: 60, height: 55),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      song.title,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(fontFamily: Constants.montserratSemibold, fontSize: 16, color: Constants.colorOnPrimary),
-                    ),
-                    Text(
-                      song.bandName,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(fontFamily: Constants.montserratLight, fontSize: 14, color: Constants.colorPrimary),
-                    ),
-                    Text(
-                      bloc.formatDuration(song.duration.toInt()),
-                      style: TextStyle(
-                        fontFamily: Constants.montserratLight,
-                        color: Constants.colorOnSurface.withOpacity(0.7),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Image.asset('assets/play.png'),
-                  Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Text(
-                      '${AppText.VOTES} ${song.votesCount}',
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(fontFamily: Constants.montserratSemibold, fontSize: 14, color: Constants.colorOnPrimary),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }
