@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_state.dart';
 import 'package:easy_audio_trimmer/easy_audio_trimmer.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../backend/shared_web_services.dart';
@@ -44,21 +46,29 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   Future<void> updateFilePath(String? filePath) async {
     if (filePath == null) return;
+
     final file = File(filePath);
     emit(state.copyWith(isLoading: true, file: file));
-    await trimmer.loadAudio(audioFile: file);
+    final duration = await trimmer.loadAudio(audioFile: file);
+    // print('duration-------------->$duration');duration
+
     emit(state.copyWith(isLoading: false));
   }
+
+
 
   Future<void> trimmerSaveFile() => trimmer.saveTrimmedAudio(
       startValue: start,
       endValue: end,
       audioFileName: DateTime.now().millisecondsSinceEpoch.toString(),
-      onSave: (String? trimmedFile) {
+      onSave: (trimmedFile) {
+        final tempFile = trimmer!.currentAudioFile;
+        print("tempfile ======================>>> $tempFile");
         print('Trimmed File --> $trimmedFile');
-        if (trimmedFile == null) return;
         final duration = (end - start) / 1000;
-        print('duration------------->$duration');
+        print('duration---------------->$duration');
+
+        if (trimmedFile == null) return;
         emit(state.copyWith(duration: duration, file: File(trimmedFile)));
       });
 

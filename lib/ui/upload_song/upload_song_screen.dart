@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:battle_of_bands/backend/server_response.dart';
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/upload_song/upload_song_bloc.dart';
@@ -70,8 +69,9 @@ class UploadSongScreen extends StatelessWidget {
                   onTap: () async {
                     if (bloc.state.file.path.isNotEmpty) return;
                     FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: Platform.isAndroid ? FileType.audio : FileType.any,
-                      allowCompression: false,
+                      type: FileType.custom,
+                      allowedExtensions:  ['mp3'],
+                      allowCompression: false
                     );
                     if (result == null) return;
                     bloc.updateFilePath(result.files.single.path);
