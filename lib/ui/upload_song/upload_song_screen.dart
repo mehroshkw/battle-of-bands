@@ -147,9 +147,6 @@ class UploadSongScreen extends StatelessWidget {
                               ]);
                   }),
               const SizedBox(height: 20),
-
-              /// for checking if trimmer working
-              // IconButton(onPressed: ()=> bloc.checkNewTrimmer(), icon: Icon(Icons.my_library_music_rounded, color: Colors.white,)),
               Container(
                   alignment: Alignment.centerLeft,
                   child: const Text(AppText.SONG_TITLE,
