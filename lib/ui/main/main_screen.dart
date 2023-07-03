@@ -17,12 +17,32 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   static const _homeScreenNavigationKey = PageStorageKey(HomeScreen.key_title);
   static const _battleScreenNavigationKey = PageStorageKey(BattleScreen.key_title);
   static const _allSongsKeyNavigationKey = PageStorageKey(AllSongsScreen.key_title);
   static const _profileKeyNavigationKey = PageStorageKey(ProfileScreen.key_title);
   final _bottomMap = <PageStorageKey<String>, Widget>{};
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('app state changed');
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      print('app in background');
+      stopAudioPlayer();
+      final bloc = context.read<MainScreenBloc>();
+      bloc.emit(bloc.state.copyWith(isPlaying: false));
+    }
+  }
+
+  Future<void> stopAudioPlayer() async {
+    print('element =====');
+    final bloc = context.read<MainScreenBloc>();
+    for (var element in bloc.audioPlayers) {
+      element.stop();
+    }
+  }
 
   @override
   void initState() {
@@ -31,7 +51,23 @@ class _MainScreenState extends State<MainScreen> {
     _bottomMap[_allSongsKeyNavigationKey] = const AllSongsScreen(key: _allSongsKeyNavigationKey);
     _bottomMap[_profileKeyNavigationKey] = const ProfileScreen(key: _profileKeyNavigationKey);
 
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+  @override
+  void dispose() {
+    final bloc = context.read<MainScreenBloc>();
+    print("element ===== ");
+
+    for (var element in bloc.audioPlayers) {
+      print("element ===== $element");
+      element.stop();
+    }
+    for (var element in bloc.audioPlayers) {
+      element.dispose();
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   final _bottomNavItems = <BottomNavigationBarItem>[

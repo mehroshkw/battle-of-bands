@@ -124,9 +124,12 @@ class SharedWebService {
 
   /// get All Songs
   Future<List<Song>> getAllSongs(int genreId, int userId) async {
+    print('userId: $userId, genrerId $genreId');
     final uri = Uri.parse('$_BASE_URL/Song/GetAllSongByGenreId?appUserId=$userId&genreId=$genreId');
     final response = await _get(uri);
     final responseBody = json.decode(await response.transform(utf8.decoder).join());
+    final finalResponse = (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
+    print('responsebody ==========> $finalResponse');
     return (responseBody as List<dynamic>).map((e) => Song.fromJson(e)).toList();
   }
 

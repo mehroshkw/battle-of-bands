@@ -58,6 +58,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   Future<void> updateFilePath(String? filePath) async {
     if (filePath == null) return;
+
     final file = File(filePath);
     print('file ==========================> $file');
     emit(state.copyWith(isLoading: true, file: file));
@@ -65,51 +66,6 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print("start === $start, end=== $end");
     emit(state.copyWith(isLoading: false));
   }
-
-
-
-/// easy audio trimmer
-//   Future<void> trimmerSaveFile() => trimmer.saveTrimmedAudio(
-//       startValue: start,
-//       endValue: end,
-//       audioFileName: DateTime.now().millisecondsSinceEpoch.toString(),
-//       onSave: (String? trimmedFile) {
-//         // trimMP3File(trimmedFile!, DateTime.now().millisecondsSinceEpoch.toString(), start, end);
-//         print('Trimmed File --> $trimmedFile');
-//         if (trimmedFile == null) return;
-//         final duration = (end - start) / 1000;
-//         print('duration------------->$duration');
-//         // emit(state.copyWith(duration: duration, file: File(trimmedFile)));
-//         emit(state.copyWith(duration: duration));
-//       });
-
-
- /// using flutter ffmpeg package
-  // Future<void> trimMP3File() async {
-  //   int startTrimmer = start ~/ 1000;
-  //   int endTrimmer = end ~/ 1000;
-  //     // int startTrimmer = 30;
-  //     // int endTrimmer = 90;
-  //     print('Start Trimmer: $startTrimmer');
-  //     print('End Trimmer: $endTrimmer');
-  //
-  //     final inputPath = state.file.path;
-  //     print('Input File Path: $inputPath');
-  //   final Directory appDir = await getApplicationDocumentsDirectory();
-  //   final String outputFilePath = '${appDir.path}/output.mp3';
-  //
-  //   print('inputpath == $inputPath, outputPath== $outputFilePath, start time == $startTrimmer, end seconds === $endTrimmer');
-  //   final FlutterFFmpeg flutterFFmpeg = FlutterFFmpeg();
-  //   final arguments = ['-i', inputPath,'-ss', '$startTrimmer', '-t', '${endTrimmer - startTrimmer}', outputFilePath];
-  //   try {
-  //   await flutterFFmpeg.executeWithArguments(arguments);
-  //   print('Trimmed MP3 file saved at: $outputFilePath');
-  //   emit(state.copyWith(file: File(outputFilePath)));
-  //   } catch (error) {
-  //   print('Failed to trim MP3 file: $error');
-  //   }
-  // }
-
 
   /// using flutter ffmpeg kit package
   Future<String?> getTrimmedAudioFile() async {
@@ -119,13 +75,14 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print('End Trimmer: $endTrimmer');
     final inputPath = state.file.path;
     final String inputPathFileName = inputPath.split('/').last;
+    print("inputFileName ======= $inputPathFileName");
 
     final Directory dir = await getTemporaryDirectory();
 
     String outPath;
     String cmd;
-    if(inputPath.endsWith('mp3')) {
-       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+    if (inputPath.endsWith('mp3')) {
+      outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
       cmd = '-i $inputPath -ss ${startTrimmer.toHumanReadableTime()} -to ${endTrimmer.toHumanReadableTime()} -c copy $outPath';
     } else {
       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
@@ -148,60 +105,13 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     bool isSuccess = ReturnCode.isSuccess(returnCode);
     print('Is Success -- $isSuccess');
 
-    if(!isSuccess) return null;
+    if (!isSuccess) return null;
 
     final trimmedDuration = (end - start) / 1000;
     print('duration------------->$trimmedDuration');
     emit(state.copyWith(duration: trimmedDuration));
 
     return outPath;
-  }
-
-/// using flutter_audio_trimmer package
-  // Future<void> onTrimAudioFile() async {
-  //   int startTrimmer  = start.toInt();
-  //   int endTrimmer  = end.toInt();
-  //   print("hereeeeeeeeeeeeeeeeeee");
-  //   final inputPath = state.file.path;
-  //
-  //   print('song file from state ==============>>> $inputPath');
-  //   try {
-  //     if (inputPath.isNotEmpty) {
-  //       Directory directory = await getTemporaryDirectory();
-  //       print('Directory ==========> $directory');
-  //       print("start==== $startTrimmer  , end==== $endTrimmer");
-  //       final trimmedAudioFile = await FlutterAudioTrimmer.trim(
-  //         inputFile: File(inputPath),
-  //         outputDirectory: directory,
-  //         fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-  //         fileType:AudioFileType.mp3,
-  //         time: AudioTrimTime(
-  //           start:  Duration(milliseconds: startTrimmer),
-  //           end:  Duration(milliseconds: endTrimmer),
-  //         ),
-  //       );
-  //       final duration = (end - start) / 1000;
-  //       print("new dration ====== $duration");
-  //       // emit(state.copyWith(file: trimmedAudioFile, duration: duration));
-  //       // print('new Trimmed Song ==============>>> ${trimmedAudioFile!.path}');
-  //     } else {
-  //       print("file empty");
-  //     }
-  //   } on AudioTrimmerException catch (e) {
-  //     print("Exception=============> $e");
-  //   } catch (e) {
-  //   print("error");
-  //   print(e);
-  //   }
-  // }
-
-
-
-  Future<void> checkNewTrimmer()async {
-    print('start time in method==== $start  ,, end time in method ==== $end');
-    final trimmedDuration = (end - start) / 1000;
-    print('duration------------->$trimmedDuration');
-    getTrimmedAudioFile();
   }
 
   Future<AddSongResponse> uploadSong() async {
@@ -213,7 +123,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     emit(state.copyWith(duration: trimmedDuration));
     final outfilePath = await getTrimmedAudioFile();
     print('outfilePath=========== $outfilePath');
-    if(outfilePath == null) throw const NoInternetConnectException();
+    if (outfilePath == null) throw const NoInternetConnectException();
 
     final String userId = user.id.toString();
     print('userId=========== $userId');
@@ -239,7 +149,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     };
 
     // final songResponse =  await _sharedWebService.addSong(body, songPath);
-    final songResponse =  await _sharedWebService.addSong(body, outfilePath);
+    final songResponse = await _sharedWebService.addSong(body, outfilePath);
     File(outfilePath).delete();
     print('song response =============$songResponse');
     return songResponse;

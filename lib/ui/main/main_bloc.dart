@@ -472,9 +472,14 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     });
   }
 
+
+
   @override
   Future<void> close() {
+      print("element =====");
+
     for (var element in audioPlayers) {
+      print("element ===== $element");
       element.stop();
     }
     for (var element in audioPlayers) {

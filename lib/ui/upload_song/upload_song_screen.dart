@@ -73,7 +73,6 @@ class UploadSongScreen extends StatelessWidget {
                       type: FileType.custom,
                       allowedExtensions: ['wav','mp3','opus'],
                       allowCompression: false
-
                     );
                     if (result == null) return;
                     bloc.updateFilePath(result.files.single.path);
@@ -103,12 +102,13 @@ class UploadSongScreen extends StatelessWidget {
                         : state.isLoading
                             ? const CircularProgressIndicator.adaptive(backgroundColor: Constants.colorPrimary)
                             : Column(children: [
-                                Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Text(AppText.UPLOAD_DESCRIPTION,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface.withOpacity(0.6), fontSize: 14))),
+                                // Padding(
+                                //     padding: const EdgeInsets.all(20.0),
+                                //     child: Text(AppText.UPLOAD_DESCRIPTION,
+                                //         textAlign: TextAlign.center,
+                                //         style: TextStyle(fontFamily: Constants.montserratBold, color: Constants.colorOnSurface.withOpacity(0.6), fontSize: 14))),
                                 Container(
+                                  margin: const EdgeInsets.only(top: 10),
                                     alignment: Alignment.centerLeft,
                                     child: const Text(AppText.TRIM_FILE,
                                         textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.montserratMedium, fontSize: 16, color: Constants.colorOnPrimary))),
@@ -148,9 +148,6 @@ class UploadSongScreen extends StatelessWidget {
                               ]);
                   }),
               const SizedBox(height: 20),
-
-              /// for checking if trimmer working
-              IconButton(onPressed: ()=> bloc.checkNewTrimmer(), icon: Icon(Icons.my_library_music_rounded, color: Colors.white,)),
               Container(
                   alignment: Alignment.centerLeft,
                   child: const Text(AppText.SONG_TITLE,
