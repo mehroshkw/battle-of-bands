@@ -69,8 +69,8 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   void updateIndex(int index) {
     if(state.index==index)return;
     emit(state.copyWith(index: index));
-    stopAudioPlayer();
     if(state.isPlaying == true){
+      stopAudioPlayer();
       emit(state.copyWith(isPlaying: false));
     }
   }
@@ -182,9 +182,9 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       final previousStatistics = state.statistics;
       final updatedStatistics = previousStatistics.copyWith(judgedBattles: previousStatistics.judgedBattles + 1);
       emit(state.copyWith(isBeginBattle: !state.isBeginBattle, statistics: updatedStatistics));
-      stopAudioPlayer();
-      disposeAudioPlayer();
       if(state.isPlaying == true){
+        stopAudioPlayer();
+        disposeAudioPlayer();
         emit(state.copyWith(isPlaying: false));
       }
       battlesGenreController.clear();
