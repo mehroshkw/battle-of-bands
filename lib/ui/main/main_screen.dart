@@ -23,21 +23,21 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   static const _allSongsKeyNavigationKey = PageStorageKey(AllSongsScreen.key_title);
   static const _profileKeyNavigationKey = PageStorageKey(ProfileScreen.key_title);
   final _bottomMap = <PageStorageKey<String>, Widget>{};
+  MainScreenBloc? bloc;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('app state changed');
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
       print('app in background');
       stopAudioPlayer();
-      final bloc = context.read<MainScreenBloc>();
-      bloc.emit(bloc.state.copyWith(isPlaying: false));
+      if (bloc != null) {
+        bloc!.emit(bloc!.state.copyWith(isPlaying: false));
+      }
     }
   }
 
   Future<void> stopAudioPlayer() async {
-    print('element =====');
     final bloc = context.read<MainScreenBloc>();
     for (var element in bloc.audioPlayers) {
       element.stop();
@@ -50,31 +50,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     _bottomMap[_battleScreenNavigationKey] = const BattleScreen(key: _battleScreenNavigationKey);
     _bottomMap[_allSongsKeyNavigationKey] = const AllSongsScreen(key: _allSongsKeyNavigationKey);
     _bottomMap[_profileKeyNavigationKey] = const ProfileScreen(key: _profileKeyNavigationKey);
-
+    bloc = context.read<MainScreenBloc>();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-  }
-  @override
-  void dispose() {
-    final bloc = context.read<MainScreenBloc>();
-    print("element ===== ");
-
-    for (var element in bloc.audioPlayers) {
-      print("element ===== $element");
-      element.stop();
-    }
-    for (var element in bloc.audioPlayers) {
-      element.dispose();
-    }
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   final _bottomNavItems = <BottomNavigationBarItem>[
     const BottomNavigationBarItem(
         icon: Image(image: AssetImage('assets/3x/home.png'), width: 24, height: 24, color: Constants.colorSecondary),
         label: '',
-        activeIcon: Image(image: AssetImage('assets/3x/home.png'), width: 24, height: 24, color: Constants.colorPrimary)),
+        activeIcon:
+            Image(image: AssetImage('assets/3x/home.png'), width: 24, height: 24, color: Constants.colorPrimary)),
     const BottomNavigationBarItem(
         icon: Image(image: AssetImage('assets/3x/vote.png'), width: 24, height: 24, color: Constants.colorSecondary),
         label: '',
@@ -96,7 +82,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     const BottomNavigationBarItem(
         icon: Image(image: AssetImage('assets/3x/user.png'), width: 24, height: 24, color: Constants.colorSecondary),
         label: '',
-        activeIcon: Image(image: AssetImage('assets/3x/user.png'), width: 24, height: 24, color: Constants.colorPrimary)),
+        activeIcon:
+            Image(image: AssetImage('assets/3x/user.png'), width: 24, height: 24, color: Constants.colorPrimary)),
   ];
 
   @override
@@ -136,7 +123,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     showSelectedLabels: true,
                     showUnselectedLabels: true))),
         body: BlocBuilder<MainScreenBloc, MainScreenState>(
-            buildWhen: (previous, current) => previous.index != current.index, builder: (_, state) => IndexedStack(index: state.index, children: _bottomMap.values.toList())));
+            buildWhen: (previous, current) => previous.index != current.index,
+            builder: (_, state) => IndexedStack(index: state.index, children: _bottomMap.values.toList())));
   }
 
   Widget _getNavigationWidget(int index) {

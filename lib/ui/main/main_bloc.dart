@@ -69,6 +69,24 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   void updateIndex(int index) {
     if(state.index==index)return;
     emit(state.copyWith(index: index));
+    stopAudioPlayer();
+    if(state.isPlaying == true){
+      emit(state.copyWith(isPlaying: false));
+    }
+  }
+
+  Future<void> stopAudioPlayer() async {
+    print('element =====');
+    for (var element in audioPlayers) {
+      element.stop();
+    }
+  }
+
+  Future<void> disposeAudioPlayer() async {
+    print('element =====');
+    for (var element in audioPlayers) {
+      element.dispose();
+    }
   }
 
   Future<void> getHomeData() async {
@@ -164,6 +182,11 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       final previousStatistics = state.statistics;
       final updatedStatistics = previousStatistics.copyWith(judgedBattles: previousStatistics.judgedBattles + 1);
       emit(state.copyWith(isBeginBattle: !state.isBeginBattle, statistics: updatedStatistics));
+      stopAudioPlayer();
+      disposeAudioPlayer();
+      if(state.isPlaying == true){
+        emit(state.copyWith(isPlaying: false));
+      }
       battlesGenreController.clear();
     } catch (_) {
       throw const NoInternetConnectException();
