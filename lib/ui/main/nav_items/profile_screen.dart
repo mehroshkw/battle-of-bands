@@ -1,7 +1,7 @@
 import 'package:battle_of_bands/extension/context_extension.dart';
 import 'package:battle_of_bands/ui/auth/change_password/change_password.dart';
 import 'package:battle_of_bands/ui/auth/login/login_screen.dart';
-import 'package:battle_of_bands/ui/main/mian_state.dart';
+import 'package:battle_of_bands/ui/main/main_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

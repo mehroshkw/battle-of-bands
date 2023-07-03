@@ -13,7 +13,7 @@ import '../../../helper/dilogue_helper.dart';
 import '../../../util/app_strings.dart';
 import '../../../util/constants.dart';
 import '../main_bloc.dart';
-import '../mian_state.dart';
+import '../main_state.dart';
 
 class BattleScreen extends StatelessWidget {
   static const String key_title = '/battle_screen';
@@ -104,14 +104,13 @@ class BattleScreen extends StatelessWidget {
                                                 child: Text(AppText.NO_SONG,
                                                     style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface))),
                                             const SizedBox(height: 10),
-                                            const Padding(
-                                                padding: EdgeInsets.all(6.0),
-                                                child: Text(AppText.SELECT_A_GENRE,
-                                                    style: TextStyle(fontSize: 20, fontFamily: Constants.montserratRegular, color: Constants.colorOnSurface))),
-                                            Text(
-                                              AppText.BATTLE_TO_SHOW,
-                                              style: TextStyle(fontSize: 14, fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.8)),
-                                              textAlign: TextAlign.center,
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              child: Text(
+                                                AppText.BATTLE_TO_SHOW,
+                                                style: TextStyle(fontSize: 14, fontFamily: Constants.montserratLight, color: Constants.colorOnSurface.withOpacity(0.8)),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                             const SizedBox(height: 50)
                                           ]));

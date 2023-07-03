@@ -12,7 +12,7 @@ import '../../../common/custom_appbar.dart';
 import '../../../common/single_song_item_widget.dart';
 import '../../../util/constants.dart';
 import '../main_bloc.dart';
-import '../mian_state.dart';
+import '../main_state.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String key_title = '/home';

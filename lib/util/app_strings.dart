@@ -57,11 +57,11 @@ abstract class AppText {
   static const String VOTES = 'Votes';
   static const String TODAY = 'Today';
   static const String DATE = '09 Feb 2023';
-  static const String NO_SONG = 'No Song';
+  static const String NO_SONG = 'No Song Available';
   static const String UPLOAD_YOUR_NEW_SONG = 'Upload your new song';
   static const String SELECT_A_GENRE = 'Select a genre to see song list';
   static const String DUMMY_DESC = 'Leaderboard will be displayed here once we have ratings to show.';
-  static const String BATTLE_TO_SHOW = 'Battle song will be displayed here once we have battle to show.';
+  static const String BATTLE_TO_SHOW = 'There is nothing available right now please check later.';
   static const String MY_SONGS_SHOW_HERE = 'Song will be displayed here once you have upload it.';
 
   /// my song details screen

@@ -13,7 +13,7 @@ import '../../../common/single_song_item_widget.dart';
 import '../../../util/app_strings.dart';
 import '../../../util/constants.dart';
 import '../main_bloc.dart';
-import '../mian_state.dart';
+import '../main_state.dart';
 
 class AllSongsScreen extends StatelessWidget {
   static const String key_title = '/all_songs';

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:battle_of_bands/backend/shared_web_services.dart';
 import 'package:battle_of_bands/data/exception.dart';
 import 'package:battle_of_bands/data/meta_data.dart';
-import 'package:battle_of_bands/ui/main/mian_state.dart';
+import 'package:battle_of_bands/ui/main/main_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
