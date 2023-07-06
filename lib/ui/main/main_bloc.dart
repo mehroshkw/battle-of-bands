@@ -235,35 +235,6 @@ class MainScreenBloc extends Cubit<MainScreenState> {
     sharedPreferenceHelper.clear();
   }
 
-  // void togglePlayPause(int index, String songUrl) {
-  //   print("here");
-  //   emit(state.copyWith(songIndex:index));
-  //   final isPlaying = state.isPlaying;
-  //   final currentSongUrl = state.fileUrl;
-  //   print('here 2,,,, index ===== $index');
-  //
-  //   if (isPlaying) {
-  //     audioPlayer.pause();
-  //     print("here 3");
-  //   } else if (currentSongUrl.isNotEmpty && currentSongUrl == songUrl) {
-  //     audioPlayer.play();
-  //     print('currentUrl ======= $currentSongUrl here 4');
-  //   } else {
-  //     // final fileUrl = songUrl;
-  //     setSongUrl(songUrl, index);
-  //     audioPlayer.play();
-  //     print('here 5, song url ==== $songUrl and index === $index');
-  //   }
-  //   emit(state.copyWith(isPlaying: !isPlaying));
-  // }
-
-  // void togglePlayPause(int index) {
-  //   if (state.songIndex != index) return;
-  //   final isPlaying = state.isPlaying;
-  //   isPlaying ? audioPlayer.pause() : audioPlayer.play();
-  //   emit(state.copyWith(isPlaying: !isPlaying));
-  // }
-
   void backwardTenSeconds(int index) {
     final player = audioPlayers[index];
     if (!state.isPlayerReady && state.songIndex != index) return;
@@ -331,93 +302,6 @@ class MainScreenBloc extends Cubit<MainScreenState> {
       return finalDuration;
     }
   }
-
-  // double sliderValue(int index) {
-  //   final tempState = state.battleDataEvent as Data;
-  //
-  //   final songs = List<Song>.of(tempState.data as List<Song>);
-  //   if (state.songIndex != index) {
-  //     final player = audioPlayers[index];
-  //     final position = songs[index].seekbar;
-  //     final duration = player.duration;
-  //
-  //     if (duration != null && duration.inMilliseconds > 0) {
-  //       final currentPosition = position.inMilliseconds.toDouble();
-  //       final totalDuration = duration.inMilliseconds.toDouble();
-  //       final finalDuration = (currentPosition / totalDuration).isNaN
-  //           ? 1.0
-  //           : currentPosition / totalDuration;
-  //
-  //       return finalDuration;
-  //     }
-  //   }
-  //   final player = audioPlayers[index];
-  //   final position = player.position;
-  //   final duration = player.duration;
-  //
-  //   if (state.isPlaying) {
-  //     if (duration != null && duration.inMilliseconds > 0) {
-  //       final currentPosition = position.inMilliseconds.toDouble();
-  //       final totalDuration = duration.inMilliseconds.toDouble();
-  //       final finalDuration = (currentPosition / totalDuration).isNaN
-  //           ? 1.0
-  //           : currentPosition / totalDuration;
-  //
-  //       return finalDuration;
-  //     } else {
-  //       return 0.0;
-  //     }
-  //   } else {
-  //     final player = audioPlayers[index];
-  //     final position = songs[index].seekbar;
-  //     final duration = player.duration;
-  //
-  //     if (duration != null && duration.inMilliseconds > 0) {
-  //       final currentPosition = position.inMilliseconds.toDouble();
-  //       final totalDuration = duration.inMilliseconds.toDouble();
-  //       final finalDuration = (currentPosition / totalDuration).isNaN
-  //           ? 1.0
-  //           : currentPosition / totalDuration;
-  //
-  //       return finalDuration;
-  //     } else {
-  //       return 0.0;
-  //     }
-  //   }
-  //
-  //   // if (duration != null && duration.inMilliseconds > 0) {
-  //   //   final currentPosition = position.inMilliseconds.toDouble();
-  //   //   final totalDuration = duration.inMilliseconds.toDouble();
-  //   //   final finalDuration = (currentPosition / totalDuration).isNaN
-  //   //       ? 1.0
-  //   //       : currentPosition / totalDuration;
-  //   //
-  //   //   return finalDuration;
-  //   // } else {
-  //   //   print("else of sliderValue method");
-  //   //   return 0.0;
-  //   // }
-  // }
-
-  // Future<void> setSongUrl(String songUrl, int songIndex) async {
-  //   final duration = await audioPlayer.setUrl(songUrl);
-  //   emit(state.copyWith(isPlayerReady: true, songIndex: songIndex, fileUrl: songUrl, totalDuration: duration));
-  //   processingStreamSubscription = audioPlayer.processingStateStream.listen((event) {
-  //     if (event == ProcessingState.completed && state.songIndex == songIndex) {
-  //       emit(state.copyWith(isPlaying: false, currentDuration: const Duration(seconds: 0)));
-  //       audioPlayer.pause();
-  //       audioPlayer.seek(const Duration(seconds: 0));
-  //     }
-  //   });
-  //
-  //   durationStreamSubscription = audioPlayer.positionStream.listen((event) {
-  //     if (state.currentDuration.inSeconds == event.inSeconds) {
-  //       return;
-  //     }
-  //     if (state.songIndex != songIndex) return;
-  //     emit(state.copyWith(currentDuration: event));
-  //   });
-  // }
 
   void togglePlayPause(int index, String songUrl) async {
     final tempState = state.battleDataEvent as Data;
@@ -499,8 +383,6 @@ class MainScreenBloc extends Cubit<MainScreenState> {
 
   @override
   Future<void> close() {
-      print("element =====");
-
     for (var element in audioPlayers) {
       print("element ===== $element");
       element.stop();
