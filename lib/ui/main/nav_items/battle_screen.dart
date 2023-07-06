@@ -192,25 +192,46 @@ class BattleScreen extends StatelessWidget {
                                       return const SizedBox();
                                     }
                                   })
-                              : SizedBox(
-                                  height: size.height / 1.6,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        if (bloc.battlesGenreController.text.isNotEmpty) {
-                                          bloc.toggleBeginBattle();
-                                        }
-                                      },
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                              child: Image.asset(
-                                                  bloc.battlesGenreController.text.isEmpty
-                                                      ? 'assets/battle_img_dim.png'
-                                                      : 'assets/battle_img.png',
-                                                  height: 250,
-                                                  width: 250,
-                                                  fit: BoxFit.contain))))))))))
+                              : Padding(
+                                padding: const EdgeInsets.only(top: 25),
+                                child: SizedBox(
+                                    height: size.height / 1.9,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (bloc.battlesGenreController.text.isNotEmpty) {
+                                            bloc.toggleBeginBattle();
+                                          }
+                                        },
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.circular(6.0)
+                                              ),
+                                              child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  child: Container(
+                                                    // padding: const EdgeInsets.all(6.0),
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: AssetImage(
+                                                          bloc.battlesGenreController.text.isEmpty
+                                                              ? 'assets/battle_img_dim.png'
+                                                              : 'assets/battle_img.png',
+                                                        ),
+                                                        fit: BoxFit.contain
+                                                      )
+                                                    ),
+                                                    // child: Image.asset(
+                                                    //     bloc.battlesGenreController.text.isEmpty
+                                                    //         ? 'assets/battle_img_dim.png'
+                                                    //         : 'assets/battle_img.png',
+                                                    //     fit: BoxFit.cover)
+                                                  )),
+                                            )))),
+                              ))))))
     ]);
   }
 }
