@@ -195,7 +195,7 @@ class BattleScreen extends StatelessWidget {
                               : Padding(
                                   padding: const EdgeInsets.only(top: 30),
                                   child: SizedBox(
-                                      height: size.height / 1.75,
+                                      height: size.height / 1.6,
                                       child: GestureDetector(
                                           onTap: () {
                                             if (bloc.battlesGenreController.text.isNotEmpty) {
