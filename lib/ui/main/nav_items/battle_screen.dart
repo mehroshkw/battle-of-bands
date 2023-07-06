@@ -193,45 +193,29 @@ class BattleScreen extends StatelessWidget {
                                     }
                                   })
                               : Padding(
-                                padding: const EdgeInsets.only(top: 25),
-                                child: SizedBox(
-                                    height: size.height / 1.9,
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          if (bloc.battlesGenreController.text.isNotEmpty) {
-                                            bloc.toggleBeginBattle();
-                                          }
-                                        },
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: Container(
-                                              padding: const EdgeInsets.all(4.0),
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius: BorderRadius.circular(6.0)
-                                              ),
+                                  padding: const EdgeInsets.only(top: 30),
+                                  child: SizedBox(
+                                      height: size.height / 1.75,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            if (bloc.battlesGenreController.text.isNotEmpty) {
+                                              bloc.toggleBeginBattle();
+                                            }
+                                          },
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(20.0),
                                               child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(8.0),
                                                   child: Container(
-                                                    // padding: const EdgeInsets.all(6.0),
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                          bloc.battlesGenreController.text.isEmpty
-                                                              ? 'assets/battle_img_dim.png'
-                                                              : 'assets/battle_img.png',
-                                                        ),
-                                                        fit: BoxFit.contain
-                                                      )
-                                                    ),
-                                                    // child: Image.asset(
-                                                    //     bloc.battlesGenreController.text.isEmpty
-                                                    //         ? 'assets/battle_img_dim.png'
-                                                    //         : 'assets/battle_img.png',
-                                                    //     fit: BoxFit.cover)
-                                                  )),
-                                            )))),
-                              ))))))
+                                                      // padding: const EdgeInsets.all(6.0),
+                                                      decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                bloc.battlesGenreController.text.isEmpty
+                                                                    ? 'assets/Batlle - 2 dim.png'
+                                                                    : 'assets/Battle – 2.png',
+                                                              ),
+                                                              fit: BoxFit.contain)))))))))))))
     ]);
   }
 }
@@ -263,7 +247,8 @@ class SongWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         width: size.width - 30,
-        decoration: BoxDecoration(color: Constants.colorTextLight, borderRadius: BorderRadius.circular(20)),
+        decoration:
+            BoxDecoration(color: Constants.colorTextLight.withOpacity(0.8), borderRadius: BorderRadius.circular(20)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
             ClipRRect(
@@ -367,10 +352,10 @@ class SongWidget extends StatelessWidget {
           const SizedBox(height: 10),
           Container(
               height: 35,
-              width: 130,
+              width: 140,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(30.0),
                 border: Border.all(color: Constants.colorOnSurface, width: 0.4),
                 shape: BoxShape.rectangle,
                 color: Constants.colorPrimary,
