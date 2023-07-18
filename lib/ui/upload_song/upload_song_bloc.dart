@@ -63,7 +63,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print('file ==========================> $file');
     emit(state.copyWith(isLoading: true, file: file));
     await trimmer.loadAudio(audioFile: file);
-    print("start === $start, end=== $end");
+    print('start === $start, end=== $end');
     emit(state.copyWith(isLoading: false));
   }
 
@@ -75,27 +75,41 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print('End Trimmer: $endTrimmer');
     final inputPath = state.file.path;
     final String inputPathFileName = inputPath.split('/').last;
-    print("inputFileName ======= $inputPathFileName");
+    print('inputFileName ======= $inputPathFileName');
 
     final Directory dir = await getTemporaryDirectory();
 
     String outPath;
-    String cmd;
+    List<String> commandArguments = [];
+
     if (inputPath.endsWith('mp3')) {
       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-      cmd = '-i $inputPath -ss ${startTrimmer.toHumanReadableTime()} -to ${endTrimmer.toHumanReadableTime()} -c copy $outPath';
+      commandArguments = ['-i', inputPath, '-ss', startTrimmer.toHumanReadableTime(), '-to', endTrimmer.toHumanReadableTime(), '-c', 'copy', outPath];
     } else {
       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
-      cmd = '-i $inputPath -ss ${startTrimmer.toHumanReadableTime()} -to ${endTrimmer.toHumanReadableTime()} -c:a aac -b:a 320k $outPath';
+      commandArguments = [
+        '-i',
+        inputPath,
+        '-ss',
+        startTrimmer.toHumanReadableTime(),
+        '-to',
+        endTrimmer.toHumanReadableTime(),
+        '-c:a',
+        'aac',
+        '-b:a',
+        '320k',
+        outPath
+      ];
     }
 
     print('Input File Path: $inputPath');
 
+    final isExists = await File(outPath).exists();
+    print('Output file already exists.... -> $isExists');
+
     print('Output File Path: $outPath');
 
-    log('command ==================> $cmd');
-
-    final FFmpegSession session = await FFmpegKit.execute(cmd);
+    final FFmpegSession session = await FFmpegKit.executeWithArguments(commandArguments);
     final sessionState = await session.getState();
 
     print('Trimming state --> $sessionState');
@@ -103,6 +117,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     // Return code for completed sessions. Will be undefined if session is still running or FFmpegKit fails to run it
     final returnCode = await session.getReturnCode();
     bool isSuccess = ReturnCode.isSuccess(returnCode);
+
     print('Is Success -- $isSuccess');
 
     if (!isSuccess) return null;
@@ -110,7 +125,6 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final trimmedDuration = (end - start) / 1000;
     print('duration------------->$trimmedDuration');
     emit(state.copyWith(duration: trimmedDuration));
-
     return outPath;
   }
 
@@ -146,11 +160,11 @@ class UploadSongBloc extends Cubit<UploadSongState> {
       'bandName': bandName,
       'ExternalUrl': 'https://www.google.com/',
       'duration': duration.toString()
-    };
+    }; // flutter: Output File Path: /var/mobile/Containers/Data/Application/94F7FB80-3A20-42C9-AB88-0E42F9C047CC/Library/Caches/file_example_MP3_5MG.mp3
 
     // final songResponse =  await _sharedWebService.addSong(body, songPath);
     final songResponse = await _sharedWebService.addSong(body, outfilePath);
-    File(outfilePath).delete();
+    await File(outfilePath).delete();
     print('song response =============$songResponse');
     return songResponse;
   }

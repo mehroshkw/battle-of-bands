@@ -47,6 +47,7 @@ dependencies:
   easy_audio_trimmer: ^1.0.1+1
   path_provider: ^2.0.15
   ffmpeg_kit_flutter: 5.1.0-LTS
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:
