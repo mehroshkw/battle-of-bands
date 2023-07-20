@@ -41,7 +41,8 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
   void updateGenreError(bool value, String errorText) => emit(state.copyWith(genreError: value, errorText: errorText));
 
-  void updateBandNameError(bool value, String errorText) => emit(state.copyWith(bandNameError: value, errorText: errorText));
+  void updateBandNameError(bool value, String errorText) =>
+      emit(state.copyWith(bandNameError: value, errorText: errorText));
 
   void updateErrorText(String error) => emit(state.copyWith(errorText: error));
 
@@ -61,11 +62,18 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
     final Directory dir = await getTemporaryDirectory();
     final String inputPathFileName = filePath.split('/').last;
+
+    String? inputFilePath;
     print('inputFileName ======= $inputPathFileName');
-    final inputFilePath = '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-    print('input File --> ${inputFilePath}');
-
-
+    if (inputPathFileName.endsWith('mp3')) {
+      inputFilePath =
+          '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+      print('input File --> ${inputFilePath}');
+    } else {
+      inputFilePath =
+          '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.acc';
+      print('input File --> ${inputFilePath}');
+    }
     File inputFile = File(inputFilePath);
     inputFile = await inputFile.create(recursive: true);
     inputFile = await inputFile.writeAsBytes(await File(filePath).readAsBytes());
@@ -94,7 +102,17 @@ class UploadSongBloc extends Cubit<UploadSongState> {
 
     if (inputPath.endsWith('mp3')) {
       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-      commandArguments = ['-i', inputPath, '-ss', startTrimmer.toHumanReadableTime(), '-to', endTrimmer.toHumanReadableTime(), '-c', 'copy', outPath];
+      commandArguments = [
+        '-i',
+        inputPath,
+        '-ss',
+        startTrimmer.toHumanReadableTime(),
+        '-to',
+        endTrimmer.toHumanReadableTime(),
+        '-c',
+        'copy',
+        outPath
+      ];
     } else {
       outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
       commandArguments = [
@@ -115,7 +133,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print('Input File Path: $inputPath');
 
     final isExists = await File(outPath).exists();
-    if(isExists) await File(outPath).delete();
+    if (isExists) await File(outPath).delete();
     print('Output file already exists.... -> $isExists');
 
     print('Output File Path: $outPath');

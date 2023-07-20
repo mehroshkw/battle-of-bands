@@ -132,7 +132,7 @@ class UploadSongScreen extends StatelessWidget {
                                       TrimViewer(
                                           trimmer: bloc.trimmer,
                                           viewerHeight: 50.0,
-                                          viewerWidth: size.width/2,
+                                          viewerWidth: size.width,
                                           // maxAudioLength: const Duration(minutes: 10),
                                           onChangeStart: (value) => bloc.start = value,
                                           onChangeEnd: (value) => bloc.end = value,
