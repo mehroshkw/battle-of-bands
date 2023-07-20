@@ -120,6 +120,7 @@ class LoginScreen extends StatelessWidget {
                       height: 70,
                       child: AppTextField(
                         hint: AppText.ENTER_PASSWORD,
+                        isObscure: true,
                         textInputType: TextInputType.visiblePassword,
                         textInputAction: TextInputAction.done,
                         controller: bloc.passwordController,

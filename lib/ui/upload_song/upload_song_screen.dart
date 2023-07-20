@@ -132,7 +132,7 @@ class UploadSongScreen extends StatelessWidget {
                                       TrimViewer(
                                           trimmer: bloc.trimmer,
                                           viewerHeight: 50.0,
-                                          viewerWidth: size.width,
+                                          viewerWidth: size.width/2,
                                           // maxAudioLength: const Duration(minutes: 10),
                                           onChangeStart: (value) => bloc.start = value,
                                           onChangeEnd: (value) => bloc.end = value,
@@ -225,7 +225,7 @@ class UploadSongScreen extends StatelessWidget {
                                 controller: bloc.genreController,
                                 hint: AppText.GENRE,
                                 readOnly: true,
-                                textInputType: TextInputType.name,
+                                textInputType: TextInputType.text,
                                 onChanged: (String? value) {
                                   if (value == null) return;
                                   if (value.isNotEmpty && state.genreError) {
@@ -249,7 +249,7 @@ class UploadSongScreen extends StatelessWidget {
                           textInputAction: TextInputAction.next,
                           hint: AppText.ENTER_PERFROMER_BAND_NAME,
                           controller: bloc.bandNameController,
-                          textInputType: TextInputType.name,
+                          textInputType: TextInputType.text,
                           onChanged: (String? value) {
                             if (value == null) return;
                             if (value.isNotEmpty && state.bandNameError) {
@@ -269,7 +269,7 @@ class UploadSongScreen extends StatelessWidget {
                       textInputAction: TextInputAction.done,
                       hint: AppText.URL,
                       controller: bloc.urlController,
-                      textInputType: TextInputType.name,
+                      textInputType: TextInputType.text,
                       isError: false)),
               BlocBuilder<UploadSongBloc, UploadSongState>(
                   buildWhen: (previous, current) => previous.errorText != current.errorText,

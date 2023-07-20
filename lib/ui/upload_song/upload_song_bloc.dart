@@ -59,10 +59,20 @@ class UploadSongBloc extends Cubit<UploadSongState> {
   Future<void> updateFilePath(String? filePath) async {
     if (filePath == null) return;
 
-    final file = File(filePath);
-    print('file ==========================> $file');
-    emit(state.copyWith(isLoading: true, file: file));
-    await trimmer.loadAudio(audioFile: file);
+    final Directory dir = await getTemporaryDirectory();
+    final String inputPathFileName = filePath.split('/').last;
+    print('inputFileName ======= $inputPathFileName');
+    final inputFilePath = '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+    print('input File --> ${inputFilePath}');
+
+
+    File inputFile = File(inputFilePath);
+    inputFile = await inputFile.create(recursive: true);
+    inputFile = await inputFile.writeAsBytes(await File(filePath).readAsBytes());
+
+    print('file ==========================> $inputFile');
+    emit(state.copyWith(isLoading: true, file: inputFile));
+    await trimmer.loadAudio(audioFile: inputFile);
     print('start === $start, end=== $end');
     emit(state.copyWith(isLoading: false));
   }
@@ -105,6 +115,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     print('Input File Path: $inputPath');
 
     final isExists = await File(outPath).exists();
+    if(isExists) await File(outPath).delete();
     print('Output file already exists.... -> $isExists');
 
     print('Output File Path: $outPath');
@@ -165,6 +176,7 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     // final songResponse =  await _sharedWebService.addSong(body, songPath);
     final songResponse = await _sharedWebService.addSong(body, outfilePath);
     await File(outfilePath).delete();
+    await state.file.delete();
     print('song response =============$songResponse');
     return songResponse;
   }
