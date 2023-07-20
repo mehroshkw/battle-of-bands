@@ -62,9 +62,19 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     final Directory dir = await getTemporaryDirectory();
     final String inputPathFileName = filePath.split('/').last;
     print('inputFileName ======= $inputPathFileName');
-    final inputFilePath = '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-    print('input File --> ${inputFilePath}');
-
+    // final inputFilePath = '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+    // print('input File --> ${inputFilePath}');
+    String? inputFilePath;
+    print('inputFileName ======= $inputPathFileName');
+    if (inputPathFileName.endsWith('mp3')) {
+      inputFilePath =
+      '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+      print('input File --> ${inputFilePath}');
+    } else {
+      inputFilePath =
+      '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.acc';
+      print('input File --> ${inputFilePath}');
+    }
 
     File inputFile = File(inputFilePath);
     inputFile = await inputFile.create(recursive: true);
