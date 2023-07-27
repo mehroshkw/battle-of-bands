@@ -145,6 +145,11 @@ class MainScreenBloc extends Cubit<MainScreenState> {
   }
 
   Future<void> updateBattleByChangeGenreId(Genre genre) async {
+    if(state.isPlaying == true){
+      stopAudioPlayer();
+      disposeAudioPlayer();
+      emit(state.copyWith(isPlaying: false));
+    }
     battlesGenreController.text = genre.title;
     emit(state.copyWith(battleDataEvent: const Loading()));
     try {

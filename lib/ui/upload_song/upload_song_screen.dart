@@ -176,7 +176,7 @@ class UploadSongScreen extends StatelessWidget {
                       child: AppTextField(
                           hint: AppText.Enter_SONG_TITLE,
                           textInputAction: TextInputAction.next,
-                          textInputType: TextInputType.name,
+                          textInputType: TextInputType.text,
                           controller: bloc.songTitleController,
                           onChanged: (String? value) {
                             if (value == null) return;
