@@ -71,11 +71,11 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     if (inputPathFileName.endsWith('mp3')) {
       inputFilePath =
       '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-      print('input File --> ${inputFilePath}');
+      print('input File --> $inputFilePath');
     } else {
       inputFilePath =
       '${dir.path}/input_trimmer/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.acc';
-      print('input File --> ${inputFilePath}');
+      print('input File --> $inputFilePath');
     }
 
 
@@ -105,35 +105,50 @@ class UploadSongBloc extends Cubit<UploadSongState> {
     String outPath;
     List<String> commandArguments = [];
 
-    if (inputPath.endsWith('mp3')) {
-      outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
-      commandArguments = [
-        '-i',
-        inputPath,
-        '-ss',
-        startTrimmer.toHumanReadableTime(),
-        '-to',
-        endTrimmer.toHumanReadableTime(),
-        '-c',
-        'copy',
-        outPath
-      ];
-    } else {
-      outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
-      commandArguments = [
-        '-i',
-        inputPath,
-        '-ss',
-        startTrimmer.toHumanReadableTime(),
-        '-to',
-        endTrimmer.toHumanReadableTime(),
-        '-c:a',
-        'aac',
-        '-b:a',
-        '320k',
-        outPath
-      ];
-    }
+    // if (inputPath.endsWith('mp3')) {
+    //   outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.mp3';
+    //   commandArguments = [
+    //     '-i',
+    //     inputPath,
+    //     '-ss',
+    //     startTrimmer.toHumanReadableTime(),
+    //     '-to',
+    //     endTrimmer.toHumanReadableTime(),
+    //     '-c',
+    //     'copy',
+    //     outPath
+    //   ];
+    // } else {
+    //   outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
+    //   commandArguments = [
+    //     '-i',
+    //     inputPath,
+    //     '-ss',
+    //     startTrimmer.toHumanReadableTime(),
+    //     '-to',
+    //     endTrimmer.toHumanReadableTime(),
+    //     '-c:a',
+    //     'aac',
+    //     '-b:a',
+    //     '320k',
+    //     outPath
+    //   ];
+    // }
+
+    outPath = '${dir.path}/${inputPathFileName.replaceAll(path.extension(inputPathFileName), '')}.aac';
+    commandArguments = [
+      '-i',
+      inputPath,
+      '-ss',
+      startTrimmer.toHumanReadableTime(),
+      '-to',
+      endTrimmer.toHumanReadableTime(),
+      '-c:a',
+      'aac',
+      '-b:a',
+      '320k',
+      outPath
+    ];
 
     print('Input File Path: $inputPath');
 
