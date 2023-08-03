@@ -195,7 +195,7 @@ class BattleScreen extends StatelessWidget {
                               : Padding(
                                   padding: const EdgeInsets.only(top: 30),
                                   child: SizedBox(
-                                      height: size.height / 1.6,
+                                      height: size.height / 1.7,
                                       child: GestureDetector(
                                           onTap: () {
                                             if (bloc.battlesGenreController.text.isNotEmpty) {
@@ -212,8 +212,8 @@ class BattleScreen extends StatelessWidget {
                                                           image: DecorationImage(
                                                               image: AssetImage(
                                                                 bloc.battlesGenreController.text.isEmpty
-                                                                    ? 'assets/Batlle - 2 dim.png'
-                                                                    : 'assets/Battle – 2.png',
+                                                                    ? 'assets/Group 12475.png'
+                                                                    : 'assets/Group 12476.png',
                                                               ),
                                                               fit: BoxFit.contain)))))))))))))
     ]);
