@@ -9,7 +9,7 @@ import 'server_response.dart';
 import 'package:http/http.dart' as http;
 
 class SharedWebService {
-  static const String _BASE_URL = 'http://battleofbands.triaxo.com/api';
+  static const String _BASE_URL = 'http://serverlink.com/api';
 
   final HttpClient _client = HttpClient();
   final Duration _timeoutDuration = const Duration(seconds: 20);
