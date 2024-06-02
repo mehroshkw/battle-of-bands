@@ -1,4 +1,4 @@
-const String BASE_URL_DATA = 'http://battleofbands.triaxo.com';
+const String BASE_URL_DATA = 'http://servelink.com';
 
 abstract class IBaseResponse {
   final bool status;
